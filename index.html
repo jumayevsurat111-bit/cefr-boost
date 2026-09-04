@@ -704,33 +704,53 @@ function loadJSON(key, fallback){
   try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
   catch(e){ return fallback; }
 }
-
 function renderMockList(){
   const progress = loadJSON(STORAGE_KEY, null);
   const history = loadJSON(HISTORY_KEY, []);
   const lastResult = history[0];
-  const inProgress = progress && Array.isArray(progress.answers) && progress.answers.some(a=>a && a.trim());
+
+  const inProgress =
+    progress &&
+    Array.isArray(progress.answers) &&
+    progress.answers.some(a => a && a.trim());
 
   let metaLine = "3 tasks · 60 minutes";
+
   if(inProgress){
-    const m = Math.floor((progress.seconds||0)/60), s = String((progress.seconds||0)%60).padStart(2,"0");
+    const m = Math.floor((progress.seconds || 0) / 60);
+    const s = String((progress.seconds || 0) % 60).padStart(2,"0");
     metaLine = `In progress · ${m}:${s} left on the clock`;
-  } else if(lastResult){
+  } 
+  else if(lastResult){
     const d = new Date(lastResult.date);
     metaLine = `Last attempt: ${lastResult.cert}/75 · ${lastResult.cefr} · ${d.toLocaleDateString()}`;
   }
 
-  const ctaLabel = inProgress ? "Continue →" : "Start →";
-  const ctaClass = inProgress ? "go continue" : "go";
+  const buttonText = inProgress ? "Continue →" : "Start →";
 
   document.getElementById("mockList").innerHTML = `
     <div class="mock-row">
-      <div>
+      <div class="mock-info">
         <div class="name">Writing Mock 01</div>
         <div class="meta">${metaLine}</div>
       </div>
-      <button class="${ctaClass}" onclick="startOrContinueWriting()">${ctaLabel}</button>
-    </div>`;
+
+      <button
+        type="button"
+        class="go writing-start-btn"
+        id="writingStartBtn">
+        ${buttonText}
+      </button>
+    </div>
+  `;
+
+  const startButton = document.getElementById("writingStartBtn");
+
+  if(startButton){
+    startButton.addEventListener("click", function(){
+      startOrContinueWriting();
+    });
+  }
 }
 
 function renderActivity(){
