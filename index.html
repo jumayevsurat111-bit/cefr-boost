@@ -143,6 +143,36 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
   cursor:pointer;
   border:none;
 }
+.writing-start-btn{
+  background:#6536d8 !important;
+  color:#fff !important;
+  display:block !important;
+  width:auto;
+  min-width:120px;
+  text-align:center;
+  position:relative;
+  z-index:10;
+}
+
+.writing-start-btn:active{
+  transform:scale(.98);
+}
+
+@media(max-width:640px){
+  .mock-row{
+    width:100%;
+  }
+
+  .mock-row .writing-start-btn{
+    width:100% !important;
+    min-width:100% !important;
+    display:block !important;
+  }
+
+  .mock-info{
+    width:100%;
+  }
+}
 </style>
 <script>
 
