@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEFR Boost — Practice Tests</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;color:#20242c}
+a,button,.tab,.part-box{outline:none}
+a:focus-visible,button:focus-visible,.tab:focus-visible,.part-box:focus-visible,textarea:focus-visible{outline:2px solid #6536d8;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.header{background:#fff;border-bottom:1px solid #e7e9ef;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.logo{font-size:21px;font-weight:800;color:#6337d8}
+.header-history{background:#f0ebff;color:#5b2bc8;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;border:0}
+
+.home-container{max-width:960px;margin:0 auto;padding:0 18px 60px}
+
+.hero{padding:46px 0 30px;text-align:left}
+.hero h1{font-size:34px;line-height:1.2;margin:0 0 10px;max-width:520px}
+.hero p{color:#606775;font-size:16px;max-width:480px;margin:0}
+
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px}
+.skill-card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 5px 20px #0000000c;display:flex;flex-direction:column;gap:10px}
+.skill-card .icon{font-size:26px}
+.skill-card h2{margin:0;font-size:19px}
+.skill-card p{margin:0;color:#6b7280;font-size:14px;line-height:1.5;flex-grow:1}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:20px;width:fit-content}
+.status.live{background:#e6f8ef;color:#0b9565}
+.status.soon{background:#f1f2f5;color:#8a919e}
+.skill-cta{border:0;border-radius:11px;padding:11px 16px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.skill-cta.primary{background:#6536d8;color:#fff}
+.skill-cta.primary:hover{background:#5529bd}
+.skill-cta.disabled{background:#eef0f4;color:#9aa1ad;cursor:not-allowed}
+
+.section-title{font-size:20px;margin:0 0 14px}
+
+.mock-list{background:#fff;border-radius:18px;padding:8px;box-shadow:0 5px 20px #0000000c;margin-bottom:36px}
+.mock-row{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-radius:13px}
+.mock-row+.mock-row{border-top:1px solid #eef0f4}
+.mock-row .name{font-weight:700;font-size:15px}
+.mock-row .meta{color:#8a919e;font-size:13px;margin-top:3px}
+.mock-row .go{background:#6536d8;color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-size:13px;text-decoration:none}
+.mock-row .go:hover{background:#5529bd}
+.mock-row .go.continue{background:#0b9a69}
+.mock-row .go.continue:hover{background:#08825a}
+
+.activity{background:#fff;border-radius:18px;padding:20px;box-shadow:0 5px 20px #0000000c;display:none}
+.activity-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid #eef0f4;font-size:14px}
+.activity-item:first-of-type{border-top:0}
+.activity-item .cefr-pill{background:#fff0c7;color:#9b6a00;padding:5px 10px;border-radius:8px;font-weight:800;font-size:12px}
+
+@media(max-width:640px){
+  .skill-grid{grid-template-columns:1fr}
+  .hero h1{font-size:27px}
+  .mock-row{flex-direction:column;align-items:flex-start;gap:10px}
+  .mock-row .go{width:100%;text-align:center}
+}
+
+
+.logo{font-size:21px;font-weight:800;color:#6337d8}.mock{font-weight:700;color:#606775}
+.timer{background:#f0ebff;color:#5b2bc8;padding:10px 15px;border-radius:10px;font-weight:700;white-space:nowrap}
+.container{max-width:900px;margin:30px auto;padding:0 18px}
+.progress-wrap{background:#fff;border-radius:16px;padding:18px 20px;box-shadow:0 3px 15px #0000000b;margin-bottom:20px}
+.progress-top{display:flex;justify-content:space-between;font-size:14px;color:#687080;margin-bottom:10px}
+.bar{height:8px;background:#e9eaf0;border-radius:99px;overflow:hidden}.fill{height:100%;width:33.33%;background:#6939dc;transition:.25s}
+.card{background:#fff;border-radius:18px;padding:28px;box-shadow:0 5px 20px #0000000c}
+.badge{display:inline-block;background:#eee8ff;color:#5d30ca;font-weight:700;padding:7px 12px;border-radius:8px;font-size:13px}
+h1{font-size:27px;margin:15px 0 8px}.subtitle{color:#6b7280;margin-bottom:25px}
+.taskbox{background:#f8f9fc;border:1px solid #e8eaf0;border-radius:13px;padding:18px;line-height:1.65}
+.prompt{font-size:16px}.instruction{margin-top:10px;color:#555}
+textarea{width:100%;min-height:260px;margin-top:20px;border:1px solid #dfe2e9;border-radius:13px;padding:16px;font:16px Arial;resize:vertical;outline:none}
+textarea:focus{border-color:#7544df;box-shadow:0 0 0 3px #7544df18}
+.wordrow{display:flex;justify-content:space-between;margin-top:8px;color:#747b89;font-size:13px}
+.wordcount.ok{color:#159447;font-weight:700}.wordcount.warn{color:#d97706;font-weight:700}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.tab{background:#f8f9fc;border:2px solid #e8eaf0;border-radius:12px;padding:10px 8px;cursor:pointer;text-align:center;font-weight:700;color:#5b6270;font-size:12px;line-height:1.3}
+.tab.active{border-color:#6536d8;background:#f1ebfe;color:#5b2bc8}
+.tab .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#d5d8e0;margin-right:6px;vertical-align:middle}
+.tab.done .dot{background:#0b9a69}
+.resume-banner{background:#fff8e1;border:1px solid #f2d98a;color:#8a6a00;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;display:none}
+.history-btn{background:#f0ebff;color:#5b2bc8;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;border:0}
+.history-panel{display:none;background:#fff;border-radius:16px;padding:20px;box-shadow:0 3px 15px #0000000b;margin-bottom:20px}
+.history-item{border:1px solid #e4e6eb;border-radius:10px;padding:12px 14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.history-item .hd{color:#8a919e;font-size:12px}
+.buttons{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:700;cursor:pointer}
+.prev{background:#eef0f4;color:#4b5563}.next{background:#6536d8;color:#fff}
+.next:hover{background:#5529bd}.prev:disabled{opacity:.45;cursor:not-allowed}
+.review{display:none}.review h2{margin-top:0}.review-item{border:1px solid #e4e6eb;border-radius:12px;padding:16px;margin:12px 0}.review-item strong{display:block;margin-bottom:8px}.answer{color:#666;white-space:pre-wrap}
+.submit{background:#0b9a69;color:white;width:100%;margin-top:18px}
+.success{display:none;text-align:center}.score{font-size:54px;font-weight:800;color:#6536d8}.cefr{display:inline-block;background:#fff0c7;color:#9b6a00;padding:9px 18px;border-radius:10px;font-weight:800}
+@media(max-width:600px){.header{padding:13px 15px}.container{margin:18px auto}.card{padding:20px}h1{font-size:23px}.timer{padding:8px 10px}.buttons button{flex:1}}
+
+/* Result dashboard */
+.result-page{display:none;max-width:900px;margin:30px auto;padding:0 18px 40px}
+.result-header{background:#fff;border-radius:18px;padding:25px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 5px 20px #0000000c;margin-bottom:18px}
+.brand-small{font-size:14px;color:#6738d8;font-weight:800;letter-spacing:.5px}
+.result-header h1{margin:7px 0 5px;font-size:25px}.result-header p{margin:0;color:#737b89}
+.result-status{background:#e6f8ef;color:#0b9565;border-radius:10px;padding:10px 13px;font-weight:800}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.score-card{border-radius:16px;padding:21px;color:#fff;min-height:118px;display:flex;flex-direction:column;justify-content:space-between}
+.score-card span{font-size:13px;opacity:.9}.score-card strong{font-size:36px}
+.score-card.raw{background:#078d7f}.score-card.certificate{background:#2e72dc}.score-card.cefr-card{background:#ee9c00}
+.result-card{background:#fff;border-radius:17px;padding:21px;margin-bottom:16px;box-shadow:0 4px 18px #0000000b}
+.result-card-title{font-size:17px;font-weight:800;margin-bottom:16px}
+.part-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.part-box{background:#fafbfe;border:1px solid #e5e7ed;border-radius:13px;padding:15px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:15px}
+.part-box span{font-size:13px;color:#555e6e}.part-box b{font-size:28px;color:#6337d8}.part-box small{font-size:15px;color:#777}
+.criteria{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.criteria div{background:#f7f8fb;border-radius:10px;padding:13px;display:flex;justify-content:space-between}
+.criteria b{color:#6337d8}
+.feedback{margin-top:14px;background:#f3efff;border-radius:12px;padding:15px;line-height:1.55}.feedback p{margin:7px 0 0;color:#565d6a}
+.answer-result{border:1px solid #e7e9ef;border-radius:11px;padding:13px;margin-top:9px}
+.answer-result b{display:block;margin-bottom:7px;color:#6337d8}.answer-result p{margin:0;color:#606775;white-space:pre-wrap}
+.action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
+.action{padding:15px;border-radius:12px;border:0;color:#fff;font-weight:800;font-size:14px;cursor:pointer}
+.action.green{background:#159b50}.action.blue{background:#2768df}.action.teal{background:#069879}
+.extra-panel{display:none;background:#fff;border-radius:15px;padding:20px;margin-bottom:15px;box-shadow:0 4px 18px #0000000b;line-height:1.6}
+.back-btn{width:100%;background:#68798f;color:#fff;border:0;border-radius:12px;padding:15px;font-weight:800;cursor:pointer}
+@media(max-width:650px){
+ .result-header{align-items:flex-start;gap:15px;flex-direction:column}.score-grid{grid-template-columns:1fr}
+ .part-grid{grid-template-columns:1fr 1fr}.criteria{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}
+ .score-card{min-height:100px}
+}
+
+
+.scoring-note{background:#f7f4ff;border:1px solid #e8defe;border-radius:11px;padding:12px 14px;margin-bottom:15px;display:flex;flex-direction:column;gap:5px;color:#565d6a;font-size:13px}
+.scoring-note b{color:#6337d8}.scoring-note span strong{color:#20242c}
+
+
+</style>
+<script>
+
+/* Official Writing new-format raw structure:
+   Task 1.1 = /5, Task 1.2 = /6, Task 2 = /6, total = /17.
+   The conversion table below is kept separate so it can be replaced with
+   the exact official 17→75 table supplied by the exam authority. */
+const WRITING_MAX = {t11:5, t12:6, t2:6};
+
+function calculateWritingRaw(t11, t12, t2){
+  return Math.max(0,Math.min(5,t11)) +
+         Math.max(0,Math.min(6,t12)) +
+         Math.max(0,Math.min(6,t2));
+}
+
+/* Demo conversion used by this prototype. Replace/verify against the
+   official 17→75 conversion table before production use. */
+const WRITING_CONVERSION = {
+  17:75,16:71,15:68,14:65,13:61,12:58,11:54,10:51,
+  9:48,8:45,7:42,6:39,5:36,4:33,3:30,2:27,1:23,0:0
+};
+
+function rawTo75(raw){ return WRITING_CONVERSION[raw] ?? 0; }
+function cefrFrom75(score){
+  if(score>=65) return "C1";
+  if(score>=51) return "B2";
+  return "Below B2";
+}
+
+</script>
+</head>
+<body>
+
+<div id="homeView">
+<header class="header">
+  <span class="logo">CEFR BOOST</span>
+  <button class="header-history" id="homeHistoryBtn">📜 Recent activity</button>
+</header>
+
+<main class="home-container">
+  <section class="hero">
+    <h1>Which skill do you want to practice?</h1>
+    <p>Timed mock tests with AI scoring against official CEFR criteria, plus a certificate score out of 75.</p>
+  </section>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <span class="icon">✍️</span>
+      <h2>Writing</h2>
+      <p>Two letters and a discussion post, scored on task achievement, grammar, vocabulary, cohesion, and accuracy.</p>
+      <span class="status live">● 1 mock available</span>
+      <a class="skill-cta primary" href="#writing-mocks">View mocks</a>
+    </div>
+    <div class="skill-card">
+      <span class="icon">📖</span>
+      <h2>Reading</h2>
+      <p>Comprehension passages with multiple-choice and matching tasks across B1–C1 texts.</p>
+      <span class="status soon">Coming soon</span>
+      <span class="skill-cta disabled">Not available yet</span>
+    </div>
+    <div class="skill-card">
+      <span class="icon">🎧</span>
+      <h2>Listening</h2>
+      <p>Audio recordings with note-completion and multiple-choice questions.</p>
+      <span class="status soon">Coming soon</span>
+      <span class="skill-cta disabled">Not available yet</span>
+    </div>
+    <div class="skill-card">
+      <span class="icon">🎤</span>
+      <h2>Speaking</h2>
+      <p>Recorded responses to prompts, scored on fluency, pronunciation, grammar, and vocabulary.</p>
+      <span class="status soon">Coming soon</span>
+      <span class="skill-cta disabled">Not available yet</span>
+    </div>
+  </div>
+
+  <div id="writing-mocks">
+    <h2 class="section-title">Writing mocks</h2>
+    <div class="mock-list" id="mockList">
+      <!-- populated by script -->
+    </div>
+  </div>
+
+  <div class="activity" id="activity">
+    <h2 class="section-title" style="margin-bottom:8px">Recent attempts</h2>
+    <div id="activityList"></div>
+  </div>
+</main>
+</div>
+
+<div id="writingView" style="display:none">
+<header class="header">
+  <div><a href="javascript:void(0)" onclick="showHome()" style="text-decoration:none"><span class="logo">CEFR BOOST</span></a> <span class="mock">· Writing Mock 01</span></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="history-btn" id="historyBtn">📜 History</button>
+    <div class="timer" id="timer">60:00</div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="resume-banner" id="resumeBanner">🔄 We restored your saved progress — pick up any task where you left off.</div>
+
+  <div class="history-panel" id="historyPanel">
+    <h2 style="margin-top:0">📜 Your attempt history</h2>
+    <div id="historyList"></div>
+    <button class="prev" id="closeHistory" style="margin-top:10px">Close</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top"><span id="stepText">Task 1.1 of 3</span><span id="pct">33%</span></div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <section class="card" id="testCard">
+    <span class="badge" id="badge">TASK 1.1</span>
+    <h1 id="title">Informal Message</h1>
+    <div class="subtitle" id="subtitle">Recommended length: 50 words</div>
+
+    <div class="taskbox">
+      <div class="prompt" id="prompt">
+        You have received a message from your friend about a new activity at your school.
+        Write a short message to your friend. Explain what you think about the activity
+        and suggest one improvement.
+      </div>
+      <div class="instruction"><b>Your task:</b> Write your answer in the box below.</div>
+    </div>
+
+    <textarea id="answer" placeholder="Start writing here..."></textarea>
+    <div class="wordrow"><span id="range">Target: 45–55 words</span><span id="wordcount">0 words</span></div>
+
+    <div class="buttons">
+      <button class="prev" id="prev" disabled>← Previous</button>
+      <button class="next" id="next">Next →</button>
+    </div>
+  </section>
+
+  <section class="card review" id="review">
+    <h2>Review your answers</h2>
+    <p class="subtitle">Make sure you have completed all three tasks before submitting.</p>
+    <div id="reviewList"></div>
+    <button class="submit" id="submit">✓ Submit Writing Mock</button>
+  </section>
+
+  <section class="result-page" id="success">
+  <div class="result-header">
+    <div>
+      <div class="brand-small">🤖 AI SCORE RESULTS</div>
+      <h1 id="resultTitle">Scoring your writing... 🤖</h1>
+      <p id="resultSubtitle">Our AI examiner is reading your answers.</p>
+    </div>
+    <div class="result-status" id="resultStatus">⏳ Scoring</div>
+  </div>
+
+  <div class="result-card" id="loadingCard">
+    <div class="result-card-title">⏳ Please wait</div>
+    <p style="color:#606775;margin:0">This usually takes a few seconds. We're evaluating each task against CEFR criteria (task achievement, coherence, grammar, vocabulary).</p>
+  </div>
+
+  <div id="resultsContent" style="display:none">
+  <div class="score-grid">
+    <div class="score-card raw"><span>Raw Score</span><strong id="rawScoreDisplay">–/17</strong></div>
+    <div class="score-card certificate"><span>Certificate</span><strong id="certScoreDisplay">–/75</strong></div>
+    <div class="score-card cefr-card"><span>CEFR</span><strong id="cefrDisplay">–</strong></div>
+  </div>
+
+  <div class="result-card">
+    <div class="result-card-title">📝 Writing Parts</div>
+    <div class="scoring-note">
+      <b>Official raw-score structure</b>
+      <span>Task 1.1 <strong>/5</strong> · Task 1.2 <strong>/6</strong> · Task 2 <strong>/6</strong> → Overall <strong>/17</strong> → Certificate score <strong>/75</strong></span>
+    </div>
+    <div class="part-grid">
+      <button class="part-box" data-part="0"><span>✏️ Task 1.1</span><b id="pg-t11">–<small>/5</small></b></button>
+      <button class="part-box" data-part="1"><span>✏️ Task 1.2</span><b id="pg-t12">–<small>/6</small></b></button>
+      <button class="part-box" data-part="2"><span>✏️ Task 2</span><b id="pg-t2">–<small>/6</small></b></button>
+      <button class="part-box" data-part="2"><span>📊 Overall</span><b id="pg-overall">–<small>/17</small></b></button>
+    </div>
+  </div>
+
+  <div class="result-card details-card" id="details">
+    <div class="result-card-title">📋 View Details</div>
+    <div class="criteria">
+      <div><span>Task 1.1</span><b id="det-t11">–/5</b></div>
+      <div><span>Task 1.2</span><b id="det-t12">–/6</b></div>
+      <div><span>Task 2</span><b id="det-t2">–/6</b></div>
+      <div><span>Overall Raw Score</span><b id="det-overall">–/17</b></div>
+    </div>
+    <div class="feedback">
+      <b>🤖 AI Feedback</b>
+      <p id="feedbackText">–</p>
+    </div>
+  </div>
+
+  <div class="result-card">
+    <div class="result-card-title">📈 Score Conversion</div>
+    <div class="criteria">
+      <div><span>Raw Writing Score</span><b id="conv-raw">–/17</b></div>
+      <div><span>Converted Certificate Score</span><b id="conv-cert">–/75</b></div>
+      <div><span>CEFR Threshold</span><b id="conv-cefr">–</b></div>
+      <div><span>Maximum Possible</span><b>17/17 → 75/75</b></div>
+    </div>
+  </div>
+  </div>
+
+  <div class="result-card answers-card">
+    <div class="result-card-title">📋 My Answers</div>
+    <div id="savedAnswers"></div>
+  </div>
+
+  <div class="action-grid">
+    <button class="action green" id="samplesBtn">📚 See Samples</button>
+    <button class="action blue" id="vocabBtn">📖 Topic Vocabulary</button>
+    <button class="action teal" id="expertBtn">📋 Expert Score</button>
+  </div>
+
+  <div class="extra-panel" id="extraPanel"></div>
+  <button class="back-btn" id="backBtn">← Back to Mock Selection</button>
+</section>
+</main>
+</div>
+
+<script>
+let writingStarted = false;
+
+function showHome(){
+  document.getElementById("homeView").style.display="block";
+  document.getElementById("writingView").style.display="none";
+  renderMockList();
+  renderActivity();
+}
+function showWriting(){
+  document.getElementById("homeView").style.display="none";
+  document.getElementById("writingView").style.display="block";
+  if(!writingStarted){
+    writingStarted = true;
+    initWritingMock();
+  }
+}
+function startOrContinueWriting(){
+  showWriting();
+}
+
+// ============ WRITING MOCK LOGIC (constants, scoring, test flow) ============
+
+const tasks=[
+ {badge:"TASK 1.1",title:"Informal Letter (B1)",sub:"Recommended length: 50 words",range:"Target: ~50 words",
+ prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to your friend, who is also a member of the club. Write about your feelings and what you think the club management should do about the situation."},
+ {badge:"TASK 1.2",title:"Formal Letter (B2)",sub:"Recommended length: 120–150 words",range:"Target: 120–150 words",
+ prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to the manager. Write about your feelings and what you think the club management should do about the situation."},
+ {badge:"TASK 2",title:"Online Discussion Post (C1)",sub:"Recommended length: 180–200 words",range:"Target: 180–200 words",
+ prompt:"You are participating in an online discussion for language learners. The question is: \"Is it better to live in a big city or a small town?\" Post your response, giving reasons and examples."}
+];
+let index=0, answers=["","",""], seconds=3600, clockInterval=null;
+
+const STORAGE_KEY="cefrWritingProgress";
+const HISTORY_KEY="cefrWritingHistory";
+
+function saveProgress(){
+ try{
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({answers, seconds, index, savedAt:Date.now()}));
+ }catch(e){ console.warn("Could not save progress:", e); }
+}
+function clearProgress(){
+ try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+}
+function loadProgress(){
+ try{
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(!raw) return null;
+  return JSON.parse(raw);
+ }catch(e){ return null; }
+}
+function loadHistory(){
+ try{ return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]"); }catch(e){ return []; }
+}
+function saveHistoryEntry(entry){
+ try{
+  const h=loadHistory();
+  h.unshift(entry);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0,50)));
+ }catch(e){ console.warn("Could not save history:", e); }
+}
+
+const answer=document.getElementById("answer");
+const wordcount=document.getElementById("wordcount");
+function words(s){return s.trim()?s.trim().split(/\s+/).length:0}
+
+function renderTabs(){
+ const wrap=document.getElementById("tabs");
+ wrap.innerHTML=tasks.map((t,i)=>{
+  const n=words(answers[i]||"");
+  const done=n>0;
+  return `<div class="tab ${i===index?"active":""} ${done?"done":""}" data-i="${i}" role="button" tabindex="0" aria-current="${i===index?"true":"false"}"><span class="dot"></span>${t.badge.replace("TASK ","Task ")}</div>`;
+ }).join("");
+ const selectTab=(el)=>{ answers[index]=answer.value; index=parseInt(el.dataset.i); saveProgress(); render(); };
+ wrap.querySelectorAll(".tab").forEach(el=>{
+  el.onclick=()=>selectTab(el);
+  el.onkeydown=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectTab(el); } };
+ });
+}
+
+function render(){
+ const t=tasks[index];
+ document.getElementById("badge").textContent=t.badge;
+ document.getElementById("title").textContent=t.title;
+ document.getElementById("subtitle").textContent=t.sub;
+ document.getElementById("range").textContent=t.range;
+ document.getElementById("prompt").textContent=t.prompt;
+ document.getElementById("stepText").textContent=`${t.badge.replace("TASK ","Task ")} of 3`;
+ const p=Math.round((index+1)/3*100);
+ document.getElementById("pct").textContent=p+"%";
+ document.getElementById("fill").style.width=p+"%";
+ answer.value=answers[index];
+ document.getElementById("prev").disabled=index===0;
+ document.getElementById("next").textContent=index===2?"Review →":"Next →";
+ renderTabs();
+ updateCount();
+}
+function updateCount(){
+ const n=words(answer.value); wordcount.textContent=n+" words";
+ const min=index===0?45:index===1?120:180, max=index===0?55:index===1?150:200;
+ wordcount.className="wordcount "+(n>=min&&n<=max?"ok":n>max?"warn":"");
+}
+answer.addEventListener("input",()=>{answers[index]=answer.value;updateCount();renderTabs();saveProgress();});
+document.getElementById("prev").onclick=()=>{answers[index]=answer.value;if(index>0){index--;saveProgress();render()}};
+function showReview(){
+ document.getElementById("testCard").style.display="none";
+ document.getElementById("tabs").style.display="none";
+ document.querySelector(".progress-wrap").style.display="none";
+ document.getElementById("review").style.display="block";
+ document.getElementById("reviewList").innerHTML=answers.map((a,i)=>`<div class="review-item" data-i="${i}" style="cursor:pointer"><strong>${tasks[i].badge} — ${tasks[i].title} <span style="float:right;color:#6536d8;font-weight:600;font-size:13px">Edit ✎</span></strong><div class="answer">${a||"<i>No answer</i>"}</div></div>`).join("");
+ document.querySelectorAll("#reviewList .review-item").forEach(el=>{
+  el.onclick=()=>{
+   index=parseInt(el.dataset.i);
+   document.getElementById("review").style.display="none";
+   document.getElementById("testCard").style.display="block";
+   document.getElementById("tabs").style.display="flex";
+   document.querySelector(".progress-wrap").style.display="block";
+   render();
+  };
+ });
+}
+document.getElementById("next").onclick=()=>{
+ answers[index]=answer.value;
+ saveProgress();
+ if(index<2){index++;render()}else{ showReview(); }
+};
+const CALIBRATION_EXAMPLES = `Below are real graded responses to this exact test (fitness club scenario), with official examiner marks and comments. Use them to calibrate how strict your marking should be — do not just describe them, match their severity:
+
+--- Task 1.1 (max 5) ---
+Response (mark 4/5): "Hi Alex, Did you see the message from fitness club? They close for one month. I'm not so happy because I like go there every week. Maybe they can do some sport outside for us. What do you think? See you soon, Luca."
+Examiner: on topic, appropriate register, errors in grammar and word choice occur, uses simple cohesive devices.
+
+Response (mark 5/5): "Hi Ben, Did you hear the club is closing for a month? I'm really disappointed—we'll miss our workouts! I think they should offer online classes or outdoor group sessions during the break. Also, it'd be great if they improve the showers and maybe add more space in the stretching area. Take care, Nico"
+Examiner: beyond level B1 — no errors, natural, effective.
+
+--- Task 1.2 (max 6) ---
+Response (mark 2/6): on topic, but register not consistently appropriate; errors in grammar/word choice sometimes cause misunderstanding (e.g. "I feel myself little bit sad", "I like go to here"); only simple cohesive devices.
+Response (mark 3/6): on topic but not all questions fully addressed; appropriate register; a range of complex structures used; sufficient vocabulary; errors in grammar/word choice do not cause misunderstanding; some cohesive devices and referencing used.
+
+--- Task 2 (max 6) ---
+Response (mark 2/6): mostly relevant but unclear stance and some minor off-topic parts; errors in grammar/word choice sometimes cause misunderstanding; simple cohesive devices only.
+Response (mark 4/6): relevant with clear stance; range of complex structures; sufficient vocabulary; errors and awkward vocabulary usage do not cause misunderstanding; clear structure with connectors and logical flow.
+
+Reserve top marks for near error-free, well-organised, fully-developed responses. Mid marks are for competent but imperfect responses (occasional errors, simple cohesion, some unaddressed points). Low marks are for responses where errors affect understanding, or the stance/topic focus is unclear.`;
+
+/* All AI calls go through our own backend at /api/score, which holds the
+   real Anthropic API key server-side (see /api/score.js). The browser
+   never sees the API key. */
+async function callAI(sys, userContent, maxTokens){
+ const response = await fetch("/api/score", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+   system: sys,
+   messages: [{ role: "user", content: userContent }],
+   max_tokens: maxTokens || 1000
+  })
+ });
+ if(!response.ok){
+  const errText = await response.text().catch(()=> "");
+  throw new Error(`Scoring service error (${response.status}): ${errText || "no details"}`);
+ }
+ const data = await response.json();
+ const text = (data.content || []).map(b=>b.text||"").join("\n");
+ const clean = text.replace(/```json|```/g,"").trim();
+ return JSON.parse(clean);
+}
+
+async function scoreWithAI(answers){
+ const sys = `You are a certified CEFR Writing examiner (Cambridge/IELTS-style, B1–C1 range). Score three writing tasks strictly against the official assessment criteria:
+1) task achievement (topshiriqning bajarilishi)
+2) grammatical structures (grammatik strukturalar)
+3) vocabulary range (so'z boyligi)
+4) text coherence & cohesion (matn yaxlitligi va bog'lanish)
+5) punctuation & spelling (punktuatsiya va imlo)
+
+Each task uses a holistic scale: one overall mark per task, informed by all five criteria together.
+
+Scoring bands (integers only):
+- Task 1.1 (informal letter, B1 level task): 0 to 5
+- Task 1.2 (formal letter, B2 level task): 0 to 6
+- Task 2 (online discussion post, C1 level task): 0 to 6
+
+Be a fair but rigorous examiner: a near-empty or off-topic answer scores 0-1, a competent B1/B2 answer scores in the middle of the range, and only genuinely strong, accurate, well-organised writing earns the top mark. Word-count targets not met should reduce the task-achievement component.
+
+${CALIBRATION_EXAMPLES}
+
+Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
+{"task11":{"score":<int 0-5>,"comment":"<one sentence>"},"task12":{"score":<int 0-6>,"comment":"<one sentence>"},"task2":{"score":<int 0-6>,"comment":"<one sentence>"},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
+
+ const userContent = tasks.map((t,i)=>
+  `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
+ ).join("\n\n---\n\n");
+
+ return callAI(sys, userContent, 1000);
+}
+
+function renderResults(result){
+ const t11 = Math.max(0,Math.min(5, Math.round(result.task11.score)));
+ const t12 = Math.max(0,Math.min(6, Math.round(result.task12.score)));
+ const t2  = Math.max(0,Math.min(6, Math.round(result.task2.score)));
+ const raw = calculateWritingRaw(t11, t12, t2);
+ const cert = rawTo75(raw);
+ const cefr = cefrFrom75(cert);
+
+ document.getElementById("rawScoreDisplay").textContent = `${raw}/17`;
+ document.getElementById("certScoreDisplay").textContent = `${cert}/75`;
+ document.getElementById("cefrDisplay").textContent = cefr;
+
+ document.getElementById("pg-t11").firstChild.textContent = t11;
+ document.getElementById("pg-t12").firstChild.textContent = t12;
+ document.getElementById("pg-t2").firstChild.textContent = t2;
+ document.getElementById("pg-overall").firstChild.textContent = raw;
+
+ document.getElementById("det-t11").textContent = `${t11}/5`;
+ document.getElementById("det-t12").textContent = `${t12}/6`;
+ document.getElementById("det-t2").textContent = `${t2}/6`;
+ document.getElementById("det-overall").textContent = `${raw}/17`;
+
+ document.getElementById("feedbackText").textContent = result.overallFeedback || "";
+
+ document.getElementById("conv-raw").textContent = `${raw}/17`;
+ document.getElementById("conv-cert").textContent = `${cert}/75`;
+ document.getElementById("conv-cefr").textContent = cefr;
+
+ document.getElementById("resultTitle").textContent = "Thank you for completing the test! 🎉";
+ document.getElementById("resultSubtitle").textContent = "Your Writing Mock 01 results are ready.";
+ document.getElementById("resultStatus").textContent = "✓ Completed";
+ document.getElementById("loadingCard").style.display = "none";
+ document.getElementById("resultsContent").style.display = "block";
+
+ saveHistoryEntry({
+  date: new Date().toISOString(),
+  mock: "Writing Mock 01",
+  raw, max: 17, cert, cefr,
+  scores: {t11, t12, t2}
+ });
+ clearProgress();
+}
+
+function scrollToDetails(){
+ const el = document.getElementById("details");
+ if(!el) return;
+ el.scrollIntoView({behavior:"smooth", block:"start"});
+ el.style.boxShadow = "0 0 0 3px #6536d8";
+ setTimeout(()=>{ el.style.boxShadow = ""; }, 900);
+}
+document.querySelectorAll(".part-box").forEach(el=>{ el.onclick = scrollToDetails; });
+
+document.getElementById("submit").onclick=async ()=>{
+ answers[index]=answer.value;
+ document.getElementById("review").style.display="none";
+ document.querySelector(".progress-wrap").style.display="none";
+ document.querySelector(".header .timer").style.display="none";
+ document.getElementById("success").style.display="block";
+ document.getElementById("savedAnswers").innerHTML=answers.map((a,i)=>`<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title}</b><p>${a||"No answer submitted."}</p></div>`).join("");
+ clearInterval(clockInterval);
+
+ try{
+  const result = await scoreWithAI(answers);
+  renderResults(result);
+ }catch(err){
+  console.error("Scoring error:", err);
+  document.getElementById("loadingCard").innerHTML =
+   `<div class="result-card-title">⚠️ Scoring failed</div><p style="color:#606775;margin:0 0 12px">Something went wrong while scoring your answers. Please try again.</p><button class="action blue" id="retryScore" style="width:100%">Retry Scoring</button>`;
+  document.getElementById("retryScore").onclick=async ()=>{
+   document.getElementById("loadingCard").innerHTML = `<div class="result-card-title">⏳ Please wait</div><p style="color:#606775;margin:0">Retrying...</p>`;
+   try{
+    const result = await scoreWithAI(answers);
+    renderResults(result);
+   }catch(e2){
+    console.error("Retry failed:", e2);
+    document.getElementById("loadingCard").innerHTML =
+     `<div class="result-card-title">⚠️ Scoring failed again</div><p style="color:#606775;margin:0">Please try submitting again in a moment.</p>`;
+   }
+  };
+ }
+};
+function startWritingClock(){
+clockInterval=setInterval(()=>{
+ seconds--; if(seconds<0)seconds=0;
+ const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");
+ document.getElementById("timer").textContent=m+":"+s;
+ if(seconds%5===0){answers[index]=answer.value;saveProgress();}
+ if(seconds===0){
+  clearInterval(clockInterval);
+  answers[index]=answer.value;
+  alert("Time is up! Submitting your answers now.");
+  if(document.getElementById("success").style.display==="block"){
+   // already submitted, nothing to do
+  }else{
+   if(document.getElementById("review").style.display!=="block") showReview();
+   document.getElementById("submit").click();
+  }
+ }
+},1000);
+}
+
+function renderHistory(){
+ const h=loadHistory();
+ const list=document.getElementById("historyList");
+ if(!h.length){ list.innerHTML="<p style='color:#8a919e'>No past attempts yet — finish a mock to see it here.</p>"; return; }
+ list.innerHTML=h.map(e=>{
+  const d=new Date(e.date);
+  return `<div class="history-item"><div><b>${e.cert}/75 · ${e.cefr}</b><div class="hd">${e.mock} · Raw ${e.raw}/${e.max} · ${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div></div></div>`;
+ }).join("");
+}
+document.getElementById("backBtn").onclick=()=>{
+ showHome();
+};
+document.getElementById("historyBtn").onclick=()=>{
+ renderHistory();
+ document.getElementById("historyPanel").style.display="block";
+ document.getElementById("historyPanel").scrollIntoView({behavior:"smooth"});
+};
+document.getElementById("closeHistory").onclick=()=>{
+ document.getElementById("historyPanel").style.display="none";
+};
+
+function initWritingMock(){
+ const saved=loadProgress();
+ if(saved && Array.isArray(saved.answers) && saved.seconds>0){
+  answers=saved.answers;
+  seconds=saved.seconds;
+  index=Math.min(saved.index||0,2);
+  document.getElementById("resumeBanner").style.display="block";
+ }
+ render();
+ startWritingClock();
+}
+
+
+// ============ HOME VIEW LOGIC (mock list, recent activity) ============
+
+function loadJSON(key, fallback){
+  try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch(e){ return fallback; }
+}
+
+function renderMockList(){
+  const progress = loadJSON(STORAGE_KEY, null);
+  const history = loadJSON(HISTORY_KEY, []);
+  const lastResult = history[0];
+  const inProgress = progress && Array.isArray(progress.answers) && progress.answers.some(a=>a && a.trim());
+
+  let metaLine = "3 tasks · 60 minutes";
+  if(inProgress){
+    const m = Math.floor((progress.seconds||0)/60), s = String((progress.seconds||0)%60).padStart(2,"0");
+    metaLine = `In progress · ${m}:${s} left on the clock`;
+  } else if(lastResult){
+    const d = new Date(lastResult.date);
+    metaLine = `Last attempt: ${lastResult.cert}/75 · ${lastResult.cefr} · ${d.toLocaleDateString()}`;
+  }
+
+  const ctaLabel = inProgress ? "Continue →" : "Start →";
+  const ctaClass = inProgress ? "go continue" : "go";
+
+  document.getElementById("mockList").innerHTML = `
+    <div class="mock-row">
+      <div>
+        <div class="name">Writing Mock 01</div>
+        <div class="meta">${metaLine}</div>
+      </div>
+      <button class="${ctaClass}" onclick="startOrContinueWriting()">${ctaLabel}</button>
+    </div>`;
+}
+
+function renderActivity(){
+  const history = loadJSON(HISTORY_KEY, []);
+  if(!history.length) return;
+  document.getElementById("activity").style.display = "block";
+  document.getElementById("activityList").innerHTML = history.slice(0,5).map(e=>{
+    const d = new Date(e.date);
+    return `<div class="activity-item">
+      <span>${e.mock} · Raw ${e.raw}/${e.max} · ${d.toLocaleDateString()}</span>
+      <span class="cefr-pill">${e.cert}/75 · ${e.cefr}</span>
+    </div>`;
+  }).join("");
+}
+
+document.getElementById("homeHistoryBtn").onclick = () => {
+  document.getElementById("activity").scrollIntoView({behavior:"smooth"});
+};
+
+
+
+// ============ SAMPLES / VOCAB / EXPERT PANELS ============
+
+function escapeHtml(s){
+ return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+async function callClaudeJSON(sys, userContent){
+ return callAI(sys, userContent, 1200);
+}
+
+const panelCache = {};
+
+async function withPanel(key, title, loadingMsg, loader, renderer){
+ const p = document.getElementById("extraPanel");
+ p.style.display = "block";
+ if(panelCache[key]){ p.innerHTML = renderer(panelCache[key]); return; }
+ p.innerHTML = `<b>${title}</b><br><br><span style="color:#767e8c">${loadingMsg}</span>`;
+ try{
+  const result = await loader();
+  panelCache[key] = result;
+  p.innerHTML = renderer(result);
+ }catch(err){
+  console.error(key+" error:", err);
+  p.innerHTML = `<b>${title}</b><br><br><span style="color:#c23434">Something went wrong generating this. Please try again.</span>`;
+ }
+}
+
+document.getElementById("samplesBtn").onclick=()=>{
+ withPanel("samples", "📚 Sample Answers", "Writing model answers for each task...",
+  async ()=>{
+   const sys = `You are a CEFR writing teacher. For each of the three tasks below, write a strong C1-level model answer that meets the target word count. Respond with ONLY JSON, no markdown fences: {"t11":"<model answer text>","t12":"<model answer text>","t2":"<model answer text>"}`;
+   const userContent = tasks.map(t=>`${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}`).join("\n\n");
+   return callClaudeJSON(sys, userContent);
+  },
+  (r)=>`<b>📚 Sample Answers</b><br><br>` +
+   tasks.map((t,i)=>`<b>${t.badge} — ${t.title}:</b><p style="white-space:pre-wrap;margin:6px 0 14px;color:#565d6a">${escapeHtml(r[["t11","t12","t2"][i]])}</p>`).join("")
+ );
+};
+
+document.getElementById("vocabBtn").onclick=()=>{
+ withPanel("vocab", "📖 Topic Vocabulary", "Gathering useful vocabulary for these topics...",
+  async ()=>{
+   const sys = `You are a CEFR writing teacher. Based on the topics of the tasks below, produce useful topic-specific vocabulary and collocations a candidate could use to raise their score. Respond with ONLY JSON, no markdown fences: {"sections":[{"heading":"<short heading>","items":["item1","item2", "..."]}]} Provide 2-4 sections, each with 5-8 items.`;
+   const userContent = tasks.map(t=>`${t.badge} — ${t.title}\nPrompt: ${t.prompt}`).join("\n\n");
+   return callClaudeJSON(sys, userContent);
+  },
+  (r)=>`<b>📖 Topic Vocabulary</b><br><br>` +
+   r.sections.map(s=>`<b>${escapeHtml(s.heading)}:</b> ${s.items.map(escapeHtml).join(" · ")}<br><br>`).join("")
+ );
+};
+
+document.getElementById("expertBtn").onclick=()=>{
+ withPanel("expert", "📋 Expert Score", "Running a detailed criteria-by-criteria evaluation...",
+  async ()=>{
+   const sys = `You are a senior CEFR writing examiner giving a detailed second-opinion evaluation, on top of an existing quick AI score. For each of the three tasks, rate on a 1-5 scale (5=excellent) across the five official criteria: Task Achievement, Grammatical Structures, Vocabulary Range, Text Coherence & Cohesion, Punctuation & Spelling. Then give one short comment per task. Respond with ONLY JSON, no markdown fences:
+{"task11":{"taskAchievement":<1-5>,"grammar":<1-5>,"vocabulary":<1-5>,"coherence":<1-5>,"punctuation":<1-5>,"comment":"<one sentence>"},
+"task12":{"taskAchievement":<1-5>,"grammar":<1-5>,"vocabulary":<1-5>,"coherence":<1-5>,"punctuation":<1-5>,"comment":"<one sentence>"},
+"task2":{"taskAchievement":<1-5>,"grammar":<1-5>,"vocabulary":<1-5>,"coherence":<1-5>,"punctuation":<1-5>,"comment":"<one sentence>"}}`;
+   const userContent = tasks.map((t,i)=>
+    `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
+   ).join("\n\n---\n\n");
+   return callClaudeJSON(sys, userContent);
+  },
+  (r)=>{
+   const rows = (key,label)=>tasks.map((t,i)=>{
+    const d = r[["task11","task12","task2"][i]];
+    return `<div><span>${t.badge} ${label}</span><b>${d[key]}/5</b></div>`;
+   }).join("");
+   const comments = tasks.map((t,i)=>{
+    const d = r[["task11","task12","task2"][i]];
+    return `<b>${t.badge}:</b> ${escapeHtml(d.comment)}<br><br>`;
+   }).join("");
+   return `<b>📋 Expert Score (detailed)</b><br><br>
+    <div class="criteria" style="margin-bottom:12px">${rows("taskAchievement","Task Achievement")}</div>
+    <div class="criteria" style="margin-bottom:12px">${rows("grammar","Grammar")}</div>
+    <div class="criteria" style="margin-bottom:12px">${rows("vocabulary","Vocabulary")}</div>
+    <div class="criteria" style="margin-bottom:12px">${rows("coherence","Coherence")}</div>
+    <div class="criteria" style="margin-bottom:14px">${rows("punctuation","Punctuation & Spelling")}</div>
+    ${comments}`;
+  }
+ );
+};
+
+
+// Start on the home view
+showHome();
+</script>
+</body>
+</html>
