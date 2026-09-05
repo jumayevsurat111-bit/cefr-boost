@@ -29,7 +29,39 @@ const ADMIN_EMAIL = "jumayevsurat111@gmail.com";
     box.innerHTML = "<h2>Kirish taqiqlangan</h2><p>Bu sahifa faqat admin uchun.</p>";
     return;
   }
-  box.innerHTML = "<h2>Admin Panel</h2><p>Xush kelibsiz, admin!</p>";
+  box.innerHTML = "<h2>Admin Panel</h2><p>box.innerHTML = `
+  <h2>Admin Panel</h2>
+  <p>Yangi Writing mock qo'shish:</p>
+  <input id="m_title" placeholder="Test nomi (masalan: Writing Mock 02)">
+  <input id="m_t11_title" placeholder="Task 1.1 sarlavhasi">
+  <textarea id="m_t11_prompt" placeholder="Task 1.1 savoli" rows="3"></textarea>
+  <input id="m_t11_length" placeholder="Task 1.1 uzunlik (masalan: 45-55 words)">
+  <input id="m_t12_title" placeholder="Task 1.2 sarlavhasi">
+  <textarea id="m_t12_prompt" placeholder="Task 1.2 savoli" rows="3"></textarea>
+  <input id="m_t12_length" placeholder="Task 1.2 uzunlik">
+  <input id="m_t2_title" placeholder="Task 2 sarlavhasi">
+  <textarea id="m_t2_prompt" placeholder="Task 2 savoli" rows="3"></textarea>
+  <input id="m_t2_length" placeholder="Task 2 uzunlik">
+  <button id="saveMockBtn">Saqlash</button>
+  <div id="saveMsg" style="margin-top:10px"></div>
+`;
+
+document.getElementById("saveMockBtn").addEventListener("click", async () => {
+  const { error } = await supabaseClient.from("mocks").insert({
+    title: document.getElementById("m_title").value,
+    task11_title: document.getElementById("m_t11_title").value,
+    task11_prompt: document.getElementById("m_t11_prompt").value,
+    task11_length: document.getElementById("m_t11_length").value,
+    task12_title: document.getElementById("m_t12_title").value,
+    task12_prompt: document.getElementById("m_t12_prompt").value,
+    task12_length: document.getElementById("m_t12_length").value,
+    task2_title: document.getElementById("m_t2_title").value,
+    task2_prompt: document.getElementById("m_t2_prompt").value,
+    task2_length: document.getElementById("m_t2_length").value,
+    is_active: true
+  });
+  document.getElementById("saveMsg").textContent = error ? "Xato: " + error.message : "✅ Saqlandi!";
+});;
 })();
 </script>
 </body>
