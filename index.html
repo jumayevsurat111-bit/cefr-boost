@@ -203,8 +203,28 @@ function cefrFrom75(score){
 }
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseClient = supabase.createClient(
+    "https://sgvfmqxwhypjoxcaxanh.supabase.co",
+    "sb_publishable_RJM4SqD7iTiUX4wJLLMOTA_g5peTZAx"
+  );
+</script>  
 </head>
 <body>
+<div id="authModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:#fff;padding:24px;border-radius:12px;width:320px;max-width:90%;">
+    <h2 id="authTitle" style="margin-top:0;">Kirish</h2>
+    <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:10px;margin-bottom:8px;box-sizing:border-box;">
+    <input id="authPassword" type="password" placeholder="Parol" style="width:100%;padding:10px;margin-bottom:8px;box-sizing:border-box;">
+    <div id="authError" style="color:red;font-size:13px;margin-bottom:8px;"></div>
+    <button id="authSubmitBtn" style="width:100%;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer;">Kirish</button>
+    <p style="text-align:center;margin-top:12px;font-size:14px;">
+      <span id="authToggleText">Akkountingiz yo'qmi?</span>
+      <a href="#" id="authToggleLink">Ro'yxatdan o'tish</a>
+    </p>
+  </div>
+</div> 
 
 <div id="homeView">
 <header class="header">
@@ -887,6 +907,51 @@ document.getElementById("expertBtn").onclick=()=>{
 
 // Start on the home view
 showHome();
+</script>
+<script>
+  let isLogin = true;
+
+  document.getElementById("authToggleLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    isLogin = !isLogin;
+    document.getElementById("authTitle").textContent = isLogin ? "Kirish" : "Ro'yxatdan o'tish";
+    document.getElementById("authSubmitBtn").textContent = isLogin ? "Kirish" : "Ro'yxatdan o'tish";
+    document.getElementById("authToggleText").textContent = isLogin ? "Akkountingiz yo'qmi?" : "Akkountingiz bormi?";
+    document.getElementById("authToggleLink").textContent = isLogin ? "Ro'yxatdan o'tish" : "Kirish";
+    document.getElementById("authError").textContent = "";
+  });
+
+  document.getElementById("authSubmitBtn").addEventListener("click", async () => {
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+    const errorEl = document.getElementById("authError");
+    errorEl.textContent = "";
+
+    if (!email || !password) {
+      errorEl.textContent = "Email va parolni to'ldiring.";
+      return;
+    }
+
+    let result;
+    if (isLogin) {
+      result = await supabaseClient.auth.signInWithPassword({ email, password });
+    } else {
+      result = await supabaseClient.auth.signUp({ email, password });
+    }
+
+    if (result.error) {
+      errorEl.textContent = result.error.message;
+    } else {
+      document.getElementById("authModal").style.display = "none";
+    }
+  });
+
+  (async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session) {
+      document.getElementById("authModal").style.display = "none";
+    }
+  })();
 </script>
 </body>
 </html>
