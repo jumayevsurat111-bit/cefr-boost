@@ -947,7 +947,7 @@ function tarjimaXato(msg) {
     document.getElementById("authToggleLink").textContent = isLogin ? "Ro'yxatdan o'tish" : "Kirish";
     document.getElementById("authError").textContent = "";
   });
- errorEl.textContent = tarjimaXato(result.error.message);
+ 
   document.getElementById("authSubmitBtn").addEventListener("click", async () => {
     const email = document.getElementById("authEmail").value.trim();
     const password = document.getElementById("authPassword").value;
@@ -967,7 +967,7 @@ function tarjimaXato(msg) {
     }
 
     if (result.error) {
-  errorEl.textContent = result.error.message;
+  errorEl.textContent = tarjimaXato(result.error.message);
 } else if (!isLogin) {
   errorEl.style.color = "green";
   errorEl.textContent = "✅ Ro'yxatdan o'tdingiz! Emailingizga yuborilgan havolani bosib tasdiqlang, so'ng qayta kiring.";
