@@ -16,8 +16,8 @@ a,button,.tab,.part-box{outline:none}
 a:focus-visible,button:focus-visible,.tab:focus-visible,.part-box:focus-visible,textarea:focus-visible{outline:2px solid #6536d8;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
-.header{background:#fff;border-bottom:1px solid #e7e9ef;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
-.logo{font-size:21px;font-weight:800;color:#4338ca}
+.header{background:#fff;border-bottom:1px solid #e7e9ef;padding:16px 24px;display:flex;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px #0000000a;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.logo{font-size:21px;font-weight:800;background:linear-gradient(135deg,#4338ca,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .header-history{background:#eef0ff;color:#5b2bc8;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;border:0}
 
 .home-container{max-width:960px;margin:0 auto;padding:0 18px 60px}
@@ -248,7 +248,7 @@ function cefrFrom75(score){
 
 <div id="homeView">
 <header class="header">
-  <span class="logo">CEFR BOOST</span>
+  <span class="logo">🚀 CEFR BOOST</span>
   <button class="header-history" id="homeHistoryBtn">📜 Recent activity</button>
   <span id="userEmailDisplay" style="margin-left:8px;font-size:13px;color:#5b2bc8;"></span>
   <button id="logoutBtn" style="margin-left:8px;padding:8px 14px;border-radius:8px;border:1px solid #e7e9ef;background:#fff;cursor:pointer;font-size:13px;">🚪 Chiqish</button>
