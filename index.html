@@ -230,6 +230,8 @@ function cefrFrom75(score){
 <header class="header">
   <span class="logo">CEFR BOOST</span>
   <button class="header-history" id="homeHistoryBtn">📜 Recent activity</button>
+  <button id="logoutBtn" style="margin-left:8px;padding:8px 14px;border-radius:8px;border:1px solid #e7e9ef;background:#fff;cursor:pointer;font-size:13px;">🚪 Chiqish</button>
+  
 </header>
 
 <main class="home-container">
@@ -952,6 +954,10 @@ showHome();
       document.getElementById("authModal").style.display = "none";
     }
   })();
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  location.reload();
+});
 </script>
 </body>
 </html>
