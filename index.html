@@ -218,7 +218,12 @@ function cefrFrom75(score){
     <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:10px;margin-bottom:8px;box-sizing:border-box;">
     <input id="authPassword" type="password" placeholder="Parol" style="width:100%;padding:10px;margin-bottom:8px;box-sizing:border-box;">
     <div id="authError" style="color:red;font-size:13px;margin-bottom:8px;"></div>
-    <button id="authSubmitBtn" style="width:100%;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer;">Kirish</button>
+    <button id="authSubmitBtn" style="width:100%;padding:10px;background:#2563eb;color:#fff;border:no
+     ne;border-radius:6px;cursor:pointer;">Kirish</button>
+    <div style="text-align:center;margin:12px 0;color:#999;font-size:13px;">yoki</div>
+<button id="googleLoginBtn" style="width:100%;padding:10px;background:#fff;color:#333;border:1px solid #ddd;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+  <img src="https://www.google.com/favicon.ico" style="width:16px;height:16px;"> Google orqali kirish
+</button>
     <p style="text-align:center;margin-top:12px;font-size:14px;">
       <span id="authToggleText">Akkountingiz yo'qmi?</span>
       <a href="#" id="authToggleLink">Ro'yxatdan o'tish</a>
@@ -921,6 +926,9 @@ showHome();
 </script>
 <script>
   let isLogin = true;
+  document.getElementById("googleLoginBtn").addEventListener("click", async () => {
+  await supabaseClient.auth.signInWithOAuth({ provider: "google" });
+});
 function tarjimaXato(msg) {
   const xatolar = {
     "Invalid login credentials": "Email yoki parol noto'g'ri",
