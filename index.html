@@ -626,6 +626,14 @@ function renderResults(result){
  document.getElementById("rawScoreDisplay").textContent = `${raw}/17`;
  document.getElementById("certScoreDisplay").textContent = `${cert}/75`;
  document.getElementById("cefrDisplay").textContent = cefr;
+supabaseClient.from("Results").insert({
+  mock_name: "Writing Mock 01",
+  raw_score: raw,
+  certificate_score: cert,
+  cefr_level: cefr
+}).then(({error}) => {
+  if (error) console.error("Bazaga saqlashda xato:", error);
+});
 
  document.getElementById("pg-t11").firstChild.textContent = t11;
  document.getElementById("pg-t12").firstChild.textContent = t12;
