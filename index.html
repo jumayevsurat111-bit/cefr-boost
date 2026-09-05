@@ -921,7 +921,23 @@ showHome();
 </script>
 <script>
   let isLogin = true;
-
+function tarjimaXato(msg) {
+  const xatolar = {
+    "Invalid login credentials": "Email yoki parol noto'g'ri",
+    "User already registered": "Bu email allaqachon ro'yxatdan o'tgan",
+    "Email not confirmed": "Avval emailingizni tasdiqlang",
+    "Password should be at least 6 characters": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
+    "Unable to validate email address: invalid format": "Email manzili noto'g'ri formatda",
+    "Signup requires a valid password": "To'g'ri parol kiriting"
+  };
+  for (const key in xatolar) {
+    if (msg.includes(key)) return xatolar[key];
+  }
+  if (msg.toLowerCase().includes("rate limit") || msg.toLowerCase().includes("security purposes")) {
+    return "Juda tez-tez urinyapsiz. Bir necha soniya kutib, qayta urinib ko'ring.";
+  }
+  return msg;
+}
   document.getElementById("authToggleLink").addEventListener("click", (e) => {
     e.preventDefault();
     isLogin = !isLogin;
@@ -931,12 +947,12 @@ showHome();
     document.getElementById("authToggleLink").textContent = isLogin ? "Ro'yxatdan o'tish" : "Kirish";
     document.getElementById("authError").textContent = "";
   });
-
+ errorEl.textContent = tarjimaXato(result.error.message);
   document.getElementById("authSubmitBtn").addEventListener("click", async () => {
     const email = document.getElementById("authEmail").value.trim();
     const password = document.getElementById("authPassword").value;
     const errorEl = document.getElementById("authError");
-    errorEl.textContent = "";
+    
 
     if (!email || !password) {
       errorEl.textContent = "Email va parolni to'ldiring.";
