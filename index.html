@@ -950,10 +950,13 @@ showHome();
     }
 
     if (result.error) {
-      errorEl.textContent = result.error.message;
-    } else {
-      document.getElementById("authModal").style.display = "none";
-    }
+  errorEl.textContent = result.error.message;
+} else if (!isLogin) {
+  errorEl.style.color = "green";
+  errorEl.textContent = "✅ Ro'yxatdan o'tdingiz! Emailingizga yuborilgan havolani bosib tasdiqlang, so'ng qayta kiring.";
+} else {
+  document.getElementById("authModal").style.display = "none";
+}
   });
 
   (async () => {
