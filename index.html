@@ -552,7 +552,7 @@ const STORAGE_KEY="cefrWritingProgress";
 const HISTORY_KEY="cefrWritingHistory";
 function saveProgress(){
  try{
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({answers, seconds, index, savedAt:Date.now()}));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({answers, seconds, index, savedAt:Date.now(), mockName: currentMockName}));
  }catch(e){ console.warn("Could not save progress:", e); }
 }
 function clearProgress(){
@@ -859,11 +859,16 @@ function loadJSON(key, fallback){
   }).join("");
 
   document.querySelectorAll(".writing-start-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.dataset.mockid;
-      const mock = allMocks.find(m => String(m.id) === id);
-      loadMockTasks(mock);
-      startOrContinueWriting();
+   btn.addEventListener("click", () => {
+  const id = btn.dataset.mockid;
+  const mock = allMocks.find(m => String(m.id) === id);
+  const saved = loadProgress();
+  if(!saved || saved.mockName !== mock.title){
+    clearProgress();
+  }
+  loadMockTasks(mock);
+  startOrContinueWriting();
+}); 
     });
   });
 }
