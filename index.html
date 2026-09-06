@@ -305,15 +305,17 @@ async function updateAvatar() {
   const name = user.user_metadata?.full_name || user.email;
   document.getElementById("userAvatar").textContent = name.charAt(0).toUpperCase();
 }
-const darkToggle = document.getElementById("darkToggle");
-if (localStorage.getItem("darkMode") === "true") {
-  document.body.classList.add("dark");
-  darkToggle.checked = true;
-}
-darkToggle.addEventListener("change", () => {
-  document.body.classList.toggle("dark", darkToggle.checked);
-  localStorage.setItem("darkMode", darkToggle.checked);
-}); 
+window.addEventListener("load", function() {
+  const darkToggle = document.getElementById("darkToggle");
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+    darkToggle.checked = true;
+  }
+  darkToggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark", darkToggle.checked);
+    localStorage.setItem("darkMode", darkToggle.checked);
+  });
+});
 
 document.getElementById("addVocabBtn").addEventListener("click", async () => {
   const word = document.getElementById("v_word").value.trim();
