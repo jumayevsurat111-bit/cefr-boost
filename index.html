@@ -773,6 +773,7 @@ document.getElementById("submit").onclick=async ()=>{
  }
 };
 function startWritingClock(){
+clearInterval(clockInterval);
 clockInterval=setInterval(()=>{
  seconds--; if(seconds<0)seconds=0;
  const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");
