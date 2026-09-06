@@ -890,31 +890,7 @@ function loadMockTasks(mock){
   answers = ["","",""];
   seconds = 3600;
 }
-  else if(lastResult){
-    const d = new Date(lastResult.date);
-    metaLine = `Last attempt: ${lastResult.cert}/75 · ${lastResult.cefr} · ${d.toLocaleDateString()}`;
-  }
-  const buttonText = inProgress ? "Continue →" : "Start →";
-  document.getElementById("mockList").innerHTML = `
-    <div class="mock-row">
-      <div class="mock-info">
-        <div class="name">Writing Mock 01</div>
-        <div class="meta">${metaLine}</div>
-      </div>
-      <button
-        type="button"
-        class="go writing-start-btn"
-        id="writingStartBtn">
-        ${buttonText}
-      </button>
-    </div>
-  `;
-  const startButton = document.getElementById("writingStartBtn");
-  if(startButton){
-    startButton.addEventListener("click", function(){
-      startOrContinueWriting();
-    });
-  }
+  
 }
 function renderActivity(){
   const history = loadJSON(HISTORY_KEY, []);
