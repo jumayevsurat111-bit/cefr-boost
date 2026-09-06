@@ -531,10 +531,8 @@ function showHome(){
 function showWriting(){
   document.getElementById("homeView").style.display="none";
   document.getElementById("writingView").style.display="block";
-  if(!writingStarted){
-    writingStarted = true;
-    initWritingMock();
-  }
+  writingStarted = true;
+  initWritingMock();
 }
 function startOrContinueWriting(){
   showWriting();
