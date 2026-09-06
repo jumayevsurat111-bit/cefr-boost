@@ -540,7 +540,8 @@ function startOrContinueWriting(){
   showWriting();
 }
 // ============ WRITING MOCK LOGIC (constants, scoring, test flow) ============
-const tasks=[
+let currentMockName = "Writing Mock 01";
+ let tasks=[
  {badge:"TASK 1.1",title:"Informal Letter (B1)",sub:"Recommended length: 50 words",range:"Target: ~50 words",
  prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to your friend, who is also a member of the club. Write about your feelings and what you think the club management should do about the situation."},
  {badge:"TASK 1.2",title:"Formal Letter (B2)",sub:"Recommended length: 120–150 words",range:"Target: 120–150 words",
@@ -705,7 +706,7 @@ function renderResults(result){
  document.getElementById("certScoreDisplay").textContent = `${cert}/75`;
  document.getElementById("cefrDisplay").textContent = cefr;
 supabaseClient.from("Results").insert({
-  mock_name: "Writing Mock 01",
+  mock_name: currentMockName,
   raw_score: raw,
   certificate_score: cert,
   cefr_level: cefr
@@ -828,20 +829,69 @@ function loadJSON(key, fallback){
   try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
   catch(e){ return fallback; }
 }
-function renderMockList(){
-  const progress = loadJSON(STORAGE_KEY, null);
+async function renderMockList(){
+  const { data: mocksData, error } = await supabaseClient
+    .from("mocks")
+    .select("*")
+    .eq("is_active", true)
+    .order("created_at", { ascending: true });
+
   const history = loadJSON(HISTORY_KEY, []);
-  const lastResult = history[0];
-  const inProgress =
-    progress &&
-    Array.isArray(progress.answers) &&
-    progress.answers.some(a => a && a.trim());
-  let metaLine = "3 tasks · 60 minutes";
-  if(inProgress){
-    const m = Math.floor((progress.seconds || 0) / 60);
-    const s = String((progress.seconds || 0) % 60).padStart(2,"0");
-    metaLine = `In progress · ${m}:${s} left on the clock`;
-  } 
+  const listEl = document.getElementById("mockList");
+
+  const builtIn = { id: "builtin", title: "Writing Mock 01" };
+  const allMocks = [builtIn, ...(mocksData || [])];
+
+  listEl.innerHTML = allMocks.map(m => {
+    const lastResult = history.find(h => h.mock === m.title);
+    let metaLine = "3 tasks · 60 minutes";
+    if(lastResult){
+      const d = new Date(lastResult.date);
+      metaLine = `Last attempt: ${lastResult.cert}/75 · ${lastResult.cefr} · ${d.toLocaleDateString()}`;
+    }
+    return `
+      <div class="mock-row">
+        <div class="mock-info">
+          <div class="name">${m.title}</div>
+          <div class="meta">${metaLine}</div>
+        </div>
+        <button type="button" class="go writing-start-btn" data-mockid="${m.id}">Start →</button>
+      </div>`;
+  }).join("");
+
+  document.querySelectorAll(".writing-start-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.mockid;
+      const mock = allMocks.find(m => String(m.id) === id);
+      loadMockTasks(mock);
+      startOrContinueWriting();
+    });
+  });
+}
+
+function loadMockTasks(mock){
+  currentMockName = mock.title;
+  if(mock.id === "builtin"){
+    tasks = [
+      {badge:"TASK 1.1",title:"Informal Letter (B1)",sub:"Recommended length: 50 words",range:"Target: ~50 words",
+      prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to your friend, who is also a member of the club. Write about your feelings and what you think the club management should do about the situation."},
+      {badge:"TASK 1.2",title:"Formal Letter (B2)",sub:"Recommended length: 120–150 words",range:"Target: 120–150 words",
+      prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to the manager. Write about your feelings and what you think the club management should do about the situation."},
+      {badge:"TASK 2",title:"Online Discussion Post (C1)",sub:"Recommended length: 180–200 words",range:"Target: 180–200 words",
+      prompt:"You are participating in an online discussion for language learners. The question is: \"Is it better to live in a big city or a small town?\" Post your response, giving reasons and examples."}
+    ];
+  } else {
+    tasks = [
+      {badge:"TASK 1.1", title: mock.task11_title||"Task 1.1", sub:`Recommended length: ${mock.task11_length||""}`, range:`Target: ${mock.task11_length||""}`, prompt: mock.task11_prompt||""},
+      {badge:"TASK 1.2", title: mock.task12_title||"Task 1.2", sub:`Recommended length: ${mock.task12_length||""}`, range:`Target: ${mock.task12_length||""}`, prompt: mock.task12_prompt||""},
+      {badge:"TASK 2", title: mock.task2_title||"Task 2", sub:`Recommended length: ${mock.task2_length||""}`, range:`Target: ${mock.task2_length||""}`, prompt: mock.task2_prompt||""}
+    ];
+  }
+  writingStarted = false;
+  index = 0;
+  answers = ["","",""];
+  seconds = 3600;
+}
   else if(lastResult){
     const d = new Date(lastResult.date);
     metaLine = `Last attempt: ${lastResult.cert}/75 · ${lastResult.cefr} · ${d.toLocaleDateString()}`;
