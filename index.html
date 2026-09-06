@@ -827,7 +827,7 @@ function loadJSON(key, fallback){
   try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
   catch(e){ return fallback; }
 }
-async function renderMockList(){
+async async function renderMockList(){
   const { data: mocksData, error } = await supabaseClient
     .from("mocks")
     .select("*")
