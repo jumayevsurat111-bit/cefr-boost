@@ -253,6 +253,43 @@ async function loadVocab() {
 }
 
 async function deleteVocab(id) {
+ async function showProfile() {
+  document.getElementById("profileModal").style.display = "block";
+  const { data } = await supabaseClient.auth.getSession();
+  const user = data.session.user;
+  document.getElementById("profileEmail").textContent = user.email;
+  document.getElementById("p_name").value = user.user_metadata?.full_name || "";
+
+  const { count } = await supabaseClient.from("Results").select("*", { count: "exact", head: true });
+  document.getElementById("profileTestCount").textContent = count ?? 0;
+}
+
+document.getElementById("saveNameBtn").addEventListener("click", async () => {
+  const name = document.getElementById("p_name").value.trim();
+  const { error } = await supabaseClient.auth.updateUser({ data: { full_name: name } });
+  const msg = document.getElementById("profileMsg");
+  msg.style.color = error ? "red" : "green";
+  msg.textContent = error ? tarjimaXato(error.message) : "✅ Ism saqlandi!";
+  if (!error) updateAvatar();
+});
+
+document.getElementById("savePassBtn").addEventListener("click", async () => {
+  const pass = document.getElementById("p_newpass").value;
+  const msg = document.getElementById("profileMsg");
+  if (pass.length < 6) { msg.style.color = "red"; msg.textContent = "Parol kamida 6 belgidan iborat bo'lsin"; return; }
+  const { error } = await supabaseClient.auth.updateUser({ password: pass });
+  msg.style.color = error ? "red" : "green";
+  msg.textContent = error ? tarjimaXato(error.message) : "✅ Parol yangilandi!";
+  document.getElementById("p_newpass").value = "";
+});
+
+async function updateAvatar() {
+  const { data } = await supabaseClient.auth.getSession();
+  if (!data.session) return;
+  const user = data.session.user;
+  const name = user.user_metadata?.full_name || user.email;
+  document.getElementById("userAvatar").textContent = name.charAt(0).toUpperCase();
+}
   await supabaseClient.from("vocabulary").delete().eq("id", id);
   loadVocab();
 }
@@ -333,7 +370,7 @@ function cefrFrom75(score){
 <header class="header">
   <span class="logo">🚀 CEFR BOOST</span>
   <button class="header-history" id="homeHistoryBtn">📜 Recent activity</button>
-  <span id="userEmailDisplay" style="margin-left:8px;font-size:13px;color:#5b2bc8;"></span>
+  <span id="userAvatar" onclick="showProfile()" style="margin-left:8px;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;font-size:14px;"></span>
   <button id="logoutBtn" style="margin-left:8px;padding:8px 14px;border-radius:8px;border:1px solid #e7e9ef;background:#fff;cursor:pointer;font-size:13px;">🚪 Chiqish</button>
   
 </header>
@@ -1083,12 +1120,12 @@ function tarjimaXato(msg) {
   });
 
   (async () => {
-    const { data } = await supabaseClient.auth.getSession();
-    if (data.session) {
-    document.getElementById("userEmailDisplay").textContent = data.session.user.email;
-      document.getElementById("authModal").style.display = "none";
-    }
-  })();
+  const { data } = await supabaseClient.auth.getSession();
+  if (data.session) {
+    document.getElementById("authModal").style.display = "none";
+    updateAvatar();
+  }
+})();
   document.getElementById("logoutBtn").addEventListener("click", async () => {
   await supabaseClient.auth.signOut();
   location.reload();
@@ -1127,6 +1164,27 @@ function tarjimaXato(msg) {
     <input id="v_example" placeholder="Misol gap (ixtiyoriy)" style="width:100%;padding:10px;margin-bottom:8px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;">
     <button id="addVocabBtn" style="width:100%;padding:10px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;margin-bottom:16px;">+ Qo'shish</button>
     <div id="vocabList">Yuklanmoqda...</div>
+  </div>
+</div>
+ <div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
+  <div style="background:#fff;max-width:420px;margin:60px auto;padding:24px;border-radius:20px;max-height:75vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2 style="margin:0;font-size:20px;">👤 Profil</h2>
+      <button onclick="document.getElementById('profileModal').style.display='none'" style="border:none;background:#f1f2f5;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+    <div id="profileEmail" style="color:#6b7280;margin-bottom:16px;"></div>
+    <div style="background:#f8f9fc;border-radius:12px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:13px;color:#9aa1ad;">Yechilgan testlar</div>
+      <div id="profileTestCount" style="font-size:24px;font-weight:800;color:#4338ca;">-</div>
+    </div>
+    <label style="font-size:13px;font-weight:600;color:#374151;">Ismingiz</label>
+    <input id="p_name" placeholder="Ismingizni kiriting" style="width:100%;padding:10px;margin:6px 0 12px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;">
+    <button id="saveNameBtn" style="width:100%;padding:10px;background:#4338ca;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-bottom:20px;">Ismni saqlash</button>
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Yangi parol</label>
+    <input id="p_newpass" type="password" placeholder="Yangi parol (kamida 6 belgi)" style="width:100%;padding:10px;margin:6px 0 12px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;">
+    <button id="savePassBtn" style="width:100%;padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;">Parolni yangilash</button>
+    <div id="profileMsg" style="margin-top:10px;font-size:13px;"></div>
   </div>
 </div>
 </body>
