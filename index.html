@@ -290,9 +290,7 @@ async function updateAvatar() {
   const name = user.user_metadata?.full_name || user.email;
   document.getElementById("userAvatar").textContent = name.charAt(0).toUpperCase();
 }
-  await supabaseClient.from("vocabulary").delete().eq("id", id);
-  loadVocab();
-}
+  
 
 document.getElementById("addVocabBtn").addEventListener("click", async () => {
   const word = document.getElementById("v_word").value.trim();
