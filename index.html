@@ -380,9 +380,23 @@ function cefrFrom75(score){
   
 </header>
 <main class="home-container">
-  <section class="hero">
-    <h1>Which skill do you want to practice?</h1>
-    <p>Timed mock tests with AI scoring against official CEFR criteria, plus a certificate score out of 75.</p>
+   <section style="padding-top:6px;margin-bottom:22px;">
+    <div id="dashGreeting" style="font-size:22px;font-weight:800;margin-bottom:16px;">Xayrli kun 👋</div>
+    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:18px;padding:22px;color:#fff;margin-bottom:16px;">
+      <div style="font-size:13px;opacity:0.85;margin-bottom:4px;">Sizning CEFR darajangiz</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <span id="dashLevel" style="font-size:34px;font-weight:800;">—</span>
+        <span id="dashScore" style="font-size:15px;opacity:0.9;">0 / 75</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,0.25);border-radius:3px;margin-top:12px;overflow:hidden;">
+        <div id="dashProgressBar" style="height:100%;width:0%;background:#fff;border-radius:3px;transition:width .4s;"></div>
+      </div>
+    </div>
+    <div id="continueCard" style="display:none;background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:20px;cursor:pointer;box-shadow:0 5px 20px #0000000c;">
+      <div style="font-size:12px;color:#888;margin-bottom:2px;">Davom eting</div>
+      <div id="continueMockName" style="font-weight:700;font-size:15px;margin-bottom:8px;">—</div>
+      <div style="color:#4338ca;font-weight:700;font-size:14px;">Davom etish →</div>
+    </div>
   </section>
   <div class="skill-grid">
     <div class="skill-card">
@@ -547,7 +561,28 @@ function showHome(){
   document.getElementById("writingView").style.display="none";
   renderMockList();
   renderActivity();
+  renderDashboard();
 }
+function renderDashboard(){
+  const history = loadJSON(HISTORY_KEY, []);
+  if(history.length){
+    const best = history.reduce((a,b)=> b.cert > a.cert ? b : a);
+    document.getElementById("dashLevel").textContent = best.cefr;
+    document.getElementById("dashScore").textContent = `${best.cert} / 75`;
+    document.getElementById("dashProgressBar").style.width = `${(best.cert/75)*100}%`;
+  }
+  const saved = loadProgress();
+  const cc = document.getElementById("continueCard");
+  if(saved && saved.mockName){
+    cc.style.display = "block";
+    document.getElementById("continueMockName").textContent = saved.mockName;
+  } else {
+    cc.style.display = "none";
+  }
+}
+document.getElementById("continueCard").onclick = () => {
+  document.getElementById("writing-mocks").scrollIntoView({behavior:"smooth"});
+};
 function showWriting(){
   document.getElementById("homeView").style.display="none";
   document.getElementById("writingView").style.display="block";
