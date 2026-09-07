@@ -495,10 +495,21 @@ function cefrFrom75(score){
     <div class="result-status" id="resultStatus">⏳ Scoring</div>
   </div>
   <div class="result-card" id="loadingCard">
-    <div class="result-card-title">⏳ Please wait</div>
-    <p style="color:#606775;margin:0">This usually takes a few seconds. We're evaluating each task against CEFR criteria (task achievement, coherence, grammar, vocabulary).</p>
+    <div style="text-align:center;padding:10px 0 4px;">
+      <div style="font-size:40px;margin-bottom:10px;animation:pulse 1.4s ease-in-out infinite;">🤖</div>
+      <div style="font-weight:700;font-size:15px;margin-bottom:14px;">Yozuvingiz baholanmoqda...</div>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;text-align:left;">
+        <div style="font-size:13px;color:#606775;">✓ Task Achievement</div>
+        <div style="font-size:13px;color:#606775;">✓ Coherence</div>
+        <div style="font-size:13px;color:#9aa1ad;">⏳ Vocabulary</div>
+        <div style="font-size:13px;color:#9aa1ad;">⏳ Grammar</div>
+      </div>
+      <div style="font-size:12px;color:#9aa1ad;margin-top:16px;">Odatda 10–30 soniya davom etadi</div>
+    </div>
   </div>
+  <style>@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.75}}</style>
   <div id="resultsContent" style="display:none">
+  <div id="motivationBanner" style="display:none;background:#fff7e6;border:1px solid #ffe4a8;border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:center;font-weight:700;color:#9b6a00;font-size:14.5px;"></div>
   <div class="score-grid">
     <div class="score-card raw"><span>Raw Score</span><strong id="rawScoreDisplay">–/17</strong></div>
     <div class="score-card certificate"><span>Certificate</span><strong id="certScoreDisplay">–/75</strong></div>
@@ -758,6 +769,20 @@ function renderResults(result){
  document.getElementById("rawScoreDisplay").textContent = `${raw}/17`;
  document.getElementById("certScoreDisplay").textContent = `${cert}/75`;
  document.getElementById("cefrDisplay").textContent = cefr;
+  document.getElementById("cefrDisplay").textContent = cefr;
+ const banner = document.getElementById("motivationBanner");
+ if(cert >= 65){
+   banner.style.display = "block";
+   banner.textContent = `🎉 Tabriklaymiz! Siz C1 darajasiga yetdingiz!`;
+ } else if(cert >= 51){
+   const pointsToC1 = 65 - cert;
+   banner.style.display = "block";
+   banner.textContent = `🎯 C1 darajasiga ${pointsToC1} ball qoldi`;
+ } else {
+   const pointsToB2 = 51 - cert;
+   banner.style.display = "block";
+   banner.textContent = `🎯 B2 darajasiga ${pointsToB2} ball qoldi`;
+ }
 supabaseClient.from("Results").insert({
   mock_name: currentMockName,
   raw_score: raw,
