@@ -334,23 +334,43 @@ function cefrFrom75(score){
 <body>
 <div style="position:fixed;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,#c7d2fe 0%,transparent 70%);border-radius:50%;z-index:0;pointer-events:none;"></div>
 <div style="position:fixed;top:200px;left:-150px;width:350px;height:350px;background:radial-gradient(circle,#ddd6fe 0%,transparent 70%);border-radius:50%;z-index:0;pointer-events:none;"></div>
-<div id="authModal" style="position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:9999;">
-  <div style="background:#fff;padding:32px;border-radius:20px;width:340px;max-width:90%;box-shadow:0 20px 60px #00000026;">
-    <h2 id="authTitle" style="margin-top:0;font-size:22px;font-weight:800;color:#1a1d29;">Kirish</h2>
-    <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:12px 14px;margin-bottom:10px;box-sizing:border-box;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;outline:none;">
-    <input id="authPassword" type="password" placeholder="Parol" style="width:100%;padding:12px 14px;margin-bottom:10px;box-sizing:border-box;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;outline:none;">
+<div id="authModal" style="position:fixed;inset:0;background:rgba(15,17,23,0.75);backdrop-filter:blur(6px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;padding:36px 32px;border-radius:20px;width:380px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+
+    <!-- Logo + tagline -->
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-size:26px;font-weight:800;background:linear-gradient(135deg,#4338ca,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;">🚀 CEFR BOOST</div>
+      <div style="font-size:15px;font-weight:700;color:#1a1d29;">Prepare smarter. Score higher.</div>
+      <div style="font-size:12.5px;color:#888;margin-top:6px;line-height:1.4;">O'zbekiston CEFR imtihonini realistik mock testlar va batafsil fikr-mulohaza bilan mashq qiling</div>
+    </div>
+
+    <h2 id="authTitle" style="margin:0 0 16px;font-size:18px;font-weight:700;color:#1a1d29;text-align:center;">Kirish</h2>
+
+    <!-- Google button - prominent -->
+    <button id="googleLoginBtn" style="width:100%;padding:12px;background:#fff;color:#333;border:1px solid #ddd;border-radius:10px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
+      <img src="https://www.google.com/favicon.ico" style="width:18px;height:18px;"> Google orqali davom etish
+    </button>
+
+    <!-- Divider -->
+    <div style="display:flex;align-items:center;gap:10px;margin:20px 0;">
+      <div style="flex:1;height:1px;background:#eee;"></div>
+      <span style="color:#aaa;font-size:12px;">yoki</span>
+      <div style="flex:1;height:1px;background:#eee;"></div>
+    </div>
+
+    <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:12px 14px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;font-size:14px;box-sizing:border-box;">
+    <input id="authPassword" type="password" placeholder="Parol" style="width:100%;padding:12px 14px;margin-bottom:8px;border:1px solid #ddd;border-radius:10px;font-size:14px;box-sizing:border-box;">
     <div id="authError" style="color:red;font-size:13px;margin-bottom:8px;"></div>
-    <button id="authSubmitBtn" style="width:100%;padding:10px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:6px;cursor:pointer;">Kirish</button>
-    <div style="text-align:center;margin:12px 0;color:#999;font-size:13px;">yoki</div>
-<button id="googleLoginBtn" style="width:100%;padding:10px;background:#fff;color:#333;border:1px solid #ddd;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-  <img src="https://www.google.com/favicon.ico" style="width:16px;height:16px;"> Google orqali kirish
-</button>
-    <p style="text-align:center;margin-top:12px;font-size:14px;">
+
+    <button id="authSubmitBtn" style="width:100%;padding:12px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">Kirish</button>
+
+    <p style="text-align:center;margin-top:16px;font-size:13.5px;color:#888;">
       <span id="authToggleText">Akkountingiz yo'qmi?</span>
-      <a href="#" id="authToggleLink">Ro'yxatdan o'tish</a>
+      <a href="#" id="authToggleLink" style="color:#4338ca;font-weight:600;text-decoration:none;">Ro'yxatdan o'tish</a>
     </p>
+
   </div>
-</div> 
+</div>
 <div id="homeView">
 <header class="header">
   <span class="logo">🚀 CEFR BOOST</span>
