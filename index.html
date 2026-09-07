@@ -733,6 +733,7 @@ async function callAI(sys, userContent, maxTokens){
   const errText = await response.text().catch(()=> "");
   throw new Error(`Scoring service error (${response.status}): ${errText || "no details"}`);
  }
+  const data = await response.json();
  const text = (data.content || []).map(b=>b.text||"").join("\n");
  let clean = text.replace(/```json|```/g,"").trim();
  const firstBrace = clean.indexOf("{");
