@@ -474,6 +474,7 @@ function cefrFrom75(score){
     </div>
     <textarea id="answer" placeholder="Start writing here..."></textarea>
     <div class="wordrow"><span id="range">Target: 45–55 words</span><span id="wordcount">0 words</span></div>
+    <div id="saveIndicator" style="font-size:12px;color:#9aa1ad;margin-top:6px;text-align:right;opacity:0;transition:opacity .3s;">✓ Saqlandi</div>
     <div class="buttons">
       <button class="prev" id="prev" disabled>← Previous</button>
       <button class="next" id="next">Next →</button>
@@ -619,6 +620,12 @@ const HISTORY_KEY="cefrWritingHistory";
 function saveProgress(){
  try{
   localStorage.setItem(STORAGE_KEY, JSON.stringify({answers, seconds, index, savedAt:Date.now(), mockName: currentMockName}));
+  const ind = document.getElementById("saveIndicator");
+  if(ind){
+   ind.style.opacity = "1";
+   clearTimeout(window._saveIndicatorTimeout);
+   window._saveIndicatorTimeout = setTimeout(()=>{ ind.style.opacity = "0"; }, 1200);
+  }
  }catch(e){ console.warn("Could not save progress:", e); }
 }
 function clearProgress(){
@@ -677,7 +684,14 @@ function render(){
 function updateCount(){
  const n=words(answer.value); wordcount.textContent=n+" words";
  const min=index===0?45:index===1?120:180, max=index===0?55:index===1?150:200;
- wordcount.className="wordcount "+(n>=min&&n<=max?"ok":n>max?"warn":"");
+ let state = "", color = "#747b89";
+ if(n===0){ state=""; color="#9aa1ad"; }
+ else if(n>=min && n<=max){ state="ok"; color="#159447"; }
+ else if(n>max){ state="warn"; color="#d97706"; }
+ else{ state="below"; color="#9aa1ad"; }
+ wordcount.className="wordcount "+state;
+ wordcount.style.color = color;
+ wordcount.style.fontWeight = state ? "700" : "500";
 }
 answer.addEventListener("input",()=>{answers[index]=answer.value;updateCount();renderTabs();saveProgress();});
 document.getElementById("prev").onclick=()=>{answers[index]=answer.value;if(index>0){index--;saveProgress();render()}};
