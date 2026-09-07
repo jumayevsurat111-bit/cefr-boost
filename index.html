@@ -526,7 +526,38 @@ function cefrFrom75(score){
       <button class="part-box" data-part="0"><span>✏️ Task 1.1</span><b id="pg-t11">–<small>/5</small></b></button>
       <button class="part-box" data-part="1"><span>✏️ Task 1.2</span><b id="pg-t12">–<small>/6</small></b></button>
       <button class="part-box" data-part="2"><span>✏️ Task 2</span><b id="pg-t2">–<small>/6</small></b></button>
-      <button class="part-box" data-part="2"><span>📊 Overall</span><b id="pg-overall">–<small>/17</small></b></button>
+            <button class="part-box" data-part="2"><span>📊 Overall</span><b id="pg-overall">–<small>/17</small></b></button>
+    </div>
+  </div>
+  <div class="result-card" id="breakdownCard">
+    <div class="result-card-title">📊 Writing Performance</div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:16px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span>Task Achievement</span><b id="bd-ta-val">–%</b></div>
+        <div style="height:8px;background:#eef0f4;border-radius:4px;overflow:hidden;"><div id="bd-ta-bar" style="height:100%;width:0%;background:#4338ca;border-radius:4px;transition:width .6s;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span>Coherence</span><b id="bd-co-val">–%</b></div>
+        <div style="height:8px;background:#eef0f4;border-radius:4px;overflow:hidden;"><div id="bd-co-bar" style="height:100%;width:0%;background:#4338ca;border-radius:4px;transition:width .6s;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span>Vocabulary</span><b id="bd-vo-val">–%</b></div>
+        <div style="height:8px;background:#eef0f4;border-radius:4px;overflow:hidden;"><div id="bd-vo-bar" style="height:100%;width:0%;background:#4338ca;border-radius:4px;transition:width .6s;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span>Grammar</span><b id="bd-gr-val">–%</b></div>
+        <div style="height:8px;background:#eef0f4;border-radius:4px;overflow:hidden;"><div id="bd-gr-bar" style="height:100%;width:0%;background:#4338ca;border-radius:4px;transition:width .6s;"></div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="background:#e6f8ef;border-radius:10px;padding:12px;">
+        <div style="font-size:12px;color:#0b9565;font-weight:700;margin-bottom:2px;">🟢 Kuchli tomon</div>
+        <div id="bd-strongest" style="font-weight:700;">–</div>
+      </div>
+      <div style="background:#fef2f2;border-radius:10px;padding:12px;">
+        <div style="font-size:12px;color:#dc2626;font-weight:700;margin-bottom:2px;">🔴 Kuchsiz tomon</div>
+        <div id="bd-weakest" style="font-weight:700;">–</div>
+      </div>
     </div>
   </div>
   <div class="result-card details-card" id="details">
@@ -771,8 +802,9 @@ Scoring bands (integers only):
 - Task 2 (online discussion post, C1 level task): 0 to 6
 Be a fair but rigorous examiner: a near-empty or off-topic answer scores 0-1, a competent B1/B2 answer scores in the middle of the range, and only genuinely strong, accurate, well-organised writing earns the top mark. Word-count targets not met should reduce the task-achievement component.
 ${CALIBRATION_EXAMPLES}
+Also rate the candidate's OVERALL performance across all three tasks combined, as percentages (0-100), on these four criteria: task achievement, text coherence & cohesion, vocabulary range, and grammatical accuracy. These percentages should reflect genuine relative strength — do not make them all equal.
 Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
-{"task11":{"score":<int 0-5>,"comment":"<one sentence>"},"task12":{"score":<int 0-6>,"comment":"<one sentence>"},"task2":{"score":<int 0-6>,"comment":"<one sentence>"},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
+{"task11":{"score":<int 0-5>,"comment":"<one sentence>"},"task12":{"score":<int 0-6>,"comment":"<one sentence>"},"task2":{"score":<int 0-6>,"comment":"<one sentence>"},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
  const userContent = tasks.map((t,i)=>
   `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
  ).join("\n\n---\n\n");
@@ -819,6 +851,26 @@ supabaseClient.from("Results").insert({
  document.getElementById("det-t2").textContent = `${t2}/6`;
  document.getElementById("det-overall").textContent = `${raw}/17`;
  document.getElementById("feedbackText").textContent = result.overallFeedback || "";
+  document.getElementById("feedbackText").textContent = result.overallFeedback || "";
+ if(result.criteria){
+   const c = result.criteria;
+   const items = [
+     {key:"taskAchievement", label:"Task Achievement", valEl:"bd-ta-val", barEl:"bd-ta-bar"},
+     {key:"coherence", label:"Coherence", valEl:"bd-co-val", barEl:"bd-co-bar"},
+     {key:"vocabulary", label:"Vocabulary", valEl:"bd-vo-val", barEl:"bd-vo-bar"},
+     {key:"grammar", label:"Grammar", valEl:"bd-gr-val", barEl:"bd-gr-bar"}
+   ];
+   let strongest = items[0], weakest = items[0];
+   items.forEach(it=>{
+     const v = Math.max(0, Math.min(100, Math.round(c[it.key] || 0)));
+     document.getElementById(it.valEl).textContent = v + "%";
+     document.getElementById(it.barEl).style.width = v + "%";
+     if((c[it.key]||0) > (c[strongest.key]||0)) strongest = it;
+     if((c[it.key]||0) < (c[weakest.key]||0)) weakest = it;
+   });
+   document.getElementById("bd-strongest").textContent = strongest.label;
+   document.getElementById("bd-weakest").textContent = weakest.label;
+ }
  document.getElementById("conv-raw").textContent = `${raw}/17`;
  document.getElementById("conv-cert").textContent = `${cert}/75`;
  document.getElementById("conv-cefr").textContent = cefr;
