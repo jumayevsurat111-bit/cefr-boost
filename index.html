@@ -733,9 +733,13 @@ async function callAI(sys, userContent, maxTokens){
   const errText = await response.text().catch(()=> "");
   throw new Error(`Scoring service error (${response.status}): ${errText || "no details"}`);
  }
- const data = await response.json();
  const text = (data.content || []).map(b=>b.text||"").join("\n");
- const clean = text.replace(/```json|```/g,"").trim();
+ let clean = text.replace(/```json|```/g,"").trim();
+ const firstBrace = clean.indexOf("{");
+ const lastBrace = clean.lastIndexOf("}");
+ if(firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace){
+   clean = clean.slice(firstBrace, lastBrace + 1);
+ }
  return JSON.parse(clean);
 }
 async function scoreWithAI(answers){
