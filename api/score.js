@@ -42,8 +42,9 @@ export default async function handler(req, res) {
           { role: "system", content: system },
           { role: "user", content: userText },
         ],
-        max_tokens: Math.min(max_tokens || 1000, 2000),
-        temperature: 0.3,
+        max_tokens: Math.min(max_tokens || 1000, 3500),
+                temperature: 0.2,
+        response_format: { type: "json_object" },
       }),
     });
 
