@@ -153,6 +153,11 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
  .nav-item{color:#9aa1ad;transition:color .2s}
 .nav-item.active{color:#4338ca;font-weight:700}
 body.dark .nav-item.active{color:#a78bfa!important}
+ .result-item-card{border-radius:13px;padding:14px 15px;margin-bottom:9px;border-left:4px solid;background:#fafbfe}
+.result-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px}
+.result-item-name{font-weight:700;font-size:14.5px;color:#1a1d29}
+.result-item-cefr{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;color:#fff;flex-shrink:0}
+.result-item-meta{font-size:12.5px;color:#8a919e}
  .la-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;flex-shrink:0}
 .la-pending{color:#b2b8c4}
 .la-pending .la-icon{color:#c7cbd4}
@@ -220,8 +225,13 @@ body.dark #bottomNav a{color:#9ca3af!important}
 body.dark .header-history{background:#2a2a3d!important;color:#c7c7f0!important}
 </style>
 <script>
+function cefrColor(cefr){
+ if(cefr === "C1") return "#0b9a69";
+ if(cefr === "B2") return "#2768df";
+ return "#d97706";
+}
 async function showResults() {
- setActiveNav("results");
+  setActiveNav("results");
   document.getElementById("resultsModal").style.display = "block";
   const listEl = document.getElementById("resultsList");
   listEl.innerHTML = "Yuklanmoqda...";
@@ -233,7 +243,10 @@ async function showResults() {
     listEl.innerHTML = "Xato: " + error.message;
     return;
   }
+  document.getElementById("resultsCountBadge").textContent = `${data ? data.length : 0} ta urinish`;
   if (!data || data.length === 0) {
+    document.getElementById("resultsBestCert").textContent = "–";
+    document.getElementById("resultsBestCefr").textContent = "–";
     listEl.innerHTML = `
       <div style="text-align:center;padding:30px 10px;">
         <div style="font-size:48px;margin-bottom:12px;">📝</div>
@@ -242,6 +255,21 @@ async function showResults() {
       </div>`;
     return;
   }
+  const best = data.reduce((a,b) => b.certificate_score > a.certificate_score ? b : a);
+  document.getElementById("resultsBestCert").textContent = `${best.certificate_score}/75`;
+  document.getElementById("resultsBestCefr").textContent = best.cefr_level;
+  listEl.innerHTML = data.map(r => {
+   const color = cefrColor(r.cefr_level);
+   return `
+    <div class="result-item-card" style="border-left-color:${color}">
+      <div class="result-item-top">
+        <span class="result-item-name">${escapeHtml(r.mock_name)}</span>
+        <span class="result-item-cefr" style="background:${color}">${escapeHtml(r.cefr_level)}</span>
+      </div>
+      <div class="result-item-meta">Ball: ${r.raw_score}/17 · Sertifikat: ${r.certificate_score}/75 · ${new Date(r.created_at).toLocaleDateString("uz-UZ")}</div>
+    </div>`;
+  }).join("");
+}
   listEl.innerHTML = data.map(r => `
     <div style="border:1px solid #eef0f4;border-radius:12px;padding:14px;margin-bottom:10px;">
       <div style="font-weight:700;margin-bottom:4px;">${r.mock_name}</div>
@@ -1380,13 +1408,30 @@ function tarjimaXato(msg) {
     <div style="font-size:20px;">📚</div>Lug'atlar
   </a>
 </nav>
- <div id="resultsModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
-  <div style="background:#fff;max-width:500px;margin:60px auto;padding:24px;border-radius:20px;max-height:75vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <h2 style="margin:0;font-size:20px;">📊 Mening natijalarim</h2>
-      <button onclick="document.getElementById('resultsModal').style.display='none'" style="border:none;background:#f1f2f5;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
+  <div id="resultsModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
+  <div style="background:#fff;max-width:500px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
+
+    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:24px 24px 20px;position:relative;color:#fff;">
+      <button onclick="document.getElementById('resultsModal').style.display='none';setActiveNav('home')" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;">✕</button>
+      <div style="font-size:20px;font-weight:800;">📊 Mening natijalarim</div>
+      <div id="resultsCountBadge" style="font-size:13px;opacity:0.85;margin-top:3px;">– ta urinish</div>
     </div>
-    <div id="resultsList">Yuklanmoqda...</div>
+
+    <div style="padding:20px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-24px;">
+      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
+        <div id="resultsBestCert" style="font-size:22px;font-weight:800;color:#4338ca;">–</div>
+        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Eng yaxshi ball</div>
+      </div>
+      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
+        <div id="resultsBestCefr" style="font-size:22px;font-weight:800;color:#0b9565;">–</div>
+        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Erishilgan daraja</div>
+      </div>
+    </div>
+
+    <div style="padding:20px 24px 24px;">
+      <div id="resultsList">Yuklanmoqda...</div>
+    </div>
+
   </div>
 </div>
 <div id="vocabModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
