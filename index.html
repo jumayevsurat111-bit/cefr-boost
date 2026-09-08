@@ -122,7 +122,16 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
 .feedback{margin-top:14px;background:#f3efff;border-radius:12px;padding:15px;line-height:1.55}.feedback p{margin:7px 0 0;color:#565d6a}
 .answer-result{border:1px solid #e7e9ef;border-radius:11px;padding:13px;margin-top:9px}
 .answer-result b{display:block;margin-bottom:7px;color:#4338ca}.answer-result p{margin:0;color:#606775;white-space:pre-wrap}
-.action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
+.err-tag{display:inline;border-radius:8px;padding:2px 8px;margin:0 2px;font-size:14px}
+.err-tag b{font-size:10px;letter-spacing:.3px;margin-right:5px;font-weight:800}
+.err-tag s{opacity:.75;text-decoration:line-through}
+.err-tag strong{font-weight:800}
+.err-spell{background:#fef3c7;color:#92400e}
+.err-spell b{color:#b45309}.err-spell strong{color:#0b9565}
+.err-grammar{background:#fce7f3;color:#9d174d}
+.err-grammar b{color:#be185d}.err-grammar strong{color:#0b9565}
+.task-score-pill{display:inline-block;background:#eef0ff;color:#4338ca;font-weight:800;padding:3px 10px;border-radius:20px;font-size:13px;margin-left:8px}
+ .action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
 .action{padding:15px;border-radius:12px;border:0;color:#fff;font-weight:800;font-size:14px;cursor:pointer}
 .action.green{background:#159b50}.action.blue{background:#2768df}.action.teal{background:#069879}
 .extra-panel{display:none;background:#fff;border-radius:15px;padding:20px;margin-bottom:15px;box-shadow:0 4px 18px #0000000b;line-height:1.6}
@@ -803,14 +812,43 @@ Scoring bands (integers only):
 Be a fair but rigorous examiner: a near-empty or off-topic answer scores 0-1, a competent B1/B2 answer scores in the middle of the range, and only genuinely strong, accurate, well-organised writing earns the top mark. Word-count targets not met should reduce the task-achievement component.
 ${CALIBRATION_EXAMPLES}
 Also rate the candidate's OVERALL performance across all three tasks combined, as percentages (0-100), on these four criteria: task achievement, text coherence & cohesion, vocabulary range, and grammatical accuracy. These percentages should reflect genuine relative strength — do not make them all equal.
+Additionally, for EACH task, list the candidate's mistakes as an "errors" array. Each error object must have exactly these fields:
+- "type": either "SPELL" (spelling mistake) or "GRAMMAR" (grammar mistake)
+- "original": the EXACT substring copied character-for-character from the candidate's answer (same case, same punctuation) that contains the mistake — this is used for automatic text matching, so it MUST match the candidate's text exactly
+- "corrected": the fixed version of that exact substring
+List errors in the order they appear in the text. Only include genuine, clear mistakes — do not flag mere style preferences. If a task has no answer or no mistakes, use an empty array.
 Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
-{"task11":{"score":<int 0-5>,"comment":"<one sentence>"},"task12":{"score":<int 0-6>,"comment":"<one sentence>"},"task2":{"score":<int 0-6>,"comment":"<one sentence>"},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
- const userContent = tasks.map((t,i)=>
+{"task11":{"score":<int 0-5>,"comment":"<one sentence>","errors":[{"type":"SPELL","original":"<exact text>","corrected":"<fixed text>"}]},"task12":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"task2":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
   `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
  ).join("\n\n---\n\n");
  return callAI(sys, userContent, 1000);
 }
-function renderResults(result){
+function highlightAnswerErrors(text, errors){
+ if(!text) return "";
+ if(!errors || !errors.length) return escapeHtml(text);
+ let cursor = 0, out = "";
+ errors.forEach(err=>{
+  if(!err || !err.original) return;
+  const idx = text.indexOf(err.original, cursor);
+  if(idx === -1) return;
+  out += escapeHtml(text.slice(cursor, idx));
+  const cls = (err.type === "SPELL") ? "err-spell" : "err-grammar";
+  out += `<span class="err-tag ${cls}"><b>${err.type}</b><s>${escapeHtml(err.original)}</s> → <strong>${escapeHtml(err.corrected||"")}</strong></span>`;
+  cursor = idx + err.original.length;
+ });
+ out += escapeHtml(text.slice(cursor));
+ return out;
+}
+function renderSavedAnswersWithErrors(result){
+ const taskResults = [result.task11, result.task12, result.task2];
+ const maxScores = [5,6,6];
+ document.getElementById("savedAnswers").innerHTML = answers.map((a,i)=>{
+  const tr = taskResults[i] || {};
+  const body = a ? highlightAnswerErrors(a, tr.errors) : "No answer submitted.";
+  return `<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title} <span class="task-score-pill">${tr.score ?? "–"}/${maxScores[i]}</span></b><p style="line-height:1.9">${body}</p></div>`;
+ }).join("");
+}
+ function renderResults(result){
  const t11 = Math.max(0,Math.min(5, Math.round(result.task11.score)));
  const t12 = Math.max(0,Math.min(6, Math.round(result.task12.score)));
  const t2  = Math.max(0,Math.min(6, Math.round(result.task2.score)));
@@ -885,6 +923,7 @@ supabaseClient.from("Results").insert({
   raw, max: 17, cert, cefr,
   scores: {t11, t12, t2}
  });
+  renderSavedAnswersWithErrors(result);
  clearProgress();
 }
 function scrollToDetails(){
