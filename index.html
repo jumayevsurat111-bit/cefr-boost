@@ -143,6 +143,15 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
 .fb-tip{background:#eef0ff}
 .fb-tip .fb-block-title{color:#4338ca}
 .fb-tip p{margin:0;font-size:14px;line-height:1.5;color:#3a3f4d}
+ .la-item{font-size:13px;color:#9aa1ad;display:flex;align-items:center;gap:8px;transition:color .3s}
+.la-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;flex-shrink:0}
+.la-pending{color:#b2b8c4}
+.la-pending .la-icon{color:#c7cbd4}
+.la-active{color:#4338ca;font-weight:700}
+.la-active .la-icon{color:#6536d8;animation:laBlink 1s ease-in-out infinite}
+.la-done{color:#0b9565;font-weight:600}
+.la-done .la-icon{color:#0b9565}
+@keyframes laBlink{0%,100%{opacity:1}50%{opacity:.3}}
  .action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
 .action{padding:15px;border-radius:12px;border:0;color:#fff;font-weight:800;font-size:14px;cursor:pointer}
 .action.green{background:#159b50}.action.blue{background:#2768df}.action.teal{background:#069879}
@@ -516,15 +525,15 @@ function cefrFrom75(score){
     </div>
     <div class="result-status" id="resultStatus">⏳ Scoring</div>
   </div>
-  <div class="result-card" id="loadingCard">
+ <div class="result-card" id="loadingCard">
     <div style="text-align:center;padding:10px 0 4px;">
       <div style="font-size:40px;margin-bottom:10px;animation:pulse 1.4s ease-in-out infinite;">🤖</div>
-      <div style="font-weight:700;font-size:15px;margin-bottom:14px;">Yozuvingiz baholanmoqda...</div>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;text-align:left;">
-        <div style="font-size:13px;color:#606775;">✓ Task Achievement</div>
-        <div style="font-size:13px;color:#606775;">✓ Coherence</div>
-        <div style="font-size:13px;color:#9aa1ad;">⏳ Vocabulary</div>
-        <div style="font-size:13px;color:#9aa1ad;">⏳ Grammar</div>
+      <div style="font-weight:700;font-size:15px;margin-bottom:14px;" id="loadingMsg">Yozuvingiz baholanmoqda...</div>
+      <div style="display:flex;flex-direction:column;gap:9px;max-width:260px;margin:0 auto;text-align:left;">
+        <div class="la-item la-pending" id="la-ta"><span class="la-icon">⏳</span>Task Achievement</div>
+        <div class="la-item la-pending" id="la-co"><span class="la-icon">⏳</span>Coherence</div>
+        <div class="la-item la-pending" id="la-vo"><span class="la-icon">⏳</span>Vocabulary</div>
+        <div class="la-item la-pending" id="la-gr"><span class="la-icon">⏳</span>Grammar</div>
       </div>
       <div style="font-size:12px;color:#9aa1ad;margin-top:16px;">Odatda 10–30 soniya davom etadi</div>
     </div>
@@ -862,6 +871,51 @@ function renderSavedAnswersWithErrors(result){
   return `<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title} <span class="task-score-pill">${tr.score ?? "–"}/${maxScores[i]}</span></b><p style="line-height:1.9">${body}</p></div>`;
  }).join("");
 }
+ let loadingAnimTimer = null;
+const LOADING_STEPS = ["la-ta","la-co","la-vo","la-gr"];
+const LOADING_MESSAGES = [
+ "Yozuvingiz baholanmoqda...",
+ "Grammatika tekshirilmoqda...",
+ "So'z boyligi baholanmoqda...",
+ "Yakuniy natija tayyorlanmoqda..."
+];
+function renderLoadingStep(step){
+ LOADING_STEPS.forEach((id,i)=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  const icon = el.querySelector(".la-icon");
+  if(i < step){ el.className = "la-item la-done"; icon.textContent = "✓"; }
+  else if(i === step){ el.className = "la-item la-active"; icon.textContent = "●"; }
+  else { el.className = "la-item la-pending"; icon.textContent = "⏳"; }
+ });
+ const msgEl = document.getElementById("loadingMsg");
+ if(msgEl) msgEl.textContent = LOADING_MESSAGES[Math.min(step, LOADING_MESSAGES.length-1)];
+}
+function startLoadingAnimation(){
+ let step = 0;
+ renderLoadingStep(step);
+ clearInterval(loadingAnimTimer);
+ loadingAnimTimer = setInterval(()=>{
+  step = Math.min(step+1, LOADING_STEPS.length-1);
+  renderLoadingStep(step);
+ }, 2200);
+}
+function stopLoadingAnimation(){
+ clearInterval(loadingAnimTimer);
+}
+function loadingChecklistHTML(){
+ return `<div style="text-align:center;padding:10px 0 4px;">
+  <div style="font-size:40px;margin-bottom:10px;animation:pulse 1.4s ease-in-out infinite;">🤖</div>
+  <div style="font-weight:700;font-size:15px;margin-bottom:14px;" id="loadingMsg">Yozuvingiz baholanmoqda...</div>
+  <div style="display:flex;flex-direction:column;gap:9px;max-width:260px;margin:0 auto;text-align:left;">
+   <div class="la-item la-pending" id="la-ta"><span class="la-icon">⏳</span>Task Achievement</div>
+   <div class="la-item la-pending" id="la-co"><span class="la-icon">⏳</span>Coherence</div>
+   <div class="la-item la-pending" id="la-vo"><span class="la-icon">⏳</span>Vocabulary</div>
+   <div class="la-item la-pending" id="la-gr"><span class="la-icon">⏳</span>Grammar</div>
+  </div>
+  <div style="font-size:12px;color:#9aa1ad;margin-top:16px;">Odatda 10–30 soniya davom etadi</div>
+ </div>`;
+}
  function renderFeedbackCards(result){
  const esc = escapeHtml;
  let html = "";
@@ -943,6 +997,7 @@ renderFeedbackCards(result);
  document.getElementById("resultSubtitle").textContent = "Your Writing Mock 01 results are ready.";
  document.getElementById("resultStatus").textContent = "✓ Completed";
  document.getElementById("loadingCard").style.display = "none";
+   stopLoadingAnimation();
  document.getElementById("resultsContent").style.display = "block";
  saveHistoryEntry({
   date: new Date().toISOString(),
@@ -969,20 +1024,24 @@ document.getElementById("submit").onclick=async ()=>{
  document.getElementById("success").style.display="block";
  document.getElementById("savedAnswers").innerHTML=answers.map((a,i)=>`<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title}</b><p>${a||"No answer submitted."}</p></div>`).join("");
  clearInterval(clockInterval);
+ startLoadingAnimation();
  try{
   const result = await scoreWithAI(answers);
   renderResults(result);
  }catch(err){
   console.error("Scoring error:", err);
+  stopLoadingAnimation();
   document.getElementById("loadingCard").innerHTML =
    `<div class="result-card-title">⚠️ Scoring failed</div><p style="color:#606775;margin:0 0 12px">Something went wrong while scoring your answers. Please try again.</p><button class="action blue" id="retryScore" style="width:100%">Retry Scoring</button>`;
   document.getElementById("retryScore").onclick=async ()=>{
-   document.getElementById("loadingCard").innerHTML = `<div class="result-card-title">⏳ Please wait</div><p style="color:#606775;margin:0">Retrying...</p>`;
+   document.getElementById("loadingCard").innerHTML = loadingChecklistHTML();
+   startLoadingAnimation();
    try{
     const result = await scoreWithAI(answers);
     renderResults(result);
    }catch(e2){
     console.error("Retry failed:", e2);
+    stopLoadingAnimation();
     document.getElementById("loadingCard").innerHTML =
      `<div class="result-card-title">⚠️ Scoring failed again</div><p style="color:#606775;margin:0">Please try submitting again in a moment.</p>`;
    }
