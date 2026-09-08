@@ -150,6 +150,9 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
 .vocab-meaning{font-weight:400;color:#6b7280;font-size:14px}
 .vocab-example{font-size:12.5px;color:#9aa1ad;margin-top:3px;font-style:italic}
 .vocab-del{border:none;background:#fee2e2;color:#dc2626;width:26px;height:26px;border-radius:50%;cursor:pointer;flex-shrink:0}
+ .nav-item{color:#9aa1ad;transition:color .2s}
+.nav-item.active{color:#4338ca;font-weight:700}
+body.dark .nav-item.active{color:#a78bfa!important}
  .la-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;flex-shrink:0}
 .la-pending{color:#b2b8c4}
 .la-pending .la-icon{color:#c7cbd4}
@@ -218,6 +221,7 @@ body.dark .header-history{background:#2a2a3d!important;color:#c7c7f0!important}
 </style>
 <script>
 async function showResults() {
+ setActiveNav("results");
   document.getElementById("resultsModal").style.display = "block";
   const listEl = document.getElementById("resultsList");
   listEl.innerHTML = "Yuklanmoqda...";
@@ -247,6 +251,7 @@ async function showResults() {
   `).join("");
 }
 async function showVocab() {
+ setActiveNav("vocab");
   document.getElementById("vocabModal").style.display = "block";
   await loadVocab();
 }
@@ -647,7 +652,17 @@ function cefrFrom75(score){
 </div>
 <script>
 let writingStarted = false;
-function showHome(){
+ function setActiveNav(name){
+ ["navHome","navResults","navVocab"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.classList.remove("active");
+ });
+ const map = {home:"navHome", results:"navResults", vocab:"navVocab"};
+ const el = document.getElementById(map[name]);
+ if(el) el.classList.add("active");
+}
+ function showHome(){
+  setActiveNav("home");
   document.getElementById("homeView").style.display="block";
   document.getElementById("writingView").style.display="none";
   renderMockList();
@@ -1355,13 +1370,13 @@ function tarjimaXato(msg) {
 });
 </script>
  <nav id="bottomNav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e7e9ef;display:flex;justify-content:space-around;padding:10px 0;box-shadow:0 -4px 16px #0000000d;z-index:200;">
-  <a href="#" onclick="showHome();return false;" style="text-align:center;text-decoration:none;color:#4338ca;font-size:11px;">
+  <a href="#" id="navHome" class="nav-item active" onclick="showHome();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
     <div style="font-size:20px;">🏠</div>Bosh sahifa
   </a>
- <a href="#" onclick="showResults();return false;" style="text-align:center;text-decoration:none;color:#9aa1ad;font-size:11px;">
+ <a href="#" id="navResults" class="nav-item" onclick="showResults();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
     <div style="font-size:20px;">📊</div>Natijalar
   </a>
-  <a href="#" onclick="showVocab();return false;" style="text-align:center;text-decoration:none;color:#9aa1ad;font-size:11px;">
+  <a href="#" id="navVocab" class="nav-item" onclick="showVocab();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
     <div style="font-size:20px;">📚</div>Lug'atlar
   </a>
 </nav>
