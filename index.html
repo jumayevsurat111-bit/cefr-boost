@@ -819,7 +819,8 @@ Additionally, for EACH task, list the candidate's mistakes as an "errors" array.
 List errors in the order they appear in the text. Only include genuine, clear mistakes — do not flag mere style preferences. If a task has no answer or no mistakes, use an empty array.
 Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
 {"task11":{"score":<int 0-5>,"comment":"<one sentence>","errors":[{"type":"SPELL","original":"<exact text>","corrected":"<fixed text>"}]},"task12":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"task2":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
-  `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
+const userContent = tasks.map((t,i)=>  
+ `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
  ).join("\n\n---\n\n");
  return callAI(sys, userContent, 1000);
 }
