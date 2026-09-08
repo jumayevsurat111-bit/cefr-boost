@@ -131,6 +131,18 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
 .err-grammar{background:#fce7f3;color:#9d174d}
 .err-grammar b{color:#be185d}.err-grammar strong{color:#0b9565}
 .task-score-pill{display:inline-block;background:#eef0ff;color:#4338ca;font-weight:800;padding:3px 10px;border-radius:20px;font-size:13px;margin-left:8px}
+ .fb-block{border-radius:12px;padding:14px 16px;margin-top:10px}
+.fb-block:first-child{margin-top:0}
+.fb-block-title{font-weight:800;font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fb-block ul{margin:0;padding-left:18px}
+.fb-block li{margin-bottom:5px;font-size:14px;line-height:1.5;color:#374151}
+.fb-strengths{background:#e6f8ef}
+.fb-strengths .fb-block-title{color:#0b9565}
+.fb-improvements{background:#fff7e6}
+.fb-improvements .fb-block-title{color:#9b6a00}
+.fb-tip{background:#eef0ff}
+.fb-tip .fb-block-title{color:#4338ca}
+.fb-tip p{margin:0;font-size:14px;line-height:1.5;color:#3a3f4d}
  .action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
 .action{padding:15px;border-radius:12px;border:0;color:#fff;font-weight:800;font-size:14px;cursor:pointer}
 .action.green{background:#159b50}.action.blue{background:#2768df}.action.teal{background:#069879}
@@ -577,10 +589,7 @@ function cefrFrom75(score){
       <div><span>Task 2</span><b id="det-t2">–/6</b></div>
       <div><span>Overall Raw Score</span><b id="det-overall">–/17</b></div>
     </div>
-    <div class="feedback">
-      <b>🤖 AI Feedback</b>
-      <p id="feedbackText">–</p>
-    </div>
+    <div id="feedbackCards"></div>
   </div>
   <div class="result-card">
     <div class="result-card-title">📈 Score Conversion</div>
@@ -817,8 +826,12 @@ Additionally, for EACH task, list the candidate's mistakes as an "errors" array.
 - "original": the EXACT substring copied character-for-character from the candidate's answer (same case, same punctuation) that contains the mistake — this is used for automatic text matching, so it MUST match the candidate's text exactly
 - "corrected": the fixed version of that exact substring
 List errors in the order they appear in the text. Only include genuine, clear mistakes — do not flag mere style preferences. If a task has no answer or no mistakes, use an empty array.
+Also give structured overall feedback with these three parts:
+- "strengths": an array of 2-3 short bullet points (in Uzbek) naming genuine specific strengths in the candidate's writing
+- "improvements": an array of 2-3 short bullet points (in Uzbek) naming specific, actionable weaknesses to fix
+- "tip": one short actionable sentence (in Uzbek) telling the candidate the single most important thing to do to move up a CEFR level
 Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
-{"task11":{"score":<int 0-5>,"comment":"<one sentence>","errors":[{"type":"SPELL","original":"<exact text>","corrected":"<fixed text>"}]},"task12":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"task2":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"overallFeedback":"<2-3 sentences of overall feedback covering strengths and what to improve to move up a CEFR level>"}`;
+{"task11":{"score":<int 0-5>,"comment":"<one sentence>","errors":[...]},"task12":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"task2":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"strengths":["<point 1>","<point 2>"],"improvements":["<point 1>","<point 2>"],"tip":"<one sentence>"}`;
 const userContent = tasks.map((t,i)=>  
  `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
  ).join("\n\n---\n\n");
@@ -848,6 +861,20 @@ function renderSavedAnswersWithErrors(result){
   const body = a ? highlightAnswerErrors(a, tr.errors) : "No answer submitted.";
   return `<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title} <span class="task-score-pill">${tr.score ?? "–"}/${maxScores[i]}</span></b><p style="line-height:1.9">${body}</p></div>`;
  }).join("");
+}
+ function renderFeedbackCards(result){
+ const esc = escapeHtml;
+ let html = "";
+ if(result.strengths && result.strengths.length){
+  html += `<div class="fb-block fb-strengths"><div class="fb-block-title">✅ Kuchli tomonlar</div><ul>${result.strengths.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>`;
+ }
+ if(result.improvements && result.improvements.length){
+  html += `<div class="fb-block fb-improvements"><div class="fb-block-title">⚠️ Yaxshilash kerak</div><ul>${result.improvements.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>`;
+ }
+ if(result.tip){
+  html += `<div class="fb-block fb-tip"><div class="fb-block-title">💡 Tavsiya</div><p>${esc(result.tip)}</p></div>`;
+ }
+ document.getElementById("feedbackCards").innerHTML = html || `<p style="color:#9aa1ad">Feedback mavjud emas.</p>`;
 }
  function renderResults(result){
  const t11 = Math.max(0,Math.min(5, Math.round(result.task11.score)));
@@ -889,8 +916,7 @@ supabaseClient.from("Results").insert({
  document.getElementById("det-t12").textContent = `${t12}/6`;
  document.getElementById("det-t2").textContent = `${t2}/6`;
  document.getElementById("det-overall").textContent = `${raw}/17`;
- document.getElementById("feedbackText").textContent = result.overallFeedback || "";
-  document.getElementById("feedbackText").textContent = result.overallFeedback || "";
+renderFeedbackCards(result);
  if(result.criteria){
    const c = result.criteria;
    const items = [
