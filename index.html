@@ -835,7 +835,7 @@ Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly thi
 const userContent = tasks.map((t,i)=>  
  `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
  ).join("\n\n---\n\n");
- return callAI(sys, userContent, 1000);
+return callAI(sys, userContent, 2500);;
 }
 function highlightAnswerErrors(text, errors){
  if(!text) return "";
