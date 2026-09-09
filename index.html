@@ -1087,6 +1087,20 @@ renderFeedbackCards(result);
   raw, max: 17, cert, cefr,
   scores: {t11, t12, t2}
  });
+  
+supabaseClient.auth.getUser().then(({ data: { user } }) => {
+  if (!user) return;
+  fetch('/api/notify-result', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId: user.id,
+      mockName: "Writing Mock 01",
+      certificateScore: cert,
+      cefrLevel: cefr
+    })
+  }).catch(e => console.warn('Telegram notify failed:', e));
+});
   renderSavedAnswersWithErrors(result);
  clearProgress();
 }
