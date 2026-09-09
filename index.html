@@ -374,13 +374,16 @@ window.addEventListener("load", function() {
   });
 });
  
-document.getElementById('profileModal')?.insertAdjacentHTML('beforeend', `
-  <div class="profile-card" id="telegramLinkCard" style="margin-top:12px;">
-    <h4>📩 Telegram orqali xabar olish</h4>
-    <p id="telegramLinkStatus" style="font-size:14px; opacity:0.8; margin:6px 0;">Natijalar tayyor bo'lganda xabar olish uchun bog'lang.</p>
-    <button id="telegramLinkBtn" class="gradient-btn">Botga ulanish</button>
-  </div>
-`);
+const tgCard = document.createElement('div');
+tgCard.className = 'profile-card';
+tgCard.id = 'telegramLinkCard';
+tgCard.style.marginTop = '12px';
+tgCard.innerHTML = `
+  <h4>📩 Telegram orqali xabar olish</h4>
+  <p id="telegramLinkStatus" style="font-size:14px; opacity:0.8; margin:6px 0;">Natijalar tayyor bo'lganda xabar olish uchun bog'lang.</p>
+  <button id="telegramLinkBtn" class="gradient-btn">Botga ulanish</button>
+`;
+darkToggle.closest('div').parentNode.appendChild(tgCard);
 
 document.getElementById('telegramLinkBtn')?.addEventListener('click', async () => {
   const { data: { user } } = await supabaseClient.auth.getUser();
