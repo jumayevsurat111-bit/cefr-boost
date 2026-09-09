@@ -383,7 +383,7 @@ tgCard.innerHTML = `
   <p id="telegramLinkStatus" style="font-size:14px; opacity:0.8; margin:6px 0;">Natijalar tayyor bo'lganda xabar olish uchun bog'lang.</p>
   <button id="telegramLinkBtn" class="gradient-btn">Botga ulanish</button>
 `;
-darkToggle.closest('div').parentNode.appendChild(tgCard);
+document.getElementById('darkToggle').closest('div').parentNode.appendChild(tgCard);
 
 document.getElementById('telegramLinkBtn')?.addEventListener('click', async () => {
   const { data: { user } } = await supabaseClient.auth.getUser();
