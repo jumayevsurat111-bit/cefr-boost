@@ -373,6 +373,24 @@ window.addEventListener("load", function() {
     localStorage.setItem("darkMode", darkToggle.checked);
   });
 });
+ 
+document.getElementById('profileModal')?.insertAdjacentHTML('beforeend', `
+  <div class="profile-card" id="telegramLinkCard" style="margin-top:12px;">
+    <h4>📩 Telegram orqali xabar olish</h4>
+    <p id="telegramLinkStatus" style="font-size:14px; opacity:0.8; margin:6px 0;">Natijalar tayyor bo'lganda xabar olish uchun bog'lang.</p>
+    <button id="telegramLinkBtn" class="gradient-btn">Botga ulanish</button>
+  </div>
+`);
+
+document.getElementById('telegramLinkBtn')?.addEventListener('click', async () => {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+  const code = Math.random().toString(36).substring(2, 10);
+  const { error } = await supabaseClient.from('telegram_link_codes').insert({ code, user_id: user.id });
+  if (error) { console.error(error); return; }
+  window.open(`https://t.me/cefr_boost_bot?start=${code}`, '_blank');
+  document.getElementById('telegramLinkStatus').textContent = 'Botda "Start" bosing — bog\'lanadi ✅';
+});
 /* Official Writing new-format raw structure:
    Task 1.1 = /5, Task 1.2 = /6, Task 2 = /6, total = /17.
    The conversion table below is kept separate so it can be replaced with
