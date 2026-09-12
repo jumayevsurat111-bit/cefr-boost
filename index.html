@@ -1574,7 +1574,7 @@ window.addEventListener("load", () => {
     document.getElementById("speakingTestView").style.display = "none";
     document.getElementById("speakingDoneView").style.display = "none";
 
-    const { data, error } = await supabase.from("speaking_mocks").select("*").eq("is_active", true);
+    const { data, error } = await supabaseClient.from("speaking_mocks").select("*").eq("is_active", true);
     const listEl = document.getElementById("speakingMockList");
     listEl.innerHTML = "";
     if (error || !data || data.length === 0) {
@@ -1660,10 +1660,10 @@ window.addEventListener("load", () => {
   }
 
   async function uploadSpeakingAnswers() {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseClient.auth.getUser();
     for (let i = 0; i < spAudioBlobs.length; i++) {
       const path = `${user.id}/${spCurrentMock.id}/part11_q${i + 1}.webm`;
-      await supabase.storage.from("speaking_audio").upload(path, spAudioBlobs[i], { upsert: true });
+      await supabaseClient.storage.from("speaking_audio").upload(path, spAudioBlobs[i], { upsert: true });
     }
     document.getElementById("speakingTestView").style.display = "none";
     document.getElementById("speakingDoneView").style.display = "block";
