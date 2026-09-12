@@ -62,7 +62,40 @@ document.getElementById("saveMockBtn").addEventListener("click", async () => {
   });
   document.getElementById("saveMsg").textContent = error ? "Xato: " + error.message : "✅ Saqlandi!";
 });;
+  document.getElementById("addSpeakingMockBtn").addEventListener("click", async () => {
+  const title = document.getElementById("spTitle").value.trim();
+  const q1 = document.getElementById("spQ1").value.trim();
+  const q2 = document.getElementById("spQ2").value.trim();
+  const q3 = document.getElementById("spQ3").value.trim();
+  const statusEl = document.getElementById("spStatus");
+
+  if (!title || !q1 || !q2 || !q3) {
+    statusEl.textContent = "Barcha maydonlarni to'ldiring.";
+    return;
+  }
+
+  const { error } = await supabase.from("speaking_mocks").insert({
+    title, part11_q1: q1, part11_q2: q2, part11_q3: q3
+  });
+
+  statusEl.textContent = error ? "Xatolik: " + error.message : "Qo'shildi ✅";
+  if (!error) {
+    document.getElementById("spTitle").value = "";
+    document.getElementById("spQ1").value = "";
+    document.getElementById("spQ2").value = "";
+    document.getElementById("spQ3").value = "";
+  }
+});
 })();
 </script>
+  <div class="admin-section">
+  <h2>Speaking Mock qo'shish</h2>
+  <input type="text" id="spTitle" placeholder="Mock nomi (masalan: Speaking Mock 01)">
+  <input type="text" id="spQ1" placeholder="Part 1.1 - 1-savol">
+  <input type="text" id="spQ2" placeholder="Part 1.1 - 2-savol">
+  <input type="text" id="spQ3" placeholder="Part 1.1 - 3-savol">
+  <button id="addSpeakingMockBtn">Speaking mock qo'shish</button>
+  <p id="spStatus"></p>
+</div>
 </body>
 </html>
