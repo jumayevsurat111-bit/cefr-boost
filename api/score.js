@@ -69,7 +69,10 @@ export default async function handler(req, res) {
       throw new Error("OpenRouter API error: " + JSON.stringify(data));
     }
 
-    const rawText = data.choices?.[0]?.message?.content || "";
+       console.error(`RAW RESPONSE for ${model}:`, JSON.stringify(data));
+    const rawText = data.choices?.[0]?.message?.content
+      || data.choices?.[0]?.message?.reasoning
+      || "";
     return extractJson(rawText);
   }
 
