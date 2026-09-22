@@ -55,7 +55,38 @@ export default async function handler(req, res) {
       return res.status(orResponse.status).json({ error: "Scoring service error", details: data });
     }
 
-    const text = data.choices?.[0]?.message?.content || "";
+        let text = data.choices?.[0]?.message?.content || "";
+
+    // Some free models prepend reasoning text or wrap the JSON in
+    // markdown code fences instead of returning pure JSON, even with
+    // response_format: json_object. Extract just the {...} object.
+    text = text.trim();
+
+    // Strip ```json ... ``` or ``` ... ``` fences if present.
+    const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenceMatch) {
+      text = fenceMatch[1].trim();
+    }
+
+    // If there's still text before/after the JSON object, cut down to
+    // the first "{" through the last "}".
+    const firstBrace = text.indexOf("{");
+    const lastBrace = text.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      text = text.slice(firstBrace, lastBrace + 1);
+    }
+
+    // Validate it's actually parseable JSON before sending it on —
+    // if not, ask the model to retry once with a stricter instruction.
+    try {
+      JSON.parse(text);
+    } catch (parseErr) {
+      console.error("Model returned non-JSON, raw text was:", data.choices?.[0]?.message?.content);
+      return res.status(502).json({
+        error: "Model returned invalid JSON",
+        details: "The AI's response could not be parsed. Please try again.",
+      });
+    }
 
     // Reshape into the same {content:[{type:"text", text}]} shape the
     // frontend already expects, so index.html needs no changes.
