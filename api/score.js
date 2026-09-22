@@ -22,14 +22,30 @@ export default async function handler(req, res) {
   }
 
   const userText = messages.map((m) => m.content).join("\n\n");
-
-  // "openrouter/free" auto-routes to whichever free-tier model is
-  // currently available, so this keeps working even as OpenRouter
-  // rotates which specific model is free.
-  const model = "openrouter/free";
   const url = "https://openrouter.ai/api/v1/chat/completions";
 
-  try {
+  // Try a few different free models, in order, in case one is
+  // currently overloaded or returning malformed output.
+  const modelsToTry = [
+    "openrouter/free",
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "google/gemini-2.0-flash-exp:free",
+  ];
+
+  function extractJson(rawText) {
+    let text = (rawText || "").trim();
+    const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenceMatch) text = fenceMatch[1].trim();
+    const firstBrace = text.indexOf("{");
+    const lastBrace = text.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      text = text.slice(firstBrace, lastBrace + 1);
+    }
+    JSON.parse(text); // throws if still invalid
+    return text;
+  }
+
+  async function tryModel(model) {
     const orResponse = await fetch(url, {
       method: "POST",
       headers: {
@@ -43,56 +59,44 @@ export default async function handler(req, res) {
           { role: "user", content: userText },
         ],
         max_tokens: Math.min(max_tokens || 1000, 3500),
-                temperature: 0.2,
+        temperature: 0.2,
         response_format: { type: "json_object" },
       }),
     });
 
     const data = await orResponse.json();
-
     if (!orResponse.ok) {
-      console.error("OpenRouter API error:", data);
-      return res.status(orResponse.status).json({ error: "Scoring service error", details: data });
+      throw new Error("OpenRouter API error: " + JSON.stringify(data));
     }
 
-        let text = data.choices?.[0]?.message?.content || "";
-
-    // Some free models prepend reasoning text or wrap the JSON in
-    // markdown code fences instead of returning pure JSON, even with
-    // response_format: json_object. Extract just the {...} object.
-    text = text.trim();
-
-    // Strip ```json ... ``` or ``` ... ``` fences if present.
-    const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-    if (fenceMatch) {
-      text = fenceMatch[1].trim();
-    }
-
-    // If there's still text before/after the JSON object, cut down to
-    // the first "{" through the last "}".
-    const firstBrace = text.indexOf("{");
-    const lastBrace = text.lastIndexOf("}");
-    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      text = text.slice(firstBrace, lastBrace + 1);
-    }
-
-    // Validate it's actually parseable JSON before sending it on —
-    // if not, ask the model to retry once with a stricter instruction.
-    try {
-      JSON.parse(text);
-    } catch (parseErr) {
-      console.error("Model returned non-JSON, raw text was:", data.choices?.[0]?.message?.content);
-      return res.status(502).json({
-        error: "Model returned invalid JSON",
-        details: "The AI's response could not be parsed. Please try again.",
-      });
-    }
-
-    // Reshape into the same {content:[{type:"text", text}]} shape the
-    // frontend already expects, so index.html needs no changes.
-    return res.status(200).json({ content: [{ type: "text", text }] });
-  } catch (err) {
-    console.error("Proxy error:", err);
-    return res.status(500).json({ error: "Scoring request failed" });
+    const rawText = data.choices?.[0]?.message?.content || "";
+    return extractJson(rawText);
   }
+
+  let text;
+  let lastErr;
+
+  // Try each model up to 2 times before moving to the next one.
+  outer:
+  for (const model of modelsToTry) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        text = await tryModel(model);
+        break outer; // success
+      } catch (err) {
+        lastErr = err;
+        console.error(`Model ${model}, attempt ${attempt} failed:`, err.message);
+      }
+    }
+  }
+
+  if (text === undefined) {
+    console.error("All models/attempts failed. Last error:", lastErr);
+    return res.status(502).json({
+      error: "Model returned invalid JSON after multiple attempts",
+      details: "The AI's response could not be parsed. Please try again.",
+    });
+  }
+
+  return res.status(200).json({ content: [{ type: "text", text }] });
 }
