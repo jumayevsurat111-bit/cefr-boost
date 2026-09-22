@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
   // Try a few different free models, in order, in case one is
   // currently overloaded or returning malformed output.
-       const modelsToTry = [
+  const modelsToTry = [
     "inclusionai/ling-3.0-flash-vl:free",
     "qwen/qwen3.8-27b:free",
   ];
@@ -59,7 +59,6 @@ export default async function handler(req, res) {
         ],
         max_tokens: Math.min(max_tokens || 1000, 3500),
         temperature: 0.2,
-        response_format: { type: "json_object" },
       }),
     });
 
@@ -68,7 +67,7 @@ export default async function handler(req, res) {
       throw new Error("OpenRouter API error: " + JSON.stringify(data));
     }
 
-       console.error(`RAW RESPONSE for ${model}:`, JSON.stringify(data));
+    console.error(`RAW RESPONSE for ${model}:`, JSON.stringify(data));
     const rawText = data.choices?.[0]?.message?.content
       || data.choices?.[0]?.message?.reasoning
       || "";
@@ -78,10 +77,10 @@ export default async function handler(req, res) {
   let text;
   let lastErr;
 
-  // Try each model up to 2 times before moving to the next one.
+  // Try each model once, moving to the next one on failure.
   outer:
   for (const model of modelsToTry) {
-    for (let attempt = 1; attempt <= 2; attempt++) {
+    for (let attempt = 1; attempt <= 1; attempt++) {
       try {
         text = await tryModel(model);
         break outer; // success
