@@ -26,11 +26,10 @@ export default async function handler(req, res) {
 
   // Try a few different free models, in order, in case one is
   // currently overloaded or returning malformed output.
-     const modelsToTry = [
-     "deepseek/deepseek-chat-v3.1:free",
-     "meta-llama/llama-3.3-70b-instruct:free",
-     "google/gemini-2.0-flash-exp:free",
-   ];
+       const modelsToTry = [
+    "inclusionai/ling-3.0-flash-vl:free",
+    "qwen/qwen3.8-27b:free",
+  ];
 
   function extractJson(rawText) {
     let text = (rawText || "").trim();
