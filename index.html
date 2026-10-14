@@ -262,6 +262,18 @@ body.dark .nav-item.active{color:#a78bfa!important}
 .sp-note{font-size:13px;color:#6b7280;margin:0 0 14px;line-height:1.5}
 .sp-dl{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:#5b2bc8;text-decoration:none}
 .sp-dl:hover{text-decoration:underline}
+.sp-ring{position:relative;width:150px;height:150px;margin:6px auto 14px}
+.sp-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.sp-ring circle{fill:none;stroke-width:8}
+.sp-ring .bg{stroke:#e9eaf0}
+.sp-ring .fg{stroke:#6939dc;stroke-linecap:round;stroke-dasharray:326.73;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.sp-ring.rec .fg{stroke:#dc2626}
+.sp-ring .sp-timer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;margin:0;font-size:34px}
+.sp-intro-title{font-size:22px;margin:4px 0 8px}
+.sp-intro-text{font-size:15px;line-height:1.55;color:#4b5563;margin:0 0 12px}
+.sp-intro-meta{font-size:13px;font-weight:700;color:#5b2bc8;background:#eee8ff;display:inline-block;padding:7px 12px;border-radius:8px;margin:0 0 18px}
+.sp-hist-title{font-size:15px;margin:20px 0 6px}
+.sp-hist-item{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#6b7280;padding:8px 0;border-top:1px solid #eef0f4}
 @media(max-width:520px){.sp-columns{grid-template-columns:1fr}.sp-question{font-size:16.5px}}
 
 /* ============ DARK MODE ============ */
@@ -281,6 +293,9 @@ body.dark textarea{background:#232336!important;color:#e5e7eb!important;border-c
 body.dark .history-item,body.dark .review-item,body.dark .answer-result,body.dark .mock-item,body.dark .sp-result{border-color:#2a2a3d!important}
 body.dark #authModal>div,body.dark #resultsModal>div,body.dark #vocabModal>div,body.dark #profileModal>div,body.dark .modal-content{background:#1c1c2b!important;color:#e5e7eb!important}
 body.dark .sp-timer,body.dark .subtitle{color:#e5e7eb}
+body.dark .sp-ring .bg{stroke:#2a2a3d}
+body.dark .sp-intro-text{color:#9ca3af}
+body.dark .sp-hist-item{border-color:#2a2a3d}
 body.dark .close-btn{background:#2a2a3d;color:#e5e7eb}
 body.dark .sp-btn.ghost{background:#2a2a3d;color:#e5e7eb}
 body.dark .profile-card{background:#232336}
@@ -604,6 +619,7 @@ function cefrFrom75(score){
       <h2>🎤 Speaking mocklar</h2>
       <p class="sp-note">Haqiqiy imtihondagidek: vaqt avtomatik ketadi, to'xtatib yoki orqaga qaytib bo'lmaydi. Signaldan keyin javob yozila boshlaydi. Oxirida javoblarni tinglash va yuklab olish mumkin.</p>
       <div id="speakingMockList"></div>
+      <div id="spHistory"></div>
     </div>
 
     <div id="speakingTestView" style="display:none;">
@@ -612,6 +628,13 @@ function cefrFrom75(score){
         <span class="sp-count" id="spStepCount"></span>
       </div>
       <div class="sp-progress"><div id="spProgressFill"></div></div>
+      <div id="spIntro" style="display:none;">
+        <h3 class="sp-intro-title" id="spIntroTitle"></h3>
+        <p class="sp-intro-text" id="spIntroText"></p>
+        <p class="sp-intro-meta" id="spIntroMeta"></p>
+        <button type="button" class="sp-btn" id="spIntroBtn">Boshlash</button>
+      </div>
+      <div id="spStage">
       <p class="sp-question" id="spQuestionText"></p>
       <div class="sp-images" id="spImages"></div>
       <div class="sp-columns" id="spColumns" style="display:none;">
@@ -619,10 +642,14 @@ function cefrFrom75(score){
         <div class="sp-col against"><b>❌ Against</b><span id="spAgainst"></span></div>
       </div>
       <div class="sp-phase" id="spPhase"></div>
-      <div class="sp-timer" id="spTimer"></div>
+      <div class="sp-ring" id="spRing">
+        <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="spRingFg" cx="60" cy="60" r="52"/></svg>
+        <div class="sp-timer" id="spTimer"></div>
+      </div>
       <div class="sp-actions">
         <button type="button" class="sp-btn" id="spRecordBtn"></button>
         <button type="button" class="sp-btn ghost" id="spSkipBtn" style="display:none;"></button>
+      </div>
       </div>
     </div>
 
@@ -1739,6 +1766,50 @@ showHome();
     } catch (e) {}
   }
 
+  const RING_C = 326.73;
+  function setRing(left, total, rec){
+    const fg = $("spRingFg");
+    if (fg) fg.style.strokeDashoffset = String(RING_C * (1 - Math.max(left, 0) / total));
+    $("spRing").classList.toggle("rec", !!rec);
+  }
+  const INTRO = {
+    "Part 1.1": "Oddiy, tanish mavzularda qisqa savollar. Har bir savolga tayyorgarlikdan keyin qisqa javob bering.",
+    "Part 1.2": "Rasmlarga qarang, ularni tasvirlang va savollarga javob bering.",
+    "Part 2": "Mavzuni o'qing, bir daqiqa tayyorlaning, so'ng ikki daqiqa to'xtamay gapiring.",
+    "Part 3": "Mavzuning ikkala tomonini ko'rib chiqing, o'z fikringizni asoslang va xulosa qiling."
+  };
+  const SP_HISTORY_KEY = "cefrSpeakingHistory";
+  function loadSpHistory(){
+    try { return JSON.parse(localStorage.getItem(SP_HISTORY_KEY) || "[]"); } catch(e) { return []; }
+  }
+  function saveSpAttempt(){
+    try {
+      const h = loadSpHistory();
+      h.unshift({ date: new Date().toISOString(), mock: SP.mock.title, answers: Object.keys(SP.blobs).length, total: SP.steps.length });
+      localStorage.setItem(SP_HISTORY_KEY, JSON.stringify(h.slice(0, 20)));
+    } catch(e) {}
+  }
+  function renderSpHistory(){
+    const box = $("spHistory");
+    box.innerHTML = "";
+    const h = loadSpHistory().slice(0, 5);
+    if (!h.length) return;
+    const title = document.createElement("h3");
+    title.className = "sp-hist-title";
+    title.textContent = "Oxirgi urinishlar";
+    box.appendChild(title);
+    h.forEach(e => {
+      const row = document.createElement("div");
+      row.className = "sp-hist-item";
+      const a = document.createElement("span");
+      a.textContent = e.mock;
+      const b = document.createElement("span");
+      b.textContent = `${new Date(e.date).toLocaleDateString()} · ${e.answers}/${e.total} javob`;
+      row.appendChild(a); row.appendChild(b);
+      box.appendChild(row);
+    });
+  }
+
   // ---------- helpers ----------
   function fmt(s){
     const m = Math.floor(s / 60), r = s % 60;
@@ -1826,6 +1897,7 @@ showHome();
     showView("list");
     const listEl = $("speakingMockList");
     listEl.innerHTML = '<p class="sp-empty">Yuklanmoqda...</p>';
+    renderSpHistory();
 
     const { data, error } = await supabaseClient.from("speaking_mocks").select("*").eq("is_active", true);
     listEl.innerHTML = "";
@@ -1897,6 +1969,28 @@ showHome();
   function showStep(){
     clearInterval(SP.timer);
     const s = SP.steps[SP.i];
+    const prev = SP.i > 0 ? SP.steps[SP.i - 1] : null;
+    if (!prev || prev.part !== s.part) showIntro(s); else showQuestion(s);
+  }
+
+  function showIntro(s){
+    $("spPartLabel").textContent = s.part;
+    $("spStepCount").textContent = `${SP.i + 1} / ${SP.steps.length}`;
+    $("spProgressFill").style.width = (SP.i / SP.steps.length * 100) + "%";
+    const n = SP.steps.filter(x => x.part === s.part).length;
+    const dur = (sec) => sec >= 60 ? (sec / 60) + " daqiqa" : sec + " soniya";
+    $("spStage").style.display = "none";
+    $("spIntro").style.display = "block";
+    $("spIntroTitle").textContent = s.part;
+    $("spIntroText").textContent = INTRO[s.part] || "";
+    $("spIntroMeta").textContent = `${n} ta savol · ${s.prep > 0 ? "tayyorgarlik " + dur(s.prep) : "tayyorgarliksiz"} · javob ${dur(s.speak)}`;
+    $("spIntroBtn").onclick = () => showQuestion(s);
+  }
+
+  function showQuestion(s){
+    clearInterval(SP.timer);
+    $("spIntro").style.display = "none";
+    $("spStage").style.display = "block";
     $("spPartLabel").textContent = `${s.part} · ${s.label}`;
     $("spStepCount").textContent = `${SP.i + 1} / ${SP.steps.length}`;
     $("spProgressFill").style.width = (SP.i / SP.steps.length * 100) + "%";
@@ -1940,12 +2034,14 @@ showHome();
     $("spPhase").textContent = "⏳ Tayyorlanish vaqti";
     $("spTimer").className = "sp-timer";
     $("spTimer").textContent = fmt(left);
+    setRing(left, s.prep, false);
     $("spRecordBtn").style.display = "none";
     $("spSkipBtn").style.display = "none";
     beep(660, 0.15);
     SP.timer = setInterval(() => {
       left--;
       $("spTimer").textContent = fmt(Math.max(left, 0));
+      setRing(left, s.prep, false);
       if (left <= 0) { clearInterval(SP.timer); startRecording(s); }
     }, 1000);
   }
@@ -1988,10 +2084,12 @@ showHome();
     const t = $("spTimer");
     t.className = "sp-timer rec";
     t.textContent = fmt(left);
+    setRing(left, s.speak, true);
 
     SP.timer = setInterval(() => {
       left--;
       t.textContent = fmt(Math.max(left, 0));
+      setRing(left, s.speak, true);
       if (left <= 0) {
         clearInterval(SP.timer);
         beep(520, 0.3);
@@ -2012,6 +2110,7 @@ showHome();
   // ---------- finish: playback + upload ----------
   function finish(){
     SP.finished = true;
+    saveSpAttempt();
     stopStream();
     $("spProgressFill").style.width = "100%";
     showView("done");
