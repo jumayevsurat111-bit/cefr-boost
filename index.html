@@ -260,6 +260,8 @@ body.dark .nav-item.active{color:#a78bfa!important}
 .sp-up.ok{background:#e6f8ef;color:#0b9565}
 .sp-up.err{background:#fee2e2;color:#dc2626}
 .sp-note{font-size:13px;color:#6b7280;margin:0 0 14px;line-height:1.5}
+.sp-dl{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:#5b2bc8;text-decoration:none}
+.sp-dl:hover{text-decoration:underline}
 @media(max-width:520px){.sp-columns{grid-template-columns:1fr}.sp-question{font-size:16.5px}}
 
 /* ============ DARK MODE ============ */
@@ -600,7 +602,7 @@ function cefrFrom75(score){
 
     <div id="speakingListView">
       <h2>🎤 Speaking mocklar</h2>
-      <p class="sp-note">Mikrofonga ruxsat bering. Har bir javob avtomatik yoziladi va oxirida qayta tinglashingiz mumkin.</p>
+      <p class="sp-note">Haqiqiy imtihondagidek: vaqt avtomatik ketadi, to'xtatib yoki orqaga qaytib bo'lmaydi. Signaldan keyin javob yozila boshlaydi. Oxirida javoblarni tinglash va yuklab olish mumkin.</p>
       <div id="speakingMockList"></div>
     </div>
 
@@ -1719,6 +1721,23 @@ showHome();
     timer: null, active: false, finished: false
   };
   let mocksCache = {};
+  let audioCtx = null;
+
+  // Short signal tone (like the real exam): played at prep start, recording start and recording end
+  function beep(freq, dur){
+    try {
+      if (!audioCtx) return;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.frequency.value = freq;
+      o.connect(g); g.connect(audioCtx.destination);
+      const t = audioCtx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.start(t); o.stop(t + dur);
+    } catch (e) {}
+  }
 
   // ---------- helpers ----------
   function fmt(s){
@@ -1751,14 +1770,14 @@ showHome();
     const p11 = [1,2,3].filter(n => m["part11_q" + n]);
     p11.forEach((n, k) => steps.push({
       key: "part11_q" + n, part: "Part 1.1", label: `Savol ${k+1}/${p11.length}`,
-      text: m["part11_q" + n], images: [], prep: 0, speak: 30
+      text: m["part11_q" + n], images: [], prep: 5, speak: 30
     }));
 
     const imgs12 = [m.part12_img1, m.part12_img2].filter(Boolean);
     const p12 = [1,2,3].filter(n => m["part12_q" + n]);
     p12.forEach((n, k) => steps.push({
       key: "part12_q" + n, part: "Part 1.2", label: `Savol ${k+1}/${p12.length}`,
-      text: m["part12_q" + n], images: imgs12, prep: 0, speak: 30
+      text: m["part12_q" + n], images: imgs12, prep: 10, speak: 45
     }));
 
     if (m.part2_topic) steps.push({
@@ -1798,6 +1817,7 @@ showHome();
     SP.blobs = {};
     SP.active = false;
     SP.finished = false;
+    if (audioCtx) { try { audioCtx.close(); } catch(e) {} audioCtx = null; }
   }
 
   // ---------- list ----------
@@ -1856,6 +1876,11 @@ showHome();
       return;
     }
 
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.resume) audioCtx.resume();
+    } catch (e) { audioCtx = null; }
+
     SP.mock = mock;
     SP.steps = steps;
     SP.i = 0;
@@ -1895,7 +1920,7 @@ showHome();
       cols.style.display = "none";
     }
 
-    if (s.prep > 0) startPrep(s); else showReady(s);
+    if (s.prep > 0) startPrep(s); else startRecording(s);
   }
 
   function showReady(s){
@@ -1916,10 +1941,8 @@ showHome();
     $("spTimer").className = "sp-timer";
     $("spTimer").textContent = fmt(left);
     $("spRecordBtn").style.display = "none";
-    const skip = $("spSkipBtn");
-    skip.style.display = "block";
-    skip.textContent = "Tayyorman, yozishni boshlash";
-    skip.onclick = () => { clearInterval(SP.timer); startRecording(s); };
+    $("spSkipBtn").style.display = "none";
+    beep(660, 0.15);
     SP.timer = setInterval(() => {
       left--;
       $("spTimer").textContent = fmt(Math.max(left, 0));
@@ -1930,6 +1953,18 @@ showHome();
   function startRecording(s){
     clearInterval(SP.timer);
     if (!SP.stream) return;
+    $("spSkipBtn").style.display = "none";
+    $("spRecordBtn").style.display = "none";
+    $("spPhase").textContent = "🔔 Tayyor bo'ling...";
+    beep(880, 0.25);
+    // small delay so the signal tone is not captured in the recording
+    setTimeout(() => {
+      if (!SP.active || !SP.stream) return;
+      beginRecording(s);
+    }, 350);
+  }
+
+  function beginRecording(s){
     SP.chunks = [];
     let rec;
     try {
@@ -1949,22 +1984,17 @@ showHome();
     rec.start();
 
     let left = s.speak;
-    $("spSkipBtn").style.display = "none";
     $("spPhase").textContent = "🔴 Yozilmoqda";
     const t = $("spTimer");
     t.className = "sp-timer rec";
     t.textContent = fmt(left);
-    const btn = $("spRecordBtn");
-    btn.style.display = "block";
-    btn.className = "sp-btn rec";
-    btn.textContent = "⏹️ To'xtatish";
-    btn.onclick = () => { if (rec.state === "recording") rec.stop(); };
 
     SP.timer = setInterval(() => {
       left--;
       t.textContent = fmt(Math.max(left, 0));
       if (left <= 0) {
         clearInterval(SP.timer);
+        beep(520, 0.3);
         if (rec.state === "recording") rec.stop();
       }
     }, 1000);
@@ -2019,6 +2049,12 @@ showHome();
       box.appendChild(top);
       box.appendChild(q);
       box.appendChild(audio);
+      const dl = document.createElement("a");
+      dl.className = "sp-dl";
+      dl.href = url;
+      dl.download = `${s.part.replace(/\s+/g, "_")}_${s.key}.${SP.ext}`;
+      dl.textContent = "⬇️ Yuklab olish";
+      box.appendChild(dl);
       list.appendChild(box);
     });
 
@@ -2077,3 +2113,4 @@ showHome();
 </script>
 </body>
 </html>
+
