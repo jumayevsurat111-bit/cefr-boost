@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><link rel="icon" type="image/png" href="logo.png">
+<head>
+<link rel="icon" type="image/png" href="logo.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CEFR Boost — Practice Tests</title>
@@ -9,9 +10,12 @@
 <meta property="og:image" content="https://cefr-boost-xi.vercel.app/logo.png">
 <meta property="og:url" content="https://cefr-boost-xi.vercel.app/">
 <meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
- textarea{border:1.5px solid #e5e7eb!important;border-radius:12px!important;padding:14px!important;font-family:'Inter',sans-serif!important;font-size:15px!important;transition:border-color .2s,box-shadow .2s!important;outline:none!important}
-textarea:focus{border-color:#4338ca!important;box-shadow:0 0 0 3px #4338ca22!important} 
+textarea{border:1.5px solid #e5e7eb!important;border-radius:12px!important;padding:14px!important;font-family:'Inter',sans-serif!important;font-size:15px!important;transition:border-color .2s,box-shadow .2s!important;outline:none!important}
+textarea:focus{border-color:#4338ca!important;box-shadow:0 0 0 3px #4338ca22!important}
 *{box-sizing:border-box}
 body{margin:0;font-family:'Inter',Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f0f0ff 0%,#f8f9fc 40%);color:#1a1d29;min-height:100vh}
 a,button,.tab,.part-box{outline:none}
@@ -44,7 +48,7 @@ a:focus-visible,button:focus-visible,.tab:focus-visible,.part-box:focus-visible,
 .skill-grid .skill-card:nth-child(2) .status.soon{background:#ffffffaa;color:#059669}
 .skill-grid .skill-card:nth-child(3) .status.soon{background:#ffffffaa;color:#b45309}
 .skill-grid .skill-card:nth-child(4) .status.soon{background:#ffffffaa;color:#be185d}
-.skill-cta{border:0;border-radius:11px;padding:11px 16px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.skill-cta{border:0;border-radius:11px;padding:11px 16px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block;width:100%;font-family:inherit}
 .skill-cta.primary{background:#6536d8;color:#fff}
 .skill-cta.primary:hover{background:#5529bd}
 .skill-cta.disabled{background:#ffffff99;color:#6b7280;cursor:not-allowed;font-weight:600}
@@ -131,7 +135,7 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
 .err-grammar{background:#fce7f3;color:#9d174d}
 .err-grammar b{color:#be185d}.err-grammar strong{color:#0b9565}
 .task-score-pill{display:inline-block;background:#eef0ff;color:#4338ca;font-weight:800;padding:3px 10px;border-radius:20px;font-size:13px;margin-left:8px}
- .fb-block{border-radius:12px;padding:14px 16px;margin-top:10px}
+.fb-block{border-radius:12px;padding:14px 16px;margin-top:10px}
 .fb-block:first-child{margin-top:0}
 .fb-block-title{font-weight:800;font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .fb-block ul{margin:0;padding-left:18px}
@@ -143,22 +147,22 @@ button{border:0;border-radius:11px;padding:13px 21px;font-size:15px;font-weight:
 .fb-tip{background:#eef0ff}
 .fb-tip .fb-block-title{color:#4338ca}
 .fb-tip p{margin:0;font-size:14px;line-height:1.5;color:#3a3f4d}
- .la-item{font-size:13px;color:#9aa1ad;display:flex;align-items:center;gap:8px;transition:color .3s}
+.la-item{font-size:13px;color:#9aa1ad;display:flex;align-items:center;gap:8px;transition:color .3s}
 .vocab-card{border-radius:13px;padding:13px 14px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;border-left:4px solid;background:#fafbfe}
 .vocab-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex-shrink:0}
 .vocab-word{font-weight:700;font-size:15px;color:#1a1d29}
 .vocab-meaning{font-weight:400;color:#6b7280;font-size:14px}
 .vocab-example{font-size:12.5px;color:#9aa1ad;margin-top:3px;font-style:italic}
-.vocab-del{border:none;background:#fee2e2;color:#dc2626;width:26px;height:26px;border-radius:50%;cursor:pointer;flex-shrink:0}
- .nav-item{color:#9aa1ad;transition:color .2s}
+.vocab-del{border:none;background:#fee2e2;color:#dc2626;width:26px;height:26px;border-radius:50%;cursor:pointer;flex-shrink:0;padding:0;font-size:12px}
+.nav-item{color:#9aa1ad;transition:color .2s}
 .nav-item.active{color:#4338ca;font-weight:700}
 body.dark .nav-item.active{color:#a78bfa!important}
- .result-item-card{border-radius:13px;padding:14px 15px;margin-bottom:9px;border-left:4px solid;background:#fafbfe}
+.result-item-card{border-radius:13px;padding:14px 15px;margin-bottom:9px;border-left:4px solid;background:#fafbfe}
 .result-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px}
 .result-item-name{font-weight:700;font-size:14.5px;color:#1a1d29}
 .result-item-cefr{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;color:#fff;flex-shrink:0}
 .result-item-meta{font-size:12.5px;color:#8a919e}
- .la-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;flex-shrink:0}
+.la-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:11px;flex-shrink:0}
 .la-pending{color:#b2b8c4}
 .la-pending .la-icon{color:#c7cbd4}
 .la-active{color:#4338ca;font-weight:700}
@@ -166,7 +170,8 @@ body.dark .nav-item.active{color:#a78bfa!important}
 .la-done{color:#0b9565;font-weight:600}
 .la-done .la-icon{color:#0b9565}
 @keyframes laBlink{0%,100%{opacity:1}50%{opacity:.3}}
- .action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.75}}
+.action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:15px}
 .action{padding:15px;border-radius:12px;border:0;color:#fff;font-weight:800;font-size:14px;cursor:pointer}
 .action.green{background:#159b50}.action.blue{background:#2768df}.action.teal{background:#069879}
 .extra-panel{display:none;background:#fff;border-radius:15px;padding:20px;margin-bottom:15px;box-shadow:0 4px 18px #0000000b;line-height:1.6}
@@ -197,25 +202,67 @@ body.dark .nav-item.active{color:#a78bfa!important}
   position:relative;
   z-index:10;
 }
-.writing-start-btn:active{
-  transform:scale(.98);
-}
+.writing-start-btn.continue{background:#0b9a69 !important}
+.writing-start-btn:active{transform:scale(.98)}
 @media(max-width:640px){
-  .mock-row{
-    width:100%;
-  }
-  .mock-row .writing-start-btn{
-    width:100% !important;
-    min-width:100% !important;
-    display:block !important;
-  }
-  .mock-info{
-    width:100%;
-  }
+  .mock-row{width:100%}
+  .mock-row .writing-start-btn{width:100% !important;min-width:100% !important;display:block !important}
+  .mock-info{width:100%}
 }
 #darkToggleSlider:before{content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px #0000003a}
 #darkToggle:checked + #darkToggleSlider{background:#4338ca}
 #darkToggle:checked + #darkToggleSlider:before{transform:translateX(20px)}
+
+/* Profile: Telegram card */
+.profile-card{background:#f8f9fc;border-radius:14px;padding:16px}
+.profile-card h4{margin:0 0 6px;font-size:14px;color:#374151}
+.gradient-btn{width:100%;padding:10px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700}
+
+/* ============ SPEAKING ============ */
+.modal{display:none;position:fixed;inset:0;background:rgba(30,27,60,.55);backdrop-filter:blur(4px);z-index:9998;align-items:center;justify-content:center;padding:16px}
+.modal-content{background:#fff;border-radius:22px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:26px 24px 24px;position:relative;box-shadow:0 20px 60px #00000026}
+.close-btn{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:#eef0f4;color:#4b5563;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;line-height:1;z-index:2}
+.close-btn:hover{background:#e0e3ea}
+.modal-content h2{margin:0 0 16px;font-size:20px}
+.mock-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border:1px solid #e4e6eb;border-radius:13px;margin-bottom:10px;font-weight:700;font-size:15px}
+.mock-item button{background:#6536d8;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px}
+.mock-item button:hover{background:#5529bd}
+.sp-empty{color:#8a919e;font-size:14px;text-align:center;padding:18px 0}
+.sp-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-right:38px;margin-bottom:10px}
+.sp-part{display:inline-block;background:#eee8ff;color:#5d30ca;font-weight:700;padding:7px 12px;border-radius:8px;font-size:13px}
+.sp-count{font-size:13px;color:#8a919e;font-weight:600}
+.sp-progress{height:6px;background:#e9eaf0;border-radius:99px;overflow:hidden;margin-bottom:18px}
+.sp-progress div{height:100%;width:0;background:#6939dc;transition:width .3s}
+.sp-question{font-size:18px;line-height:1.5;font-weight:700;margin:0 0 14px;white-space:pre-wrap}
+.sp-images{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sp-images img{flex:1 1 200px;min-width:0;max-width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid #e4e6eb;background:#f3f4f8}
+.sp-columns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sp-col{border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.55;white-space:pre-wrap}
+.sp-col b{display:block;margin-bottom:5px;font-size:13px}
+.sp-col.for{background:#e6f8ef;color:#0b6b4a}
+.sp-col.against{background:#fdecec;color:#9b1c1c}
+.sp-phase{text-align:center;font-weight:700;font-size:14px;color:#5b2bc8;margin:6px 0 2px}
+.sp-timer{text-align:center;font-size:40px;font-weight:800;color:#1a1d29;margin:2px 0 14px;font-variant-numeric:tabular-nums}
+.sp-timer.rec{color:#dc2626}
+.sp-actions{display:flex;flex-direction:column;gap:10px}
+.sp-btn{width:100%;border-radius:12px;padding:14px;font-size:15px;font-weight:700;color:#fff;background:#6536d8}
+.sp-btn:hover{background:#5529bd}
+.sp-btn.rec{background:#dc2626}
+.sp-btn.rec:hover{background:#b91c1c}
+.sp-btn.ghost{background:#eef0f4;color:#4b5563}
+.sp-btn.ghost:hover{background:#e0e3ea}
+.sp-result{border:1px solid #e4e6eb;border-radius:13px;padding:12px 14px;margin-bottom:10px}
+.sp-result-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:14px;font-weight:700}
+.sp-result-q{font-size:13px;color:#6b7280;margin:0 0 8px;white-space:pre-wrap}
+.sp-result audio{width:100%}
+.sp-up{font-size:12px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap}
+.sp-up.wait{background:#eef0ff;color:#5b2bc8}
+.sp-up.ok{background:#e6f8ef;color:#0b9565}
+.sp-up.err{background:#fee2e2;color:#dc2626}
+.sp-note{font-size:13px;color:#6b7280;margin:0 0 14px;line-height:1.5}
+@media(max-width:520px){.sp-columns{grid-template-columns:1fr}.sp-question{font-size:16.5px}}
+
+/* ============ DARK MODE ============ */
 body.dark{background:#14141f!important;color:#e5e7eb!important}
 body.dark .header{background:#1c1c2b!important;border-color:#2a2a3d!important}
 body.dark .skill-card{background:#1c1c2b!important;color:#e5e7eb!important}
@@ -223,6 +270,19 @@ body.dark .skill-card p{color:#9ca3af!important}
 body.dark #bottomNav{background:#1c1c2b!important;border-color:#2a2a3d!important}
 body.dark #bottomNav a{color:#9ca3af!important}
 body.dark .header-history{background:#2a2a3d!important;color:#c7c7f0!important}
+body.dark .card,body.dark .result-card,body.dark .result-header,body.dark .mock-list,body.dark .activity,body.dark .progress-wrap,body.dark .history-panel,body.dark .extra-panel,body.dark #continueCard{background:#1c1c2b!important;color:#e5e7eb!important}
+body.dark .taskbox,body.dark .part-box,body.dark .criteria div,body.dark .tab,body.dark .scoring-note,body.dark .vocab-card,body.dark .result-item-card{background:#232336!important;border-color:#2a2a3d!important;color:#e5e7eb!important}
+body.dark .tab.active{background:#2d2650!important;border-color:#6536d8!important}
+body.dark .vocab-word,body.dark .result-item-name,body.dark .scoring-note span strong{color:#e5e7eb!important}
+body.dark .mock-row+.mock-row,body.dark .activity-item{border-color:#2a2a3d!important}
+body.dark textarea{background:#232336!important;color:#e5e7eb!important;border-color:#2a2a3d!important}
+body.dark .history-item,body.dark .review-item,body.dark .answer-result,body.dark .mock-item,body.dark .sp-result{border-color:#2a2a3d!important}
+body.dark #authModal>div,body.dark #resultsModal>div,body.dark #vocabModal>div,body.dark #profileModal>div,body.dark .modal-content{background:#1c1c2b!important;color:#e5e7eb!important}
+body.dark .sp-timer,body.dark .subtitle{color:#e5e7eb}
+body.dark .close-btn{background:#2a2a3d;color:#e5e7eb}
+body.dark .sp-btn.ghost{background:#2a2a3d;color:#e5e7eb}
+body.dark .profile-card{background:#232336}
+body.dark .profile-card h4{color:#e5e7eb}
 </style>
 <script>
 function cefrColor(cefr){
@@ -240,7 +300,7 @@ async function showResults() {
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
-    listEl.innerHTML = "Xato: " + error.message;
+    listEl.textContent = "Xato: " + error.message;
     return;
   }
   document.getElementById("resultsCountBadge").textContent = `${data ? data.length : 0} ta urinish`;
@@ -266,7 +326,7 @@ async function showResults() {
         <span class="result-item-name">${escapeHtml(r.mock_name)}</span>
         <span class="result-item-cefr" style="background:${color}">${escapeHtml(r.cefr_level)}</span>
       </div>
-      <div class="result-item-meta">Ball: ${r.raw_score}/17 · Sertifikat: ${r.certificate_score}/75 · ${new Date(r.created_at).toLocaleDateString("uz-UZ")}</div>
+      <div class="result-item-meta">Ball: ${escapeHtml(String(r.raw_score))}/17 · Sertifikat: ${escapeHtml(String(r.certificate_score))}/75 · ${new Date(r.created_at).toLocaleDateString("uz-UZ")}</div>
     </div>`;
   }).join("");
 }
@@ -280,7 +340,7 @@ async function loadVocab() {
   const listEl = document.getElementById("vocabList");
   listEl.innerHTML = "Yuklanmoqda...";
   const { data, error } = await supabaseClient.from("vocabulary").select("*").order("created_at", { ascending: false });
-  if (error) { listEl.innerHTML = "Xato: " + error.message; return; }
+  if (error) { listEl.textContent = "Xato: " + error.message; return; }
   document.getElementById("vocabCountBadge").textContent = `${data ? data.length : 0} ta so'z saqlangan`;
   if (!data || data.length === 0) {
     listEl.innerHTML = `
@@ -300,7 +360,7 @@ async function loadVocab() {
         <div class="vocab-word">${escapeHtml(v.word)} <span class="vocab-meaning">— ${escapeHtml(v.meaning)}</span></div>
         ${v.example ? `<div class="vocab-example">${escapeHtml(v.example)}</div>` : ""}
       </div>
-      <button class="vocab-del" onclick="deleteVocab(${v.id})">✕</button>
+      <button class="vocab-del" onclick="deleteVocab(${JSON.stringify(v.id)})">✕</button>
     </div>`;
   }).join("");
 }
@@ -309,8 +369,9 @@ async function deleteVocab(id) {
   loadVocab();
 }
 async function showProfile() {
-  document.getElementById("profileModal").style.display = "block";
   const { data } = await supabaseClient.auth.getSession();
+  if (!data.session) return;
+  document.getElementById("profileModal").style.display = "block";
   const user = data.session.user;
   const name = user.user_metadata?.full_name || user.email;
   document.getElementById("profileEmail").textContent = user.email;
@@ -331,8 +392,10 @@ async function updateAvatar() {
   const { data } = await supabaseClient.auth.getSession();
   if (!data.session) return;
   const user = data.session.user;
-  const name = user.user_metadata?.full_name || user.email;
+  const name = user.user_metadata?.full_name || user.email || "?";
   document.getElementById("userAvatar").textContent = name.charAt(0).toUpperCase();
+  window._userFirstName = user.user_metadata?.full_name ? user.user_metadata.full_name.split(" ")[0] : "";
+  if (typeof renderDashboard === "function") renderDashboard();
 }
 window.addEventListener("load", function() {
   document.getElementById("saveNameBtn").addEventListener("click", async () => {
@@ -341,7 +404,7 @@ window.addEventListener("load", function() {
     const msg = document.getElementById("profileMsg");
     msg.style.color = error ? "red" : "green";
     msg.textContent = error ? tarjimaXato(error.message) : "✅ Ism saqlandi!";
-        if (!error) { updateAvatar(); document.getElementById("profileNameBig").textContent = name || "Foydalanuvchi"; }
+    if (!error) { updateAvatar(); document.getElementById("profileNameBig").textContent = name || "Foydalanuvchi"; }
   });
   document.getElementById("savePassBtn").addEventListener("click", async () => {
     const pass = document.getElementById("p_newpass").value;
@@ -372,21 +435,19 @@ window.addEventListener("load", function() {
     document.body.classList.toggle("dark", darkToggle.checked);
     localStorage.setItem("darkMode", darkToggle.checked);
   });
-});
- window.addEventListener('load', () => {
-  const dt = document.getElementById('darkToggle');
-  if (!dt) return;
 
+  // Telegram link card (inside profile modal)
   const tgCard = document.createElement('div');
   tgCard.className = 'profile-card';
   tgCard.id = 'telegramLinkCard';
   tgCard.style.marginTop = '12px';
   tgCard.innerHTML = `
     <h4>📩 Telegram orqali xabar olish</h4>
-    <p id="telegramLinkStatus" style="font-size:14px; opacity:0.8; margin:6px 0;">Natijalar tayyor bo'lganda xabar olish uchun bog'lang.</p>
+    <p id="telegramLinkStatus" style="font-size:14px; opacity:0.8; margin:6px 0 10px;">Natijalar tayyor bo'lganda xabar olish uchun bog'lang.</p>
     <button id="telegramLinkBtn" class="gradient-btn">Botga ulanish</button>
   `;
-  dt.closest('div').parentNode.appendChild(tgCard);
+  const row = darkToggle.closest('div');
+  if (row && row.parentNode) row.parentNode.appendChild(tgCard);
 
   document.getElementById('telegramLinkBtn').addEventListener('click', async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
@@ -429,57 +490,46 @@ function cefrFrom75(score){
     "sb_publishable_RJM4SqD7iTiUX4wJLLMOTA_g5peTZAx"
   );
 </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <div style="position:fixed;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,#c7d2fe 0%,transparent 70%);border-radius:50%;z-index:0;pointer-events:none;"></div>
 <div style="position:fixed;top:200px;left:-150px;width:350px;height:350px;background:radial-gradient(circle,#ddd6fe 0%,transparent 70%);border-radius:50%;z-index:0;pointer-events:none;"></div>
-<div id="authModal" style="position:fixed;inset:0;background:rgba(15,17,23,0.75);backdrop-filter:blur(6px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#fff;padding:36px 32px;border-radius:20px;width:380px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
 
-    <!-- Logo + tagline -->
+<!-- AUTH -->
+<div id="authModal" style="position:fixed;inset:0;background:rgba(15,17,23,0.75);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;padding:36px 32px;border-radius:20px;width:380px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
     <div style="text-align:center;margin-bottom:28px;">
       <div style="font-size:26px;font-weight:800;background:linear-gradient(135deg,#4338ca,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;">🚀 CEFR BOOST</div>
       <div style="font-size:15px;font-weight:700;color:#1a1d29;">Prepare smarter. Score higher.</div>
       <div style="font-size:12.5px;color:#888;margin-top:6px;line-height:1.4;">O'zbekiston CEFR imtihonini realistik mock testlar va batafsil fikr-mulohaza bilan mashq qiling</div>
     </div>
-
     <h2 id="authTitle" style="margin:0 0 16px;font-size:18px;font-weight:700;color:#1a1d29;text-align:center;">Kirish</h2>
-
-    <!-- Google button - prominent -->
     <button id="googleLoginBtn" style="width:100%;padding:12px;background:#fff;color:#333;border:1px solid #ddd;border-radius:10px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
-      <img src="https://www.google.com/favicon.ico" style="width:18px;height:18px;"> Google orqali davom etish
+      <img src="https://www.google.com/favicon.ico" alt="" style="width:18px;height:18px;"> Google orqali davom etish
     </button>
-
-    <!-- Divider -->
     <div style="display:flex;align-items:center;gap:10px;margin:20px 0;">
       <div style="flex:1;height:1px;background:#eee;"></div>
       <span style="color:#aaa;font-size:12px;">yoki</span>
       <div style="flex:1;height:1px;background:#eee;"></div>
     </div>
-
-    <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:12px 14px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;font-size:14px;box-sizing:border-box;">
-    <input id="authPassword" type="password" placeholder="Parol" style="width:100%;padding:12px 14px;margin-bottom:8px;border:1px solid #ddd;border-radius:10px;font-size:14px;box-sizing:border-box;">
+    <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:12px 14px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;font-size:14px;">
+    <input id="authPassword" type="password" placeholder="Parol" style="width:100%;padding:12px 14px;margin-bottom:8px;border:1px solid #ddd;border-radius:10px;font-size:14px;">
     <div id="authError" style="color:red;font-size:13px;margin-bottom:8px;"></div>
-
     <button id="authSubmitBtn" style="width:100%;padding:12px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">Kirish</button>
-
     <p style="text-align:center;margin-top:16px;font-size:13.5px;color:#888;">
       <span id="authToggleText">Akkountingiz yo'qmi?</span>
       <a href="#" id="authToggleLink" style="color:#4338ca;font-weight:600;text-decoration:none;">Ro'yxatdan o'tish</a>
     </p>
-
   </div>
 </div>
+
+<!-- HOME -->
 <div id="homeView">
 <header class="header">
   <span class="logo">🚀 CEFR BOOST</span>
   <button class="header-history" id="homeHistoryBtn">📜 Recent activity</button>
   <span id="userAvatar" onclick="showProfile()" style="margin-left:8px;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;font-size:14px;"></span>
   <button id="logoutBtn" style="margin-left:8px;padding:8px 14px;border-radius:8px;border:1px solid #e7e9ef;background:#fff;cursor:pointer;font-size:13px;">🚪 Chiqish</button>
-  
 </header>
 <main class="home-container">
    <section style="padding-top:6px;margin-bottom:22px;">
@@ -525,8 +575,9 @@ function cefrFrom75(score){
     <div class="skill-card">
       <span class="icon">🎤</span>
       <h2>Speaking</h2>
-      <p>Recorded responses to prompts, scored on fluency, pronunciation, grammar, and vocabulary.</p>
-      <button class="skill-btn" onclick="openSpeakingList()">Boshlash</button>
+      <p>Recorded responses to prompts across Part 1.1, 1.2, 2 and 3, just like the real exam.</p>
+      <span class="status live">● Mocks available</span>
+      <button type="button" class="skill-cta primary" onclick="openSpeakingList()">Boshlash</button>
     </div>
   </div>
   <div id="writing-mocks">
@@ -541,29 +592,53 @@ function cefrFrom75(score){
   </div>
 </main>
 </div>
- <div id="speakingModal" class="modal" style="display:none;">
+
+<!-- SPEAKING MODAL -->
+<div id="speakingModal" class="modal">
   <div class="modal-content">
-    <span class="close-btn" onclick="closeSpeakingModal()">&times;</span>
+    <span class="close-btn" onclick="closeSpeakingModal()" title="Yopish">&times;</span>
+
     <div id="speakingListView">
-      <h2>Speaking Mocklar</h2>
+      <h2>🎤 Speaking mocklar</h2>
+      <p class="sp-note">Mikrofonga ruxsat bering. Har bir javob avtomatik yoziladi va oxirida qayta tinglashingiz mumkin.</p>
       <div id="speakingMockList"></div>
     </div>
+
     <div id="speakingTestView" style="display:none;">
-      <p id="spPartLabel"></p>
-      <h3 id="spQuestionText"></h3>
-      <p id="spTimer" style="font-size:24px;font-weight:bold;"></p>
-      <button id="spRecordBtn"></button>
-      <audio id="spPlayback" controls style="display:none;"></audio>
+      <div class="sp-top">
+        <span class="sp-part" id="spPartLabel"></span>
+        <span class="sp-count" id="spStepCount"></span>
+      </div>
+      <div class="sp-progress"><div id="spProgressFill"></div></div>
+      <p class="sp-question" id="spQuestionText"></p>
+      <div class="sp-images" id="spImages"></div>
+      <div class="sp-columns" id="spColumns" style="display:none;">
+        <div class="sp-col for"><b>✅ For</b><span id="spFor"></span></div>
+        <div class="sp-col against"><b>❌ Against</b><span id="spAgainst"></span></div>
+      </div>
+      <div class="sp-phase" id="spPhase"></div>
+      <div class="sp-timer" id="spTimer"></div>
+      <div class="sp-actions">
+        <button type="button" class="sp-btn" id="spRecordBtn"></button>
+        <button type="button" class="sp-btn ghost" id="spSkipBtn" style="display:none;"></button>
+      </div>
     </div>
+
     <div id="speakingDoneView" style="display:none;">
-      <h2>Rahmat! Javoblaringiz saqlandi ✅</h2>
-      <p>Baholash tez orada qo'shiladi.</p>
+      <h2>Rahmat! Javoblaringiz yozib olindi ✅</h2>
+      <p class="sp-note" id="spUploadStatus">Javoblar saqlanmoqda...</p>
+      <div id="spResultList"></div>
+      <button type="button" class="sp-btn ghost" id="spRetryUploadBtn" style="display:none;margin-bottom:10px;">🔁 Saqlashni qayta urinish</button>
+      <button type="button" class="sp-btn" onclick="closeSpeakingModal()">Yopish</button>
+      <p class="sp-note" style="margin-top:12px;">Baholash tez orada qo'shiladi.</p>
     </div>
   </div>
 </div>
+
+<!-- WRITING -->
 <div id="writingView" style="display:none">
 <header class="header">
-  <div><a href="javascript:void(0)" onclick="showHome()" style="text-decoration:none"><span class="logo">CEFR BOOST</span></a> <span class="mock">· Writing Mock 01</span></div>
+  <div><a href="javascript:void(0)" onclick="showHome()" style="text-decoration:none"><span class="logo">CEFR BOOST</span></a> <span class="mock" id="writingMockLabel">· Writing Mock 01</span></div>
   <div style="display:flex;align-items:center;gap:10px">
     <button class="history-btn" id="historyBtn">📜 History</button>
     <div class="timer" id="timer">60:00</div>
@@ -629,7 +704,6 @@ function cefrFrom75(score){
       <div style="font-size:12px;color:#9aa1ad;margin-top:16px;">Odatda 10–30 soniya davom etadi</div>
     </div>
   </div>
-  <style>@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.75}}</style>
   <div id="resultsContent" style="display:none">
   <div id="motivationBanner" style="display:none;background:#fff7e6;border:1px solid #ffe4a8;border-radius:14px;padding:14px 16px;margin-bottom:16px;text-align:center;font-weight:700;color:#9b6a00;font-size:14.5px;"></div>
   <div class="score-grid">
@@ -647,7 +721,7 @@ function cefrFrom75(score){
       <button class="part-box" data-part="0"><span>✏️ Task 1.1</span><b id="pg-t11">–<small>/5</small></b></button>
       <button class="part-box" data-part="1"><span>✏️ Task 1.2</span><b id="pg-t12">–<small>/6</small></b></button>
       <button class="part-box" data-part="2"><span>✏️ Task 2</span><b id="pg-t2">–<small>/6</small></b></button>
-            <button class="part-box" data-part="2"><span>📊 Overall</span><b id="pg-overall">–<small>/17</small></b></button>
+      <button class="part-box" data-part="3"><span>📊 Overall</span><b id="pg-overall">–<small>/17</small></b></button>
     </div>
   </div>
   <div class="result-card" id="breakdownCard">
@@ -673,11 +747,11 @@ function cefrFrom75(score){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div style="background:#e6f8ef;border-radius:10px;padding:12px;">
         <div style="font-size:12px;color:#0b9565;font-weight:700;margin-bottom:2px;">🟢 Kuchli tomon</div>
-        <div id="bd-strongest" style="font-weight:700;">–</div>
+        <div id="bd-strongest" style="font-weight:700;color:#1a1d29;">–</div>
       </div>
       <div style="background:#fef2f2;border-radius:10px;padding:12px;">
         <div style="font-size:12px;color:#dc2626;font-weight:700;margin-bottom:2px;">🔴 Kuchsiz tomon</div>
-        <div id="bd-weakest" style="font-weight:700;">–</div>
+        <div id="bd-weakest" style="font-weight:700;color:#1a1d29;">–</div>
       </div>
     </div>
   </div>
@@ -715,57 +789,191 @@ function cefrFrom75(score){
 </section>
 </main>
 </div>
+
+<!-- BOTTOM NAV -->
+<nav id="bottomNav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e7e9ef;display:flex;justify-content:space-around;padding:10px 0;box-shadow:0 -4px 16px #0000000d;z-index:200;">
+  <a href="#" id="navHome" class="nav-item active" onclick="showHome();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
+    <div style="font-size:20px;">🏠</div>Bosh sahifa
+  </a>
+  <a href="#" id="navResults" class="nav-item" onclick="showResults();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
+    <div style="font-size:20px;">📊</div>Natijalar
+  </a>
+  <a href="#" id="navVocab" class="nav-item" onclick="showVocab();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
+    <div style="font-size:20px;">📚</div>Lug'atlar
+  </a>
+</nav>
+
+<!-- RESULTS MODAL -->
+<div id="resultsModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
+  <div style="background:#fff;max-width:500px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
+    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:24px 24px 20px;position:relative;color:#fff;">
+      <button onclick="document.getElementById('resultsModal').style.display='none';setActiveNav('home')" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;padding:0;">✕</button>
+      <div style="font-size:20px;font-weight:800;">📊 Mening natijalarim</div>
+      <div id="resultsCountBadge" style="font-size:13px;opacity:0.85;margin-top:3px;">– ta urinish</div>
+    </div>
+    <div style="padding:20px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-24px;">
+      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
+        <div id="resultsBestCert" style="font-size:22px;font-weight:800;color:#4338ca;">–</div>
+        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Eng yaxshi ball</div>
+      </div>
+      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
+        <div id="resultsBestCefr" style="font-size:22px;font-weight:800;color:#0b9565;">–</div>
+        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Erishilgan daraja</div>
+      </div>
+    </div>
+    <div style="padding:20px 24px 24px;">
+      <div id="resultsList">Yuklanmoqda...</div>
+    </div>
+  </div>
+</div>
+
+<!-- VOCAB MODAL -->
+<div id="vocabModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
+  <div style="background:#fff;max-width:500px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
+    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:24px 24px 20px;position:relative;color:#fff;">
+      <button onclick="document.getElementById('vocabModal').style.display='none';setActiveNav('home')" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;padding:0;">✕</button>
+      <div style="font-size:20px;font-weight:800;">📚 Lug'atlarim</div>
+      <div id="vocabCountBadge" style="font-size:13px;opacity:0.85;margin-top:3px;">– ta so'z saqlangan</div>
+    </div>
+    <div style="padding:20px 24px 0;">
+      <div style="background:#f8f9fc;border-radius:14px;padding:16px;margin-bottom:18px;">
+        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">+ Yangi so'z qo'shish</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input id="v_word" placeholder="So'z" style="flex:1;min-width:0;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;background:#fff;">
+          <input id="v_meaning" placeholder="Ma'nosi" style="flex:1;min-width:0;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;background:#fff;">
+        </div>
+        <input id="v_example" placeholder="Misol gap (ixtiyoriy)" style="width:100%;padding:10px;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;background:#fff;">
+        <button id="addVocabBtn" style="width:100%;padding:10px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">+ Qo'shish</button>
+      </div>
+    </div>
+    <div style="padding:0 24px 24px;">
+      <div id="vocabList">Yuklanmoqda...</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
+  <div style="background:#fff;max-width:420px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
+    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:28px 24px 22px;position:relative;color:#fff;">
+      <button onclick="document.getElementById('profileModal').style.display='none'" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;padding:0;">✕</button>
+      <div id="profileAvatarBig" style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;margin-bottom:12px;">?</div>
+      <div id="profileNameBig" style="font-size:18px;font-weight:800;">Foydalanuvchi</div>
+      <div id="profileEmail" style="font-size:13px;opacity:0.85;margin-top:2px;"></div>
+    </div>
+    <div style="padding:20px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-24px;">
+      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
+        <div id="profileTestCount" style="font-size:22px;font-weight:800;color:#4338ca;">–</div>
+        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Yechilgan testlar</div>
+      </div>
+      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
+        <div id="profileBestScore" style="font-size:22px;font-weight:800;color:#0b9565;">–</div>
+        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Eng yaxshi natija</div>
+      </div>
+    </div>
+    <div style="padding:20px 24px 24px;">
+      <div style="background:#f8f9fc;border-radius:14px;padding:16px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">✏️ Ism</div>
+        <input id="p_name" placeholder="Ismingizni kiriting" style="width:100%;padding:10px;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;background:#fff;">
+        <button id="saveNameBtn" style="width:100%;padding:10px;background:#4338ca;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Ismni saqlash</button>
+      </div>
+      <div style="background:#f8f9fc;border-radius:14px;padding:16px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">🔒 Parol</div>
+        <input id="p_newpass" type="password" placeholder="Yangi parol (kamida 6 belgi)" style="width:100%;padding:10px;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;background:#fff;">
+        <button id="savePassBtn" style="width:100%;padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Parolni yangilash</button>
+      </div>
+      <div id="profileMsg" style="font-size:13px;margin-bottom:10px;"></div>
+      <div style="background:#f8f9fc;border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:14px;font-weight:700;color:#374151;">🌙 Qorong'i rejim</span>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;">
+          <input type="checkbox" id="darkToggle" style="opacity:0;width:0;height:0;">
+          <span id="darkToggleSlider" style="position:absolute;cursor:pointer;inset:0;background:#e5e7eb;border-radius:24px;transition:.3s;"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MAIN APP SCRIPT: navigation, home, writing ============ -->
 <script>
 let writingStarted = false;
- function setActiveNav(name){
+let allMocksCache = [];
+const $ = (id) => document.getElementById(id);
+
+function setActiveNav(name){
  ["navHome","navResults","navVocab"].forEach(id=>{
-  const el = document.getElementById(id);
+  const el = $(id);
   if(el) el.classList.remove("active");
  });
  const map = {home:"navHome", results:"navResults", vocab:"navVocab"};
- const el = document.getElementById(map[name]);
+ const el = $(map[name]);
  if(el) el.classList.add("active");
 }
- function showHome(){
+
+function showHome(){
+  // If the user leaves an unfinished writing test, keep their progress and stop the clock
+  if($("writingView").style.display==="block" && $("success").style.display!=="block"){
+    answers[index] = answer.value;
+    saveProgress();
+  }
+  clearInterval(clockInterval);
+  ["resultsModal","vocabModal","profileModal"].forEach(id => $(id).style.display="none");
   setActiveNav("home");
-  document.getElementById("homeView").style.display="block";
-  document.getElementById("writingView").style.display="none";
+  $("homeView").style.display="block";
+  $("writingView").style.display="none";
   renderMockList();
   renderActivity();
   renderDashboard();
 }
+
+function greetingText(){
+  const h = new Date().getHours();
+  return h < 12 ? "Xayrli tong" : h < 18 ? "Xayrli kun" : "Xayrli kech";
+}
+
 function renderDashboard(){
+  $("dashGreeting").textContent = `${greetingText()}${window._userFirstName ? ", " + window._userFirstName : ""} 👋`;
   const history = loadJSON(HISTORY_KEY, []);
   if(history.length){
     const best = history.reduce((a,b)=> b.cert > a.cert ? b : a);
-    document.getElementById("dashLevel").textContent = best.cefr;
-    document.getElementById("dashScore").textContent = `${best.cert} / 75`;
-    document.getElementById("dashProgressBar").style.width = `${(best.cert/75)*100}%`;
+    $("dashLevel").textContent = best.cefr;
+    $("dashScore").textContent = `${best.cert} / 75`;
+    $("dashProgressBar").style.width = `${(best.cert/75)*100}%`;
   }
   const saved = loadProgress();
-  const cc = document.getElementById("continueCard");
+  const cc = $("continueCard");
   if(saved && saved.mockName){
     cc.style.display = "block";
-    document.getElementById("continueMockName").textContent = saved.mockName;
+    $("continueMockName").textContent = saved.mockName;
   } else {
     cc.style.display = "none";
   }
 }
-document.getElementById("continueCard").onclick = () => {
-  document.getElementById("writing-mocks").scrollIntoView({behavior:"smooth"});
+
+$("continueCard").onclick = () => {
+  const saved = loadProgress();
+  const mock = saved && allMocksCache.find(m => m.title === saved.mockName);
+  if(mock){
+    loadMockTasks(mock);
+    startOrContinueWriting();
+  } else {
+    $("writing-mocks").scrollIntoView({behavior:"smooth"});
+  }
 };
+
 function showWriting(){
-  document.getElementById("homeView").style.display="none";
-  document.getElementById("writingView").style.display="block";
+  $("homeView").style.display="none";
+  $("writingView").style.display="block";
   writingStarted = true;
   initWritingMock();
 }
 function startOrContinueWriting(){
   showWriting();
 }
+
 // ============ WRITING MOCK LOGIC (constants, scoring, test flow) ============
 let currentMockName = "Writing Mock 01";
- let tasks=[
+const DEFAULT_TASKS = [
  {badge:"TASK 1.1",title:"Informal Letter (B1)",sub:"Recommended length: 50 words",range:"Target: ~50 words",
  prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to your friend, who is also a member of the club. Write about your feelings and what you think the club management should do about the situation."},
  {badge:"TASK 1.2",title:"Formal Letter (B2)",sub:"Recommended length: 120–150 words",range:"Target: 120–150 words",
@@ -773,13 +981,15 @@ let currentMockName = "Writing Mock 01";
  {badge:"TASK 2",title:"Online Discussion Post (C1)",sub:"Recommended length: 180–200 words",range:"Target: 180–200 words",
  prompt:"You are participating in an online discussion for language learners. The question is: \"Is it better to live in a big city or a small town?\" Post your response, giving reasons and examples."}
 ];
+let tasks = DEFAULT_TASKS.map(t => ({...t}));
 let index=0, answers=["","",""], seconds=3600, clockInterval=null;
 const STORAGE_KEY="cefrWritingProgress";
 const HISTORY_KEY="cefrWritingHistory";
+
 function saveProgress(){
  try{
   localStorage.setItem(STORAGE_KEY, JSON.stringify({answers, seconds, index, savedAt:Date.now(), mockName: currentMockName}));
-  const ind = document.getElementById("saveIndicator");
+  const ind = $("saveIndicator");
   if(ind){
    ind.style.opacity = "1";
    clearTimeout(window._saveIndicatorTimeout);
@@ -807,11 +1017,12 @@ function saveHistoryEntry(entry){
   localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0,50)));
  }catch(e){ console.warn("Could not save history:", e); }
 }
-const answer=document.getElementById("answer");
-const wordcount=document.getElementById("wordcount");
+const answer=$("answer");
+const wordcount=$("wordcount");
 function words(s){return s.trim()?s.trim().split(/\s+/).length:0}
+
 function renderTabs(){
- const wrap=document.getElementById("tabs");
+ const wrap=$("tabs");
  wrap.innerHTML=tasks.map((t,i)=>{
   const n=words(answers[i]||"");
   const done=n>0;
@@ -825,18 +1036,18 @@ function renderTabs(){
 }
 function render(){
  const t=tasks[index];
- document.getElementById("badge").textContent=t.badge;
- document.getElementById("title").textContent=t.title;
- document.getElementById("subtitle").textContent=t.sub;
- document.getElementById("range").textContent=t.range;
- document.getElementById("prompt").textContent=t.prompt;
- document.getElementById("stepText").textContent=`${t.badge.replace("TASK ","Task ")} of 3`;
+ $("badge").textContent=t.badge;
+ $("title").textContent=t.title;
+ $("subtitle").textContent=t.sub;
+ $("range").textContent=t.range;
+ $("prompt").textContent=t.prompt;
+ $("stepText").textContent=`${t.badge.replace("TASK ","Task ")} of 3`;
  const p=Math.round((index+1)/3*100);
- document.getElementById("pct").textContent=p+"%";
- document.getElementById("fill").style.width=p+"%";
+ $("pct").textContent=p+"%";
+ $("fill").style.width=p+"%";
  answer.value=answers[index];
- document.getElementById("prev").disabled=index===0;
- document.getElementById("next").textContent=index===2?"Review →":"Next →";
+ $("prev").disabled=index===0;
+ $("next").textContent=index===2?"Review →":"Next →";
  renderTabs();
  updateCount();
 }
@@ -853,29 +1064,31 @@ function updateCount(){
  wordcount.style.fontWeight = state ? "700" : "500";
 }
 answer.addEventListener("input",()=>{answers[index]=answer.value;updateCount();renderTabs();saveProgress();});
-document.getElementById("prev").onclick=()=>{answers[index]=answer.value;if(index>0){index--;saveProgress();render()}};
+$("prev").onclick=()=>{answers[index]=answer.value;if(index>0){index--;saveProgress();render()}};
+
 function showReview(){
- document.getElementById("testCard").style.display="none";
- document.getElementById("tabs").style.display="none";
+ $("testCard").style.display="none";
+ $("tabs").style.display="none";
  document.querySelector(".progress-wrap").style.display="none";
- document.getElementById("review").style.display="block";
- document.getElementById("reviewList").innerHTML=answers.map((a,i)=>`<div class="review-item" data-i="${i}" style="cursor:pointer"><strong>${tasks[i].badge} — ${tasks[i].title} <span style="float:right;color:#6536d8;font-weight:600;font-size:13px">Edit ✎</span></strong><div class="answer">${a||"<i>No answer</i>"}</div></div>`).join("");
+ $("review").style.display="block";
+ $("reviewList").innerHTML=answers.map((a,i)=>`<div class="review-item" data-i="${i}" style="cursor:pointer"><strong>${tasks[i].badge} — ${escapeHtml(tasks[i].title)} <span style="float:right;color:#6536d8;font-weight:600;font-size:13px">Edit ✎</span></strong><div class="answer">${a?escapeHtml(a):"<i>No answer</i>"}</div></div>`).join("");
  document.querySelectorAll("#reviewList .review-item").forEach(el=>{
   el.onclick=()=>{
    index=parseInt(el.dataset.i);
-   document.getElementById("review").style.display="none";
-   document.getElementById("testCard").style.display="block";
-   document.getElementById("tabs").style.display="flex";
+   $("review").style.display="none";
+   $("testCard").style.display="block";
+   $("tabs").style.display="grid";
    document.querySelector(".progress-wrap").style.display="block";
    render();
   };
  });
 }
-document.getElementById("next").onclick=()=>{
+$("next").onclick=()=>{
  answers[index]=answer.value;
  saveProgress();
  if(index<2){index++;render()}else{ showReview(); }
 };
+
 const CALIBRATION_EXAMPLES = `Below are real graded responses to this exact test (fitness club scenario), with official examiner marks and comments. Use them to calibrate how strict your marking should be — do not just describe them, match their severity:
 --- Task 1.1 (max 5) ---
 Response (mark 4/5): "Hi Alex, Did you see the message from fitness club? They close for one month. I'm not so happy because I like go there every week. Maybe they can do some sport outside for us. What do you think? See you soon, Luca."
@@ -889,6 +1102,7 @@ Response (mark 3/6): on topic but not all questions fully addressed; appropriate
 Response (mark 2/6): mostly relevant but unclear stance and some minor off-topic parts; errors in grammar/word choice sometimes cause misunderstanding; simple cohesive devices only.
 Response (mark 4/6): relevant with clear stance; range of complex structures; sufficient vocabulary; errors and awkward vocabulary usage do not cause misunderstanding; clear structure with connectors and logical flow.
 Reserve top marks for near error-free, well-organised, fully-developed responses. Mid marks are for competent but imperfect responses (occasional errors, simple cohesion, some unaddressed points). Low marks are for responses where errors affect understanding, or the stance/topic focus is unclear.`;
+
 /* All AI calls go through our own backend at /api/score, which holds the
    real Anthropic API key server-side (see /api/score.js). The browser
    never sees the API key. */
@@ -906,7 +1120,7 @@ async function callAI(sys, userContent, maxTokens){
   const errText = await response.text().catch(()=> "");
   throw new Error(`Scoring service error (${response.status}): ${errText || "no details"}`);
  }
-  const data = await response.json();
+ const data = await response.json();
  const text = (data.content || []).map(b=>b.text||"").join("\n");
  let clean = text.replace(/```json|```/g,"").trim();
  const firstBrace = clean.indexOf("{");
@@ -916,6 +1130,7 @@ async function callAI(sys, userContent, maxTokens){
  }
  return JSON.parse(clean);
 }
+
 async function scoreWithAI(answers){
  const sys = `You are a certified CEFR Writing examiner (Cambridge/IELTS-style, B1–C1 range). Score three writing tasks strictly against the official assessment criteria:
 1) task achievement (topshiriqning bajarilishi)
@@ -942,11 +1157,12 @@ Also give structured overall feedback with these three parts:
 - "tip": one short actionable sentence (in Uzbek) telling the candidate the single most important thing to do to move up a CEFR level
 Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
 {"task11":{"score":<int 0-5>,"comment":"<one sentence>","errors":[...]},"task12":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"task2":{"score":<int 0-6>,"comment":"<one sentence>","errors":[...]},"criteria":{"taskAchievement":<int 0-100>,"coherence":<int 0-100>,"vocabulary":<int 0-100>,"grammar":<int 0-100>},"strengths":["<point 1>","<point 2>"],"improvements":["<point 1>","<point 2>"],"tip":"<one sentence>"}`;
-const userContent = tasks.map((t,i)=>  
- `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
+ const userContent = tasks.map((t,i)=>
+  `${t.badge} — ${t.title}\nPrompt: ${t.prompt}\nTarget: ${t.range}\nCandidate answer:\n${answers[i] || "(no answer submitted)"}`
  ).join("\n\n---\n\n");
-return callAI(sys, userContent, 2500);;
+ return callAI(sys, userContent, 2500);
 }
+
 function highlightAnswerErrors(text, errors){
  if(!text) return "";
  if(!errors || !errors.length) return escapeHtml(text);
@@ -957,7 +1173,7 @@ function highlightAnswerErrors(text, errors){
   if(idx === -1) return;
   out += escapeHtml(text.slice(cursor, idx));
   const cls = (err.type === "SPELL") ? "err-spell" : "err-grammar";
-  out += `<span class="err-tag ${cls}"><b>${err.type}</b><s>${escapeHtml(err.original)}</s> → <strong>${escapeHtml(err.corrected||"")}</strong></span>`;
+  out += `<span class="err-tag ${cls}"><b>${escapeHtml(err.type)}</b><s>${escapeHtml(err.original)}</s> → <strong>${escapeHtml(err.corrected||"")}</strong></span>`;
   cursor = idx + err.original.length;
  });
  out += escapeHtml(text.slice(cursor));
@@ -966,13 +1182,14 @@ function highlightAnswerErrors(text, errors){
 function renderSavedAnswersWithErrors(result){
  const taskResults = [result.task11, result.task12, result.task2];
  const maxScores = [5,6,6];
- document.getElementById("savedAnswers").innerHTML = answers.map((a,i)=>{
+ $("savedAnswers").innerHTML = answers.map((a,i)=>{
   const tr = taskResults[i] || {};
   const body = a ? highlightAnswerErrors(a, tr.errors) : "No answer submitted.";
-  return `<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title} <span class="task-score-pill">${tr.score ?? "–"}/${maxScores[i]}</span></b><p style="line-height:1.9">${body}</p></div>`;
+  return `<div class="answer-result"><b>${tasks[i].badge} — ${escapeHtml(tasks[i].title)} <span class="task-score-pill">${tr.score ?? "–"}/${maxScores[i]}</span></b><p style="line-height:1.9">${body}</p></div>`;
  }).join("");
 }
- let loadingAnimTimer = null;
+
+let loadingAnimTimer = null;
 const LOADING_STEPS = ["la-ta","la-co","la-vo","la-gr"];
 const LOADING_MESSAGES = [
  "Yozuvingiz baholanmoqda...",
@@ -982,14 +1199,14 @@ const LOADING_MESSAGES = [
 ];
 function renderLoadingStep(step){
  LOADING_STEPS.forEach((id,i)=>{
-  const el = document.getElementById(id);
+  const el = $(id);
   if(!el) return;
   const icon = el.querySelector(".la-icon");
   if(i < step){ el.className = "la-item la-done"; icon.textContent = "✓"; }
   else if(i === step){ el.className = "la-item la-active"; icon.textContent = "●"; }
   else { el.className = "la-item la-pending"; icon.textContent = "⏳"; }
  });
- const msgEl = document.getElementById("loadingMsg");
+ const msgEl = $("loadingMsg");
  if(msgEl) msgEl.textContent = LOADING_MESSAGES[Math.min(step, LOADING_MESSAGES.length-1)];
 }
 function startLoadingAnimation(){
@@ -1017,7 +1234,8 @@ function loadingChecklistHTML(){
   <div style="font-size:12px;color:#9aa1ad;margin-top:16px;">Odatda 10–30 soniya davom etadi</div>
  </div>`;
 }
- function renderFeedbackCards(result){
+
+function renderFeedbackCards(result){
  const esc = escapeHtml;
  let html = "";
  if(result.strengths && result.strengths.length){
@@ -1029,49 +1247,45 @@ function loadingChecklistHTML(){
  if(result.tip){
   html += `<div class="fb-block fb-tip"><div class="fb-block-title">💡 Tavsiya</div><p>${esc(result.tip)}</p></div>`;
  }
- document.getElementById("feedbackCards").innerHTML = html || `<p style="color:#9aa1ad">Feedback mavjud emas.</p>`;
+ $("feedbackCards").innerHTML = html || `<p style="color:#9aa1ad">Feedback mavjud emas.</p>`;
 }
- function renderResults(result){
+
+function renderResults(result){
  const t11 = Math.max(0,Math.min(5, Math.round(result.task11.score)));
  const t12 = Math.max(0,Math.min(6, Math.round(result.task12.score)));
  const t2  = Math.max(0,Math.min(6, Math.round(result.task2.score)));
  const raw = calculateWritingRaw(t11, t12, t2);
  const cert = rawTo75(raw);
  const cefr = cefrFrom75(cert);
- document.getElementById("rawScoreDisplay").textContent = `${raw}/17`;
- document.getElementById("certScoreDisplay").textContent = `${cert}/75`;
- document.getElementById("cefrDisplay").textContent = cefr;
-  document.getElementById("cefrDisplay").textContent = cefr;
- const banner = document.getElementById("motivationBanner");
+ $("rawScoreDisplay").textContent = `${raw}/17`;
+ $("certScoreDisplay").textContent = `${cert}/75`;
+ $("cefrDisplay").textContent = cefr;
+ const banner = $("motivationBanner");
+ banner.style.display = "block";
  if(cert >= 65){
-   banner.style.display = "block";
    banner.textContent = `🎉 Tabriklaymiz! Siz C1 darajasiga yetdingiz!`;
  } else if(cert >= 51){
-   const pointsToC1 = 65 - cert;
-   banner.style.display = "block";
-   banner.textContent = `🎯 C1 darajasiga ${pointsToC1} ball qoldi`;
+   banner.textContent = `🎯 C1 darajasiga ${65 - cert} ball qoldi`;
  } else {
-   const pointsToB2 = 51 - cert;
-   banner.style.display = "block";
-   banner.textContent = `🎯 B2 darajasiga ${pointsToB2} ball qoldi`;
+   banner.textContent = `🎯 B2 darajasiga ${51 - cert} ball qoldi`;
  }
-supabaseClient.from("Results").insert({
+ supabaseClient.from("Results").insert({
   mock_name: currentMockName,
   raw_score: raw,
   certificate_score: cert,
   cefr_level: cefr
-}).then(({error}) => {
+ }).then(({error}) => {
   if (error) console.error("Bazaga saqlashda xato:", error);
-});
- document.getElementById("pg-t11").firstChild.textContent = t11;
- document.getElementById("pg-t12").firstChild.textContent = t12;
- document.getElementById("pg-t2").firstChild.textContent = t2;
- document.getElementById("pg-overall").firstChild.textContent = raw;
- document.getElementById("det-t11").textContent = `${t11}/5`;
- document.getElementById("det-t12").textContent = `${t12}/6`;
- document.getElementById("det-t2").textContent = `${t2}/6`;
- document.getElementById("det-overall").textContent = `${raw}/17`;
-renderFeedbackCards(result);
+ });
+ $("pg-t11").firstChild.textContent = t11;
+ $("pg-t12").firstChild.textContent = t12;
+ $("pg-t2").firstChild.textContent = t2;
+ $("pg-overall").firstChild.textContent = raw;
+ $("det-t11").textContent = `${t11}/5`;
+ $("det-t12").textContent = `${t12}/6`;
+ $("det-t2").textContent = `${t2}/6`;
+ $("det-overall").textContent = `${raw}/17`;
+ renderFeedbackCards(result);
  if(result.criteria){
    const c = result.criteria;
    const items = [
@@ -1083,61 +1297,63 @@ renderFeedbackCards(result);
    let strongest = items[0], weakest = items[0];
    items.forEach(it=>{
      const v = Math.max(0, Math.min(100, Math.round(c[it.key] || 0)));
-     document.getElementById(it.valEl).textContent = v + "%";
-     document.getElementById(it.barEl).style.width = v + "%";
+     $(it.valEl).textContent = v + "%";
+     $(it.barEl).style.width = v + "%";
      if((c[it.key]||0) > (c[strongest.key]||0)) strongest = it;
      if((c[it.key]||0) < (c[weakest.key]||0)) weakest = it;
    });
-   document.getElementById("bd-strongest").textContent = strongest.label;
-   document.getElementById("bd-weakest").textContent = weakest.label;
+   $("bd-strongest").textContent = strongest.label;
+   $("bd-weakest").textContent = weakest.label;
  }
- document.getElementById("conv-raw").textContent = `${raw}/17`;
- document.getElementById("conv-cert").textContent = `${cert}/75`;
- document.getElementById("conv-cefr").textContent = cefr;
- document.getElementById("resultTitle").textContent = "Thank you for completing the test! 🎉";
- document.getElementById("resultSubtitle").textContent = "Your Writing Mock 01 results are ready.";
- document.getElementById("resultStatus").textContent = "✓ Completed";
- document.getElementById("loadingCard").style.display = "none";
-   stopLoadingAnimation();
- document.getElementById("resultsContent").style.display = "block";
+ $("conv-raw").textContent = `${raw}/17`;
+ $("conv-cert").textContent = `${cert}/75`;
+ $("conv-cefr").textContent = cefr;
+ $("resultTitle").textContent = "Thank you for completing the test! 🎉";
+ $("resultSubtitle").textContent = `Your ${currentMockName} results are ready.`;
+ $("resultStatus").textContent = "✓ Completed";
+ $("loadingCard").style.display = "none";
+ stopLoadingAnimation();
+ $("resultsContent").style.display = "block";
  saveHistoryEntry({
   date: new Date().toISOString(),
-  mock: "Writing Mock 01",
+  mock: currentMockName,
   raw, max: 17, cert, cefr,
   scores: {t11, t12, t2}
  });
-  
-supabaseClient.auth.getUser().then(({ data: { user } }) => {
+
+ supabaseClient.auth.getUser().then(({ data: { user } }) => {
   if (!user) return;
   fetch('/api/notify-result', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       userId: user.id,
-      mockName: "Writing Mock 01",
+      mockName: currentMockName,
       certificateScore: cert,
       cefrLevel: cefr
     })
   }).catch(e => console.warn('Telegram notify failed:', e));
-});
-  renderSavedAnswersWithErrors(result);
+ });
+ renderSavedAnswersWithErrors(result);
  clearProgress();
 }
+
 function scrollToDetails(){
- const el = document.getElementById("details");
+ const el = $("details");
  if(!el) return;
  el.scrollIntoView({behavior:"smooth", block:"start"});
  el.style.boxShadow = "0 0 0 3px #6536d8";
  setTimeout(()=>{ el.style.boxShadow = ""; }, 900);
 }
 document.querySelectorAll(".part-box").forEach(el=>{ el.onclick = scrollToDetails; });
-document.getElementById("submit").onclick=async ()=>{
+
+$("submit").onclick=async ()=>{
  answers[index]=answer.value;
- document.getElementById("review").style.display="none";
+ $("review").style.display="none";
  document.querySelector(".progress-wrap").style.display="none";
- document.querySelector(".header .timer").style.display="none";
- document.getElementById("success").style.display="block";
- document.getElementById("savedAnswers").innerHTML=answers.map((a,i)=>`<div class="answer-result"><b>${tasks[i].badge} — ${tasks[i].title}</b><p>${a||"No answer submitted."}</p></div>`).join("");
+ $("timer").style.display="none";
+ $("success").style.display="block";
+ $("savedAnswers").innerHTML=answers.map((a,i)=>`<div class="answer-result"><b>${tasks[i].badge} — ${escapeHtml(tasks[i].title)}</b><p>${a?escapeHtml(a):"No answer submitted."}</p></div>`).join("");
  clearInterval(clockInterval);
  startLoadingAnimation();
  try{
@@ -1146,10 +1362,10 @@ document.getElementById("submit").onclick=async ()=>{
  }catch(err){
   console.error("Scoring error:", err);
   stopLoadingAnimation();
-  document.getElementById("loadingCard").innerHTML =
+  $("loadingCard").innerHTML =
    `<div class="result-card-title">⚠️ Scoring failed</div><p style="color:#606775;margin:0 0 12px">Something went wrong while scoring your answers. Please try again.</p><button class="action blue" id="retryScore" style="width:100%">Retry Scoring</button>`;
-  document.getElementById("retryScore").onclick=async ()=>{
-   document.getElementById("loadingCard").innerHTML = loadingChecklistHTML();
+  $("retryScore").onclick=async ()=>{
+   $("loadingCard").innerHTML = loadingChecklistHTML();
    startLoadingAnimation();
    try{
     const result = await scoreWithAI(answers);
@@ -1157,123 +1373,149 @@ document.getElementById("submit").onclick=async ()=>{
    }catch(e2){
     console.error("Retry failed:", e2);
     stopLoadingAnimation();
-    document.getElementById("loadingCard").innerHTML =
+    $("loadingCard").innerHTML =
      `<div class="result-card-title">⚠️ Scoring failed again</div><p style="color:#606775;margin:0">Please try submitting again in a moment.</p>`;
    }
   };
  }
 };
-function startWritingClock(){
-clearInterval(clockInterval);
-clockInterval=setInterval(()=>{
- seconds--; if(seconds<0)seconds=0;
- const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");
- document.getElementById("timer").textContent=m+":"+s;
- if(seconds%5===0){answers[index]=answer.value;saveProgress();}
- if(seconds===0){
-  clearInterval(clockInterval);
-  answers[index]=answer.value;
-  alert("Time is up! Submitting your answers now.");
-  if(document.getElementById("success").style.display==="block"){
-   // already submitted, nothing to do
-  }else{
-   if(document.getElementById("review").style.display!=="block") showReview();
-   document.getElementById("submit").click();
-  }
- }
-},1000);
+
+function updateTimerDisplay(){
+ const m=String(Math.floor(seconds/60)).padStart(2,"0"), s=String(seconds%60).padStart(2,"0");
+ $("timer").textContent=m+":"+s;
 }
+function startWritingClock(){
+ clearInterval(clockInterval);
+ updateTimerDisplay();
+ clockInterval=setInterval(()=>{
+  seconds--; if(seconds<0)seconds=0;
+  updateTimerDisplay();
+  if(seconds%5===0){answers[index]=answer.value;saveProgress();}
+  if(seconds===0){
+   clearInterval(clockInterval);
+   answers[index]=answer.value;
+   alert("Time is up! Submitting your answers now.");
+   if($("success").style.display!=="block"){
+    if($("review").style.display!=="block") showReview();
+    $("submit").click();
+   }
+  }
+ },1000);
+}
+
 function renderHistory(){
  const h=loadHistory();
- const list=document.getElementById("historyList");
+ const list=$("historyList");
  if(!h.length){ list.innerHTML="<p style='color:#8a919e'>No past attempts yet — finish a mock to see it here.</p>"; return; }
  list.innerHTML=h.map(e=>{
   const d=new Date(e.date);
-  return `<div class="history-item"><div><b>${e.cert}/75 · ${e.cefr}</b><div class="hd">${e.mock} · Raw ${e.raw}/${e.max} · ${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div></div></div>`;
+  return `<div class="history-item"><div><b>${e.cert}/75 · ${escapeHtml(e.cefr)}</b><div class="hd">${escapeHtml(e.mock)} · Raw ${e.raw}/${e.max} · ${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div></div></div>`;
  }).join("");
 }
-document.getElementById("backBtn").onclick=()=>{
- showHome();
-};
-document.getElementById("historyBtn").onclick=()=>{
+$("backBtn").onclick=()=>{ showHome(); };
+$("historyBtn").onclick=()=>{
  renderHistory();
- document.getElementById("historyPanel").style.display="block";
- document.getElementById("historyPanel").scrollIntoView({behavior:"smooth"});
+ $("historyPanel").style.display="block";
+ $("historyPanel").scrollIntoView({behavior:"smooth"});
 };
-document.getElementById("closeHistory").onclick=()=>{
- document.getElementById("historyPanel").style.display="none";
-};
+$("closeHistory").onclick=()=>{ $("historyPanel").style.display="none"; };
+
+// Put the writing screen back to a clean "taking the test" state
+function resetWritingUI(){
+ $("testCard").style.display="block";
+ $("tabs").style.display="grid";
+ document.querySelector(".progress-wrap").style.display="block";
+ $("review").style.display="none";
+ $("success").style.display="none";
+ $("timer").style.display="";
+ $("resumeBanner").style.display="none";
+ $("historyPanel").style.display="none";
+ $("extraPanel").style.display="none";
+ $("extraPanel").innerHTML="";
+ Object.keys(panelCache).forEach(k => delete panelCache[k]);
+ $("loadingCard").style.display="block";
+ $("loadingCard").innerHTML = loadingChecklistHTML();
+ $("resultsContent").style.display="none";
+ $("motivationBanner").style.display="none";
+ $("resultTitle").textContent="Scoring your writing... 🤖";
+ $("resultSubtitle").textContent="Our AI examiner is reading your answers.";
+ $("resultStatus").textContent="⏳ Scoring";
+ $("writingMockLabel").textContent = "· " + currentMockName;
+ stopLoadingAnimation();
+}
+
 function initWritingMock(){
+ resetWritingUI();
  const saved=loadProgress();
- if(saved && Array.isArray(saved.answers) && saved.seconds>0){
+ if(saved && saved.mockName===currentMockName && Array.isArray(saved.answers) && saved.seconds>0){
   answers=saved.answers;
   seconds=saved.seconds;
   index=Math.min(saved.index||0,2);
-  document.getElementById("resumeBanner").style.display="block";
+  $("resumeBanner").style.display="block";
  }
  render();
  startWritingClock();
 }
+
 // ============ HOME VIEW LOGIC (mock list, recent activity) ============
 function loadJSON(key, fallback){
   try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
   catch(e){ return fallback; }
 }
- async function renderMockList(){
-  const { data: mocksData, error } = await supabaseClient
+
+async function renderMockList(){
+  const { data: mocksData } = await supabaseClient
     .from("mocks")
     .select("*")
     .eq("is_active", true)
     .order("created_at", { ascending: true });
 
   const history = loadJSON(HISTORY_KEY, []);
-  const listEl = document.getElementById("mockList");
+  const saved = loadProgress();
+  const listEl = $("mockList");
 
   const builtIn = { id: "builtin", title: "Writing Mock 01" };
   const allMocks = [builtIn, ...(mocksData || [])];
+  allMocksCache = allMocks;
 
   listEl.innerHTML = allMocks.map(m => {
     const lastResult = history.find(h => h.mock === m.title);
+    const inProgress = saved && saved.mockName === m.title;
     let metaLine = "3 tasks · 60 minutes";
     if(lastResult){
       const d = new Date(lastResult.date);
       metaLine = `Last attempt: ${lastResult.cert}/75 · ${lastResult.cefr} · ${d.toLocaleDateString()}`;
     }
+    if(inProgress) metaLine = "In progress — continue where you left off";
     return `
       <div class="mock-row">
         <div class="mock-info">
-          <div class="name">${m.title}</div>
-          <div class="meta">${metaLine}</div>
+          <div class="name">${escapeHtml(m.title)}</div>
+          <div class="meta">${escapeHtml(metaLine)}</div>
         </div>
-        <button type="button" class="go writing-start-btn" data-mockid="${m.id}">Start →</button>
+        <button type="button" class="go writing-start-btn ${inProgress ? "continue" : ""}" data-mockid="${escapeHtml(String(m.id))}">${inProgress ? "Continue →" : "Start →"}</button>
       </div>`;
   }).join("");
 
   document.querySelectorAll(".writing-start-btn").forEach(btn => {
-   btn.addEventListener("click", () => {
-  const id = btn.dataset.mockid;
-  const mock = allMocks.find(m => String(m.id) === id);
-  const saved = loadProgress();
-  if(!saved || saved.mockName !== mock.title){
-    clearProgress();
-  }
-  loadMockTasks(mock);
-  startOrContinueWriting();
-}); 
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.mockid;
+      const mock = allMocks.find(m => String(m.id) === id);
+      if(!mock) return;
+      const savedNow = loadProgress();
+      if(!savedNow || savedNow.mockName !== mock.title){
+        clearProgress();
+      }
+      loadMockTasks(mock);
+      startOrContinueWriting();
+    });
   });
 }
 
 function loadMockTasks(mock){
   currentMockName = mock.title;
   if(mock.id === "builtin"){
-    tasks = [
-      {badge:"TASK 1.1",title:"Informal Letter (B1)",sub:"Recommended length: 50 words",range:"Target: ~50 words",
-      prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to your friend, who is also a member of the club. Write about your feelings and what you think the club management should do about the situation."},
-      {badge:"TASK 1.2",title:"Formal Letter (B2)",sub:"Recommended length: 120–150 words",range:"Target: 120–150 words",
-      prompt:"You are a member of a fitness club. You received an email from the manager: the fitness center is closing for a month from next Monday for repairs and new equipment, and the manager asks what else should be changed and what alternative activities should be organized. Write a letter to the manager. Write about your feelings and what you think the club management should do about the situation."},
-      {badge:"TASK 2",title:"Online Discussion Post (C1)",sub:"Recommended length: 180–200 words",range:"Target: 180–200 words",
-      prompt:"You are participating in an online discussion for language learners. The question is: \"Is it better to live in a big city or a small town?\" Post your response, giving reasons and examples."}
-    ];
+    tasks = DEFAULT_TASKS.map(t => ({...t}));
   } else {
     tasks = [
       {badge:"TASK 1.1", title: mock.task11_title||"Task 1.1", sub:`Recommended length: ${mock.task11_length||""}`, range:`Target: ${mock.task11_length||""}`, prompt: mock.task11_prompt||""},
@@ -1286,32 +1528,33 @@ function loadMockTasks(mock){
   answers = ["","",""];
   seconds = 3600;
 }
- 
+
 function renderActivity(){
   const history = loadJSON(HISTORY_KEY, []);
   if(!history.length) return;
-  document.getElementById("activity").style.display = "block";
-  document.getElementById("activityList").innerHTML = history.slice(0,5).map(e=>{
+  $("activity").style.display = "block";
+  $("activityList").innerHTML = history.slice(0,5).map(e=>{
     const d = new Date(e.date);
     return `<div class="activity-item">
-      <span>${e.mock} · Raw ${e.raw}/${e.max} · ${d.toLocaleDateString()}</span>
-      <span class="cefr-pill">${e.cert}/75 · ${e.cefr}</span>
+      <span>${escapeHtml(e.mock)} · Raw ${e.raw}/${e.max} · ${d.toLocaleDateString()}</span>
+      <span class="cefr-pill">${e.cert}/75 · ${escapeHtml(e.cefr)}</span>
     </div>`;
   }).join("");
 }
-document.getElementById("homeHistoryBtn").onclick = () => {
-  document.getElementById("activity").scrollIntoView({behavior:"smooth"});
+$("homeHistoryBtn").onclick = () => {
+  $("activity").scrollIntoView({behavior:"smooth"});
 };
+
 // ============ SAMPLES / VOCAB / EXPERT PANELS ============
 function escapeHtml(s){
- return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 async function callClaudeJSON(sys, userContent){
  return callAI(sys, userContent, 1200);
 }
 const panelCache = {};
 async function withPanel(key, title, loadingMsg, loader, renderer){
- const p = document.getElementById("extraPanel");
+ const p = $("extraPanel");
  p.style.display = "block";
  if(panelCache[key]){ p.innerHTML = renderer(panelCache[key]); return; }
  p.innerHTML = `<b>${title}</b><br><br><span style="color:#767e8c">${loadingMsg}</span>`;
@@ -1324,7 +1567,7 @@ async function withPanel(key, title, loadingMsg, loader, renderer){
   p.innerHTML = `<b>${title}</b><br><br><span style="color:#c23434">Something went wrong generating this. Please try again.</span>`;
  }
 }
-document.getElementById("samplesBtn").onclick=()=>{
+$("samplesBtn").onclick=()=>{
  withPanel("samples", "📚 Sample Answers", "Writing model answers for each task...",
   async ()=>{
    const sys = `You are a CEFR writing teacher. For each of the three tasks below, write a strong C1-level model answer that meets the target word count. Respond with ONLY JSON, no markdown fences: {"t11":"<model answer text>","t12":"<model answer text>","t2":"<model answer text>"}`;
@@ -1332,10 +1575,10 @@ document.getElementById("samplesBtn").onclick=()=>{
    return callClaudeJSON(sys, userContent);
   },
   (r)=>`<b>📚 Sample Answers</b><br><br>` +
-   tasks.map((t,i)=>`<b>${t.badge} — ${t.title}:</b><p style="white-space:pre-wrap;margin:6px 0 14px;color:#565d6a">${escapeHtml(r[["t11","t12","t2"][i]])}</p>`).join("")
+   tasks.map((t,i)=>`<b>${t.badge} — ${escapeHtml(t.title)}:</b><p style="white-space:pre-wrap;margin:6px 0 14px;color:#565d6a">${escapeHtml(r[["t11","t12","t2"][i]])}</p>`).join("")
  );
 };
-document.getElementById("vocabBtn").onclick=()=>{
+$("vocabBtn").onclick=()=>{
  withPanel("vocab", "📖 Topic Vocabulary", "Gathering useful vocabulary for these topics...",
   async ()=>{
    const sys = `You are a CEFR writing teacher. Based on the topics of the tasks below, produce useful topic-specific vocabulary and collocations a candidate could use to raise their score. Respond with ONLY JSON, no markdown fences: {"sections":[{"heading":"<short heading>","items":["item1","item2", "..."]}]} Provide 2-4 sections, each with 5-8 items.`;
@@ -1346,7 +1589,7 @@ document.getElementById("vocabBtn").onclick=()=>{
    r.sections.map(s=>`<b>${escapeHtml(s.heading)}:</b> ${s.items.map(escapeHtml).join(" · ")}<br><br>`).join("")
  );
 };
-document.getElementById("expertBtn").onclick=()=>{
+$("expertBtn").onclick=()=>{
  withPanel("expert", "📋 Expert Score", "Running a detailed criteria-by-criteria evaluation...",
   async ()=>{
    const sys = `You are a senior CEFR writing examiner giving a detailed second-opinion evaluation, on top of an existing quick AI score. For each of the three tasks, rate on a 1-5 scale (5=excellent) across the five official criteria: Task Achievement, Grammatical Structures, Vocabulary Range, Text Coherence & Cohesion, Punctuation & Spelling. Then give one short comment per task. Respond with ONLY JSON, no markdown fences:
@@ -1377,31 +1620,37 @@ document.getElementById("expertBtn").onclick=()=>{
   }
  );
 };
+
 // Start on the home view
 showHome();
 </script>
+
+<!-- ============ AUTH SCRIPT ============ -->
 <script>
   let isLogin = true;
   document.getElementById("googleLoginBtn").addEventListener("click", async () => {
-  await supabaseClient.auth.signInWithOAuth({ provider: "google" });
-});
-function tarjimaXato(msg) {
-  const xatolar = {
-    "Invalid login credentials": "Email yoki parol noto'g'ri",
-    "User already registered": "Bu email allaqachon ro'yxatdan o'tgan",
-    "Email not confirmed": "Avval emailingizni tasdiqlang",
-    "Password should be at least 6 characters": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
-    "Unable to validate email address: invalid format": "Email manzili noto'g'ri formatda",
-    "Signup requires a valid password": "To'g'ri parol kiriting"
-  };
-  for (const key in xatolar) {
-    if (msg.includes(key)) return xatolar[key];
+    await supabaseClient.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin }
+    });
+  });
+  function tarjimaXato(msg) {
+    const xatolar = {
+      "Invalid login credentials": "Email yoki parol noto'g'ri",
+      "User already registered": "Bu email allaqachon ro'yxatdan o'tgan",
+      "Email not confirmed": "Avval emailingizni tasdiqlang",
+      "Password should be at least 6 characters": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
+      "Unable to validate email address: invalid format": "Email manzili noto'g'ri formatda",
+      "Signup requires a valid password": "To'g'ri parol kiriting"
+    };
+    for (const key in xatolar) {
+      if (msg.includes(key)) return xatolar[key];
+    }
+    if (msg.toLowerCase().includes("rate limit") || msg.toLowerCase().includes("security purposes")) {
+      return "Juda tez-tez urinyapsiz. Bir necha soniya kutib, qayta urinib ko'ring.";
+    }
+    return msg;
   }
-  if (msg.toLowerCase().includes("rate limit") || msg.toLowerCase().includes("security purposes")) {
-    return "Juda tez-tez urinyapsiz. Bir necha soniya kutib, qayta urinib ko'ring.";
-  }
-  return msg;
-}
   document.getElementById("authToggleLink").addEventListener("click", (e) => {
     e.preventDefault();
     isLogin = !isLogin;
@@ -1411,12 +1660,12 @@ function tarjimaXato(msg) {
     document.getElementById("authToggleLink").textContent = isLogin ? "Ro'yxatdan o'tish" : "Kirish";
     document.getElementById("authError").textContent = "";
   });
- 
-  document.getElementById("authSubmitBtn").addEventListener("click", async () => {
+
+  async function submitAuth() {
     const email = document.getElementById("authEmail").value.trim();
     const password = document.getElementById("authPassword").value;
     const errorEl = document.getElementById("authError");
-    
+    errorEl.style.color = "red";
     if (!email || !password) {
       errorEl.textContent = "Email va parolni to'ldiring.";
       return;
@@ -1428,246 +1677,403 @@ function tarjimaXato(msg) {
       result = await supabaseClient.auth.signUp({ email, password });
     }
     if (result.error) {
-  errorEl.textContent = tarjimaXato(result.error.message);
-} else if (!isLogin) {
-  errorEl.style.color = "green";
-  errorEl.textContent = "✅ Ro'yxatdan o'tdingiz! Emailingizga yuborilgan havolani bosib tasdiqlang, so'ng qayta kiring.";
-} else {
-  document.getElementById("authModal").style.display = "none";
-}
-  });
-  (async () => {
-  const { data } = await supabaseClient.auth.getSession();
-  if (data.session) {
-    document.getElementById("authModal").style.display = "none";
-    updateAvatar();
+      errorEl.textContent = tarjimaXato(result.error.message);
+    } else if (!isLogin) {
+      errorEl.style.color = "green";
+      errorEl.textContent = "✅ Ro'yxatdan o'tdingiz! Emailingizga yuborilgan havolani bosib tasdiqlang, so'ng qayta kiring.";
+    } else {
+      document.getElementById("authModal").style.display = "none";
+      updateAvatar();
+    }
   }
-})();
+  document.getElementById("authSubmitBtn").addEventListener("click", submitAuth);
+  document.getElementById("authPassword").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") submitAuth();
+  });
+
+  (async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session) {
+      document.getElementById("authModal").style.display = "none";
+      updateAvatar();
+    }
+  })();
+
   document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await supabaseClient.auth.signOut();
-  location.reload();
-});
+    await supabaseClient.auth.signOut();
+    location.reload();
+  });
 </script>
- <nav id="bottomNav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e7e9ef;display:flex;justify-content:space-around;padding:10px 0;box-shadow:0 -4px 16px #0000000d;z-index:200;">
-  <a href="#" id="navHome" class="nav-item active" onclick="showHome();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
-    <div style="font-size:20px;">🏠</div>Bosh sahifa
-  </a>
- <a href="#" id="navResults" class="nav-item" onclick="showResults();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
-    <div style="font-size:20px;">📊</div>Natijalar
-  </a>
-  <a href="#" id="navVocab" class="nav-item" onclick="showVocab();return false;" style="text-align:center;text-decoration:none;font-size:11px;">
-    <div style="font-size:20px;">📚</div>Lug'atlar
-  </a>
-</nav>
-  <div id="resultsModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
-  <div style="background:#fff;max-width:500px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
 
-    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:24px 24px 20px;position:relative;color:#fff;">
-      <button onclick="document.getElementById('resultsModal').style.display='none';setActiveNav('home')" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;">✕</button>
-      <div style="font-size:20px;font-weight:800;">📊 Mening natijalarim</div>
-      <div id="resultsCountBadge" style="font-size:13px;opacity:0.85;margin-top:3px;">– ta urinish</div>
-    </div>
-
-    <div style="padding:20px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-24px;">
-      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
-        <div id="resultsBestCert" style="font-size:22px;font-weight:800;color:#4338ca;">–</div>
-        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Eng yaxshi ball</div>
-      </div>
-      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
-        <div id="resultsBestCefr" style="font-size:22px;font-weight:800;color:#0b9565;">–</div>
-        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Erishilgan daraja</div>
-      </div>
-    </div>
-
-    <div style="padding:20px 24px 24px;">
-      <div id="resultsList">Yuklanmoqda...</div>
-    </div>
-
-  </div>
-</div>
-<div id="vocabModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
-  <div style="background:#fff;max-width:500px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
-
-    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:24px 24px 20px;position:relative;color:#fff;">
-      <button onclick="document.getElementById('vocabModal').style.display='none'" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;">✕</button>
-      <div style="font-size:20px;font-weight:800;">📚 Lug'atlarim</div>
-      <div id="vocabCountBadge" style="font-size:13px;opacity:0.85;margin-top:3px;">– ta so'z saqlangan</div>
-    </div>
-
-    <div style="padding:20px 24px 0;">
-      <div style="background:#f8f9fc;border-radius:14px;padding:16px;margin-bottom:18px;">
-        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">+ Yangi so'z qo'shish</div>
-        <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <input id="v_word" placeholder="So'z" style="flex:1;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;background:#fff;">
-          <input id="v_meaning" placeholder="Ma'nosi" style="flex:1;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;background:#fff;">
-        </div>
-        <input id="v_example" placeholder="Misol gap (ixtiyoriy)" style="width:100%;padding:10px;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;background:#fff;">
-        <button id="addVocabBtn" style="width:100%;padding:10px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">+ Qo'shish</button>
-      </div>
-    </div>
-
-    <div style="padding:0 24px 24px;">
-      <div id="vocabList">Yuklanmoqda...</div>
-    </div>
-
-  </div>
-</div>
- <div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(30,27,60,0.55);backdrop-filter:blur(4px);z-index:9998;">
-  <div style="background:#fff;max-width:420px;margin:50px auto;border-radius:22px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px #00000026;">
-
-    <div style="background:linear-gradient(135deg,#4338ca,#7c3aed);border-radius:22px 22px 0 0;padding:28px 24px 22px;position:relative;color:#fff;">
-      <button onclick="document.getElementById('profileModal').style.display='none'" style="position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,0.2);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;color:#fff;">✕</button>
-      <div id="profileAvatarBig" style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;margin-bottom:12px;">?</div>
-      <div id="profileNameBig" style="font-size:18px;font-weight:800;">Foydalanuvchi</div>
-      <div id="profileEmail" style="font-size:13px;opacity:0.85;margin-top:2px;"></div>
-    </div>
-
-    <div style="padding:20px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-24px;">
-      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
-        <div id="profileTestCount" style="font-size:22px;font-weight:800;color:#4338ca;">–</div>
-        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Yechilgan testlar</div>
-      </div>
-      <div style="background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px #0000000f;text-align:center;">
-        <div id="profileBestScore" style="font-size:22px;font-weight:800;color:#0b9565;">–</div>
-        <div style="font-size:11.5px;color:#9aa1ad;margin-top:2px;">Eng yaxshi natija</div>
-      </div>
-    </div>
-
-    <div style="padding:20px 24px 24px;">
-      <div style="background:#f8f9fc;border-radius:14px;padding:16px;margin-bottom:12px;">
-        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">✏️ Ism</div>
-        <input id="p_name" placeholder="Ismingizni kiriting" style="width:100%;padding:10px;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;background:#fff;">
-        <button id="saveNameBtn" style="width:100%;padding:10px;background:#4338ca;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Ismni saqlash</button>
-      </div>
-
-      <div style="background:#f8f9fc;border-radius:14px;padding:16px;margin-bottom:12px;">
-        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">🔒 Parol</div>
-        <input id="p_newpass" type="password" placeholder="Yangi parol (kamida 6 belgi)" style="width:100%;padding:10px;margin-bottom:10px;border:1.5px solid #e5e7eb;border-radius:8px;box-sizing:border-box;background:#fff;">
-        <button id="savePassBtn" style="width:100%;padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Parolni yangilash</button>
-      </div>
-
-      <div id="profileMsg" style="font-size:13px;margin-bottom:10px;"></div>
-
-      <div style="background:#f8f9fc;border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:14px;font-weight:700;color:#374151;">🌙 Qorong'i rejim</span>
-        <label style="position:relative;display:inline-block;width:44px;height:24px;">
-          <input type="checkbox" id="darkToggle" style="opacity:0;width:0;height:0;">
-          <span id="darkToggleSlider" style="position:absolute;cursor:pointer;inset:0;background:#e5e7eb;border-radius:24px;transition:.3s;"></span>
-        </label>
-      </div>
-    </div>
-
-  </div>
-</div>
-</body>
-</html>
+<!-- ============ SPEAKING SCRIPT ============ -->
 <script>
-window.addEventListener("load", () => {
+(function(){
+  const $ = (id) => document.getElementById(id);
 
-  let spMediaRecorder, spChunks = [], spTimerInterval, spTimeLeft;
-  let spCurrentMock = null, spCurrentQIndex = 0, spAudioBlobs = [];
-  const spQuestionsKey = ["part11_q1", "part11_q2", "part11_q3"];
+  const SP = {
+    mock: null, steps: [], i: 0,
+    stream: null, recorder: null, chunks: [],
+    blobs: {},            // step.key -> Blob
+    urls: [],             // object URLs to revoke later
+    mime: "", ext: "webm",
+    timer: null, active: false, finished: false
+  };
+  let mocksCache = {};
 
-  window.openSpeakingList = async function() {
-    document.getElementById("speakingModal").style.display = "flex";
-    document.getElementById("speakingListView").style.display = "block";
-    document.getElementById("speakingTestView").style.display = "none";
-    document.getElementById("speakingDoneView").style.display = "none";
+  // ---------- helpers ----------
+  function fmt(s){
+    const m = Math.floor(s / 60), r = s % 60;
+    return m + ":" + String(r).padStart(2, "0");
+  }
+  function pickMime(){
+    if (!window.MediaRecorder) return "";
+    const list = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus"];
+    for (const t of list) { if (MediaRecorder.isTypeSupported(t)) return t; }
+    return "";
+  }
+  function extFor(mime){
+    if (mime.includes("mp4")) return "mp4";
+    if (mime.includes("ogg")) return "ogg";
+    return "webm";
+  }
+  function asText(v){
+    if (!v) return "";
+    if (Array.isArray(v)) return v.map(x => "• " + x).join("\n");
+    return String(v);
+  }
+
+  // Build the list of steps from whatever columns the mock row has.
+  // A part is only added if its columns are filled in, so a mock that
+  // only has Part 1.1 questions still works.
+  function buildSteps(m){
+    const steps = [];
+
+    const p11 = [1,2,3].filter(n => m["part11_q" + n]);
+    p11.forEach((n, k) => steps.push({
+      key: "part11_q" + n, part: "Part 1.1", label: `Savol ${k+1}/${p11.length}`,
+      text: m["part11_q" + n], images: [], prep: 0, speak: 30
+    }));
+
+    const imgs12 = [m.part12_img1, m.part12_img2].filter(Boolean);
+    const p12 = [1,2,3].filter(n => m["part12_q" + n]);
+    p12.forEach((n, k) => steps.push({
+      key: "part12_q" + n, part: "Part 1.2", label: `Savol ${k+1}/${p12.length}`,
+      text: m["part12_q" + n], images: imgs12, prep: 0, speak: 30
+    }));
+
+    if (m.part2_topic) steps.push({
+      key: "part2", part: "Part 2", label: "Mavzu",
+      text: m.part2_topic, images: m.part2_img ? [m.part2_img] : [], prep: 60, speak: 120
+    });
+
+    if (m.part3_topic) steps.push({
+      key: "part3", part: "Part 3", label: "Munozara",
+      text: m.part3_topic, images: [],
+      forText: asText(m.part3_for), againstText: asText(m.part3_against),
+      prep: 60, speak: 120
+    });
+
+    return steps;
+  }
+
+  function showView(name){
+    $("speakingListView").style.display = name === "list" ? "block" : "none";
+    $("speakingTestView").style.display = name === "test" ? "block" : "none";
+    $("speakingDoneView").style.display = name === "done" ? "block" : "none";
+  }
+
+  function stopStream(){
+    if (SP.stream) { SP.stream.getTracks().forEach(t => t.stop()); SP.stream = null; }
+  }
+  function cleanup(){
+    clearInterval(SP.timer);
+    if (SP.recorder && SP.recorder.state === "recording") {
+      SP.recorder.onstop = null;
+      try { SP.recorder.stop(); } catch(e) {}
+    }
+    SP.recorder = null;
+    stopStream();
+    SP.urls.forEach(u => URL.revokeObjectURL(u));
+    SP.urls = [];
+    SP.blobs = {};
+    SP.active = false;
+    SP.finished = false;
+  }
+
+  // ---------- list ----------
+  window.openSpeakingList = async function(){
+    $("speakingModal").style.display = "flex";
+    showView("list");
+    const listEl = $("speakingMockList");
+    listEl.innerHTML = '<p class="sp-empty">Yuklanmoqda...</p>';
 
     const { data, error } = await supabaseClient.from("speaking_mocks").select("*").eq("is_active", true);
-    const listEl = document.getElementById("speakingMockList");
     listEl.innerHTML = "";
     if (error || !data || data.length === 0) {
-      listEl.innerHTML = "<p>Hozircha mocklar yo'q.</p>";
+      listEl.innerHTML = '<p class="sp-empty">Hozircha mocklar yo\'q.</p>';
       return;
     }
-    window.spMocksCache = {};
+    mocksCache = {};
     data.forEach(mock => {
-      window.spMocksCache[mock.id] = mock;
-      const div = document.createElement("div");
-      div.className = "mock-item";
-      div.innerHTML = `<span>${mock.title}</span><button onclick='startSpeakingMock("${mock.id}")'>Boshlash</button>`;
-      listEl.appendChild(div);
+      mocksCache[mock.id] = mock;
+      const row = document.createElement("div");
+      row.className = "mock-item";
+      const name = document.createElement("span");
+      name.textContent = mock.title;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "Boshlash";
+      btn.addEventListener("click", () => window.startSpeakingMock(mock.id));
+      row.appendChild(name);
+      row.appendChild(btn);
+      listEl.appendChild(row);
     });
   };
 
-  window.closeSpeakingModal = function() {
-    document.getElementById("speakingModal").style.display = "none";
-    if (spTimerInterval) clearInterval(spTimerInterval);
-    if (spMediaRecorder && spMediaRecorder.state === "recording") spMediaRecorder.stop();
+  window.closeSpeakingModal = function(){
+    if (SP.active && !SP.finished) {
+      if (!confirm("Testni to'xtatasizmi? Yozilgan javoblar saqlanmaydi.")) return;
+    }
+    cleanup();
+    $("speakingModal").style.display = "none";
   };
 
-  window.startSpeakingMock = function(mockId) {
-    spCurrentMock = window.spMocksCache[mockId];
-    spCurrentQIndex = 0;
-    spAudioBlobs = [];
-    document.getElementById("speakingListView").style.display = "none";
-    document.getElementById("speakingTestView").style.display = "block";
-    loadSpeakingQuestion();
+  // ---------- test flow ----------
+  window.startSpeakingMock = async function(mockId){
+    const mock = mocksCache[mockId];
+    if (!mock) return;
+    const steps = buildSteps(mock);
+    if (!steps.length) { alert("Bu mockda hali savollar yo'q."); return; }
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+      alert("Brauzeringiz audio yozishni qo'llab-quvvatlamaydi. Chrome yoki Safari'ning yangi versiyasidan foydalaning.");
+      return;
+    }
+    try {
+      SP.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+      alert("Mikrofonga ruxsat berilmadi. Brauzer sozlamalaridan mikrofonga ruxsat bering va qayta urinib ko'ring.");
+      return;
+    }
+
+    SP.mock = mock;
+    SP.steps = steps;
+    SP.i = 0;
+    SP.blobs = {};
+    SP.urls = [];
+    SP.mime = pickMime();
+    SP.ext = extFor(SP.mime);
+    SP.active = true;
+    SP.finished = false;
+    showView("test");
+    showStep();
   };
 
-  function loadSpeakingQuestion() {
-    const key = spQuestionsKey[spCurrentQIndex];
-    document.getElementById("spPartLabel").textContent = `Part 1.1 — Savol ${spCurrentQIndex + 1}/3`;
-    document.getElementById("spQuestionText").textContent = spCurrentMock[key];
-    document.getElementById("spPlayback").style.display = "none";
-    const btn = document.getElementById("spRecordBtn");
-    btn.textContent = "🎙️ Yozishni boshlash";
-    btn.onclick = startSpeakingRecording;
-    document.getElementById("spTimer").textContent = "";
+  function showStep(){
+    clearInterval(SP.timer);
+    const s = SP.steps[SP.i];
+    $("spPartLabel").textContent = `${s.part} · ${s.label}`;
+    $("spStepCount").textContent = `${SP.i + 1} / ${SP.steps.length}`;
+    $("spProgressFill").style.width = (SP.i / SP.steps.length * 100) + "%";
+    $("spQuestionText").textContent = s.text;
+
+    const imgBox = $("spImages");
+    imgBox.innerHTML = "";
+    (s.images || []).forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = "Speaking rasmi";
+      imgBox.appendChild(img);
+    });
+
+    const cols = $("spColumns");
+    if (s.forText || s.againstText) {
+      $("spFor").textContent = s.forText || "";
+      $("spAgainst").textContent = s.againstText || "";
+      cols.style.display = "grid";
+    } else {
+      cols.style.display = "none";
+    }
+
+    if (s.prep > 0) startPrep(s); else showReady(s);
   }
 
-  async function startSpeakingRecording() {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    spChunks = [];
-    spMediaRecorder = new MediaRecorder(stream);
-    spMediaRecorder.ondataavailable = e => spChunks.push(e.data);
-    spMediaRecorder.onstop = () => {
-      const blob = new Blob(spChunks, { type: "audio/webm" });
-      spAudioBlobs[spCurrentQIndex] = blob;
-      const audioEl = document.getElementById("spPlayback");
-      audioEl.src = URL.createObjectURL(blob);
-      audioEl.style.display = "block";
-      stream.getTracks().forEach(t => t.stop());
-      goToNextSpeakingStep();
+  function showReady(s){
+    $("spPhase").textContent = "Tayyor bo'lsangiz, yozishni boshlang";
+    $("spTimer").className = "sp-timer";
+    $("spTimer").textContent = fmt(s.speak);
+    const btn = $("spRecordBtn");
+    btn.style.display = "block";
+    btn.className = "sp-btn";
+    btn.textContent = "🎙️ Yozishni boshlash";
+    btn.onclick = () => startRecording(s);
+    $("spSkipBtn").style.display = "none";
+  }
+
+  function startPrep(s){
+    let left = s.prep;
+    $("spPhase").textContent = "⏳ Tayyorlanish vaqti";
+    $("spTimer").className = "sp-timer";
+    $("spTimer").textContent = fmt(left);
+    $("spRecordBtn").style.display = "none";
+    const skip = $("spSkipBtn");
+    skip.style.display = "block";
+    skip.textContent = "Tayyorman, yozishni boshlash";
+    skip.onclick = () => { clearInterval(SP.timer); startRecording(s); };
+    SP.timer = setInterval(() => {
+      left--;
+      $("spTimer").textContent = fmt(Math.max(left, 0));
+      if (left <= 0) { clearInterval(SP.timer); startRecording(s); }
+    }, 1000);
+  }
+
+  function startRecording(s){
+    clearInterval(SP.timer);
+    if (!SP.stream) return;
+    SP.chunks = [];
+    let rec;
+    try {
+      rec = SP.mime ? new MediaRecorder(SP.stream, { mimeType: SP.mime }) : new MediaRecorder(SP.stream);
+    } catch (e) {
+      alert("Yozishni boshlab bo'lmadi: " + e.message);
+      return;
+    }
+    SP.recorder = rec;
+    rec.ondataavailable = (e) => { if (e.data && e.data.size) SP.chunks.push(e.data); };
+    rec.onstop = () => {
+      clearInterval(SP.timer);
+      const base = (SP.mime || rec.mimeType || "audio/webm").split(";")[0];
+      SP.blobs[s.key] = new Blob(SP.chunks, { type: base });
+      setTimeout(nextStep, 500);
     };
-    spMediaRecorder.start();
+    rec.start();
 
-    spTimeLeft = 30;
-    document.getElementById("spTimer").textContent = spTimeLeft + "s";
-    const btn = document.getElementById("spRecordBtn");
+    let left = s.speak;
+    $("spSkipBtn").style.display = "none";
+    $("spPhase").textContent = "🔴 Yozilmoqda";
+    const t = $("spTimer");
+    t.className = "sp-timer rec";
+    t.textContent = fmt(left);
+    const btn = $("spRecordBtn");
+    btn.style.display = "block";
+    btn.className = "sp-btn rec";
     btn.textContent = "⏹️ To'xtatish";
-    btn.onclick = () => spMediaRecorder.stop();
+    btn.onclick = () => { if (rec.state === "recording") rec.stop(); };
 
-    spTimerInterval = setInterval(() => {
-      spTimeLeft--;
-      document.getElementById("spTimer").textContent = spTimeLeft + "s";
-      if (spTimeLeft <= 0) {
-        clearInterval(spTimerInterval);
-        if (spMediaRecorder.state === "recording") spMediaRecorder.stop();
+    SP.timer = setInterval(() => {
+      left--;
+      t.textContent = fmt(Math.max(left, 0));
+      if (left <= 0) {
+        clearInterval(SP.timer);
+        if (rec.state === "recording") rec.stop();
       }
     }, 1000);
   }
 
-  function goToNextSpeakingStep() {
-    clearInterval(spTimerInterval);
-    if (spCurrentQIndex < spQuestionsKey.length - 1) {
-      spCurrentQIndex++;
-      setTimeout(loadSpeakingQuestion, 800);
+  function nextStep(){
+    if (SP.i < SP.steps.length - 1) {
+      SP.i++;
+      showStep();
     } else {
-      setTimeout(uploadSpeakingAnswers, 800);
+      finish();
     }
   }
 
-  async function uploadSpeakingAnswers() {
+  // ---------- finish: playback + upload ----------
+  function finish(){
+    SP.finished = true;
+    stopStream();
+    $("spProgressFill").style.width = "100%";
+    showView("done");
+
+    const list = $("spResultList");
+    list.innerHTML = "";
+    SP.steps.forEach(s => {
+      const blob = SP.blobs[s.key];
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      SP.urls.push(url);
+
+      const box = document.createElement("div");
+      box.className = "sp-result";
+      box.dataset.key = s.key;
+
+      const top = document.createElement("div");
+      top.className = "sp-result-top";
+      const name = document.createElement("span");
+      name.textContent = `${s.part} · ${s.label}`;
+      const up = document.createElement("span");
+      up.className = "sp-up wait";
+      up.textContent = "Saqlanmoqda...";
+      top.appendChild(name);
+      top.appendChild(up);
+
+      const q = document.createElement("p");
+      q.className = "sp-result-q";
+      q.textContent = s.text;
+
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = url;
+
+      box.appendChild(top);
+      box.appendChild(q);
+      box.appendChild(audio);
+      list.appendChild(box);
+    });
+
+    uploadAll();
+  }
+
+  function setUpStatus(key, cls, text){
+    const box = document.querySelector(`#spResultList .sp-result[data-key="${key}"] .sp-up`);
+    if (box) { box.className = "sp-up " + cls; box.textContent = text; }
+  }
+
+  async function uploadAll(){
+    const statusEl = $("spUploadStatus");
+    const retryBtn = $("spRetryUploadBtn");
+    retryBtn.style.display = "none";
+    statusEl.textContent = "Javoblar saqlanmoqda...";
+
     const { data: { user } } = await supabaseClient.auth.getUser();
-    for (let i = 0; i < spAudioBlobs.length; i++) {
-      const path = `${user.id}/${spCurrentMock.id}/part11_q${i + 1}.webm`;
-      await supabaseClient.storage.from("speaking_audio").upload(path, spAudioBlobs[i], { upsert: true });
+    if (!user) {
+      statusEl.textContent = "Saqlash uchun tizimga kiring. Javoblarni hozircha shu yerda tinglashingiz mumkin.";
+      SP.steps.forEach(s => { if (SP.blobs[s.key]) setUpStatus(s.key, "err", "Saqlanmadi"); });
+      return;
     }
-    document.getElementById("speakingTestView").style.display = "none";
-    document.getElementById("speakingDoneView").style.display = "block";
+
+    let failed = 0;
+    for (const s of SP.steps) {
+      const blob = SP.blobs[s.key];
+      if (!blob) continue;
+      const box = document.querySelector(`#spResultList .sp-result[data-key="${s.key}"] .sp-up`);
+      if (box && box.classList.contains("ok")) continue; // already uploaded
+      setUpStatus(s.key, "wait", "Saqlanmoqda...");
+      const path = `${user.id}/${SP.mock.id}/${s.key}.${SP.ext}`;
+      const { error } = await supabaseClient.storage.from("speaking_audio").upload(path, blob, {
+        upsert: true,
+        contentType: blob.type
+      });
+      if (error) {
+        console.error("Upload error:", s.key, error);
+        failed++;
+        setUpStatus(s.key, "err", "Xato");
+      } else {
+        setUpStatus(s.key, "ok", "Saqlandi ✓");
+      }
+    }
+
+    if (failed) {
+      statusEl.textContent = `${failed} ta javob saqlanmadi. Internetni tekshirib, qayta urinib ko'ring.`;
+      retryBtn.style.display = "block";
+    } else {
+      statusEl.textContent = "Barcha javoblar saqlandi ✅";
+    }
   }
 
-});
+  $("spRetryUploadBtn").addEventListener("click", uploadAll);
+})();
 </script>
+</body>
+</html>
