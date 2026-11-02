@@ -3,21 +3,34 @@
 // Set the key in Vercel: Project Settings → Environment Variables → OPENROUTER_API_KEY.
 // The frontend never sees this key — it only talks to /api/score.
 //
-// Why this version exists:
-// Free models on OpenRouter are renamed/removed every few weeks, so hardcoded
-// model names stop working. This version asks OpenRouter which free text models
-// exist right now, tries several of them (plus the "openrouter/free" router as
-// a last resort), and only accepts a reply that parses as a JSON object.
+// How it works:
+// 1. Tries the "openrouter/free" router first (it picks a working free model itself).
+// 2. If that fails, asks OpenRouter which free text models exist right now and tries
+//    the fastest-looking ones (non-reasoning models first).
+// 3. Models that answer 403/404 are skipped for an hour.
+// 4. Only a reply that parses as a JSON object is accepted.
 
 export const config = { maxDuration: 60 };
 
 const OR_BASE = "https://openrouter.ai/api/v1";
 const TOTAL_BUDGET_MS = 55000; // stay under Vercel's 60s limit
-const PER_MODEL_MAX_MS = 30000; // one slow model must not eat the whole budget
-const MAX_FREE_MODELS = 5; // how many free models to try before the router
+const FIRST_MODEL_MS = 35000; // the router gets the longest time
+const OTHER_MODEL_MS = 25000;
+const MAX_FREE_MODELS = 4; // how many extra free models to try after the router
 
 // Cached between requests while the serverless instance is warm.
 let modelCache = { at: 0, list: [] };
+const badModels = new Map(); // model id -> time it was marked unusable
+
+function isBad(model) {
+  const t = badModels.get(model);
+  if (!t) return false;
+  if (Date.now() - t > 60 * 60 * 1000) {
+    badModels.delete(model);
+    return false;
+  }
+  return true;
+}
 
 async function getFreeModels() {
   const TEN_MIN = 10 * 60 * 1000;
@@ -27,6 +40,10 @@ async function getFreeModels() {
   try {
     const r = await fetch(`${OR_BASE}/models`, { signal: AbortSignal.timeout(8000) });
     const j = await r.json();
+    const isReasoning = (m) =>
+      Array.isArray(m.supported_parameters) &&
+      (m.supported_parameters.includes("reasoning") ||
+        m.supported_parameters.includes("include_reasoning"));
     const list = (j.data || [])
       .filter((m) => typeof m.id === "string" && m.id.endsWith(":free"))
       .filter((m) => Number(m.pricing?.prompt) === 0 && Number(m.pricing?.completion) === 0)
@@ -38,14 +55,22 @@ async function getFreeModels() {
         const inp = m.architecture?.input_modalities;
         return !inp || inp.includes("text");
       })
-      .filter((m) => !/(coder|-vl|vision|audio|lyria|embed|guard|safeguard)/i.test(m.id))
-      .sort((a, b) => (b.context_length || 0) - (a.context_length || 0))
+      .filter(
+        (m) =>
+          !/(coder|-vl|vision|audio|lyria|embed|guard|safeguard|thinkingmachines|inkling)/i.test(m.id)
+      )
+      // fast non-reasoning models first, then bigger context first
+      .sort(
+        (a, b) =>
+          Number(isReasoning(a)) - Number(isReasoning(b)) ||
+          (b.context_length || 0) - (a.context_length || 0)
+      )
       .map((m) => m.id);
     if (list.length) modelCache = { at: Date.now(), list };
     return list;
   } catch (err) {
     console.error("Could not load free model list:", err.message);
-    return modelCache.list; // may be empty — handled by the caller
+    return modelCache.list; // may be empty — that is fine, the router is still tried
   }
 }
 
@@ -110,12 +135,16 @@ export default async function handler(req, res) {
         ],
         max_tokens: Math.min(max_tokens || 1500, 4000),
         temperature: 0.2,
+        reasoning: { effort: "low" }, // ignored by models that cannot reason
       }),
       signal: AbortSignal.timeout(timeoutMs),
     });
 
     const data = await orResponse.json();
     if (!orResponse.ok) {
+      if (orResponse.status === 403 || orResponse.status === 404) {
+        badModels.set(model, Date.now());
+      }
       throw new Error("OpenRouter error " + orResponse.status + ": " + JSON.stringify(data).slice(0, 300));
     }
 
@@ -123,7 +152,7 @@ export default async function handler(req, res) {
     const content = choice?.message?.content || "";
     const reasoning = choice?.message?.reasoning || "";
     console.error(
-      `[${model}] finish_reason=${choice?.finish_reason} content_len=${content.length} reasoning_len=${reasoning.length}`
+      `[${model}] answered by=${data.model} finish_reason=${choice?.finish_reason} content_len=${content.length} reasoning_len=${reasoning.length}`
     );
 
     try {
@@ -137,15 +166,17 @@ export default async function handler(req, res) {
     }
   }
 
-  const free = await getFreeModels();
-  const models = [...new Set([...free.slice(0, MAX_FREE_MODELS), "openrouter/free"])];
+  const free = (await getFreeModels()).filter((m) => !isBad(m));
+  const models = [...new Set(["openrouter/free", ...free.slice(0, MAX_FREE_MODELS)])];
   const attempts = [];
 
-  for (const model of models) {
+  for (let i = 0; i < models.length; i++) {
+    const model = models[i];
     const remaining = TOTAL_BUDGET_MS - (Date.now() - started);
     if (remaining < 8000) break;
+    const limit = Math.min(i === 0 ? FIRST_MODEL_MS : OTHER_MODEL_MS, remaining - 1000);
     try {
-      const parsed = await callModel(model, Math.min(PER_MODEL_MAX_MS, remaining - 1000));
+      const parsed = await callModel(model, limit);
       return res.status(200).json({
         content: [{ type: "text", text: JSON.stringify(parsed) }],
       });
