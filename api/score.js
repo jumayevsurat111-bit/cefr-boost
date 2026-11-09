@@ -14,8 +14,8 @@ export const config = { maxDuration: 60 };
 
 const OR_BASE = "https://openrouter.ai/api/v1";
 const TOTAL_BUDGET_MS = 55000; // stay under Vercel's 60s limit
-const FIRST_MODEL_MS = 35000; // the router gets the longest time
-const OTHER_MODEL_MS = 25000;
+const FIRST_MODEL_MS = 28000; // the router gets the longest time
+const OTHER_MODEL_MS = 20000;
 const MAX_FREE_MODELS = 4; // how many extra free models to try after the router
 
 // Cached between requests while the serverless instance is warm.
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
     system +
     "\n\nIMPORTANT OUTPUT RULES: Reply with ONE valid JSON object and nothing else. " +
     "No markdown fences, no text before or after the JSON. Keep every string short. " +
-    "List at most 5 errors per task.";
+    "List at most 3 errors per task. Do not think out loud or explain; output the JSON immediately.";
 
   async function callModel(model, timeoutMs) {
     const orResponse = await fetch(`${OR_BASE}/chat/completions`, {
@@ -133,7 +133,8 @@ export default async function handler(req, res) {
           { role: "system", content: strictSystem },
           { role: "user", content: userText },
         ],
-        max_tokens: Math.min(max_tokens || 1500, 4000),
+        // Reasoning models spend many tokens "thinking", so leave plenty of room for the JSON.
+        max_tokens: Math.min(Math.max(max_tokens || 0, 4500), 6000),
         temperature: 0.2,
         reasoning: { effort: "low" }, // ignored by models that cannot reason
       }),
