@@ -2271,6 +2271,16 @@ showHome();
   }
 
   $("spRetryUploadBtn").addEventListener("click", uploadAll);
+    window.__spFinishEarly = function () {
+    if (!SP.active || SP.finished) return;
+    SP.active = false;
+    clearInterval(SP.timer);
+    SP.i = SP.steps.length - 1;
+    if (SP.recorder && SP.recorder.state === "recording") {
+      try { SP.recorder.stop(); } catch (e) {}
+    }
+    setTimeout(function () { if (!SP.finished) finish(); }, 1500);
+  };
 })();
 </script>
   <script src="speaking-v2.js"></script>
