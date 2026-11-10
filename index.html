@@ -507,6 +507,40 @@ function cefrFrom75(score){
     "sb_publishable_RJM4SqD7iTiUX4wJLLMOTA_g5peTZAx"
   );
 </script>
+  <style>
+/* ============ SPEAKING: FULLSCREEN EXAM MODE ============ */
+#speakingModal{padding:0;background:#f4f3ff;backdrop-filter:none;align-items:stretch;justify-content:stretch}
+#speakingModal .modal-content{max-width:none;width:100%;height:100%;max-height:none;border-radius:0;box-shadow:none;padding:0;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(180deg,#f0f0ff 0%,#f8f9fc 45%)}
+#speakingModal .close-btn{top:14px;right:18px;width:38px;height:38px;font-size:24px;background:#fff;box-shadow:0 2px 8px #0000001a}
+
+/* list + done screens */
+#speakingListView,#speakingDoneView{flex:1;overflow-y:auto;width:100%;max-width:760px;margin:0 auto;padding:64px 20px 32px}
+#speakingModal .modal-content h2{font-size:26px}
+#speakingModal .mock-item{padding:18px 20px;font-size:17px}
+#speakingModal .mock-item button{padding:12px 22px;font-size:14px}
+
+/* test screen */
+#speakingTestView[style*="block"]{display:flex!important;flex-direction:column;flex:1;min-height:0}
+#speakingTestView .sp-top{background:#fff;border-bottom:1px solid #e7e9ef;margin:0;padding:14px 72px 12px 24px}
+#speakingTestView .sp-part{font-size:15px;padding:8px 14px}
+#speakingTestView .sp-count{font-size:15px}
+#speakingTestView .sp-progress{height:6px;border-radius:0;margin:0}
+
+#spStage[style*="block"],#spIntro[style*="block"]{display:flex!important;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:0;overflow-y:auto;width:100%;max-width:1000px;margin:0 auto;padding:24px 20px 32px;text-align:center}
+
+/* big question */
+#speakingModal .sp-question{font-size:clamp(22px,3.4vw,38px);line-height:1.4;margin:0 0 20px;max-width:900px}
+#speakingModal .sp-images{justify-content:center;width:100%;margin-bottom:20px}
+#speakingModal .sp-images img{flex:1 1 300px;max-width:480px;max-height:36vh;border-radius:16px}
+
+/* part 3: for / against */
+#speakingModal .sp-columns{width:100%;max-width:900px;text-align:left;gap:16px;margin-bottom:20px}
+#speakingModal .sp-col{font-size:clamp(15px,1.8vw,19px);padding:18px 20px;border-radius:16px}
+#speakingModal .sp-col b{font-size:16px;margin-bottom:8px}
+
+/* big timer ring */
+#speakingModal .sp-phase{font-size:clamp(16px,2vw,20px);margin:4px 0 6px}
+#speakingModal .sp-ring{width:clamp(170px,26vh,240px);heigh
 </head>
 <body>
 <div style="position:fixed;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,#c7d2fe 0%,transparent 70%);border-radius:50%;z-index:0;pointer-events:none;"></div>
