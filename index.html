@@ -507,7 +507,7 @@ function cefrFrom75(score){
     "sb_publishable_RJM4SqD7iTiUX4wJLLMOTA_g5peTZAx"
   );
 </script>
-  <style>
+<style>
 /* ============ SPEAKING: FULLSCREEN EXAM MODE ============ */
 #speakingModal{padding:0;background:#f4f3ff;backdrop-filter:none;align-items:stretch;justify-content:stretch}
 #speakingModal .modal-content{max-width:none;width:100%;height:100%;max-height:none;border-radius:0;box-shadow:none;padding:0;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(180deg,#f0f0ff 0%,#f8f9fc 45%)}
@@ -540,7 +540,36 @@ function cefrFrom75(score){
 
 /* big timer ring */
 #speakingModal .sp-phase{font-size:clamp(16px,2vw,20px);margin:4px 0 6px}
-#speakingModal .sp-ring{width:clamp(170px,26vh,240px);heigh
+#speakingModal .sp-ring{width:clamp(170px,26vh,240px);height:clamp(170px,26vh,240px);margin:6px auto 18px}
+#speakingModal .sp-ring circle{stroke-width:7}
+#speakingModal .sp-ring .sp-timer{font-size:clamp(38px,6vh,56px)}
+
+/* big buttons */
+#speakingModal .sp-actions{width:100%;max-width:420px}
+#speakingModal .sp-btn{padding:18px;font-size:18px;border-radius:14px}
+
+/* intro card */
+#speakingModal .sp-intro-title{font-size:clamp(28px,4vw,42px);margin:0 0 12px}
+#speakingModal .sp-intro-text{font-size:clamp(16px,2vw,20px);max-width:620px;margin:0 auto 16px}
+#speakingModal .sp-intro-meta{font-size:15px;padding:10px 16px;margin-bottom:24px}
+#spIntro .sp-btn{max-width:420px}
+
+/* pulsing ring while recording */
+#speakingModal .sp-ring.rec{animation:spPulse 1.6s ease-in-out infinite}
+@keyframes spPulse{0%,100%{filter:drop-shadow(0 0 0 #dc262600)}50%{filter:drop-shadow(0 0 14px #dc262666)}}
+
+/* dark mode */
+body.dark #speakingModal{background:#14141f}
+body.dark #speakingModal .modal-content{background:#14141f!important}
+body.dark #speakingTestView .sp-top{background:#1c1c2b;border-color:#2a2a3d}
+body.dark #speakingModal .sp-question{color:#e5e7eb}
+
+@media(max-width:520px){
+  #speakingTestView .sp-top{padding:12px 62px 10px 14px}
+  #spStage[style*="block"],#spIntro[style*="block"]{padding:16px 14px 24px;justify-content:flex-start}
+  #speakingModal .sp-images img{max-height:26vh}
+}
+</style>
 </head>
 <body>
 <div style="position:fixed;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,#c7d2fe 0%,transparent 70%);border-radius:50%;z-index:0;pointer-events:none;"></div>
