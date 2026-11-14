@@ -1,4 +1,4 @@
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     const r = await fetch(
       "https://sgvfmqxwhypjoxcaxanh.supabase.co/rest/v1/mocks?select=id&limit=1",
@@ -8,4 +8,4 @@ module.exports = async (req, res) => {
   } catch (e) {
     res.status(500).json({ ok: false, error: String(e) });
   }
-};
+}
