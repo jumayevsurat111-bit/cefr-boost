@@ -813,7 +813,8 @@ Write ALL comments in Uzbek (Latin script). Respond with ONLY one JSON object, n
       scoredAttempt = attempt;
 
       try {
-        supabaseClient.from("speaking_results").insert({
+        supabaseClient.from("Results").insert({
+          skill: "speaking",
           mock_name: (lastMock && lastMock.title) || "Speaking Mock",
           raw_score: raw,
           certificate_score: cert,
