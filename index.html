@@ -340,10 +340,10 @@ async function showResults() {
    return `
     <div class="result-item-card" style="border-left-color:${color}">
       <div class="result-item-top">
-        <span class="result-item-name">${escapeHtml(r.mock_name)}</span>
+        <span class="result-item-name">${r.skill === "speaking" ? "🎤" : "✍️"} ${escapeHtml(r.mock_name)}</span>
         <span class="result-item-cefr" style="background:${color}">${escapeHtml(r.cefr_level)}</span>
       </div>
-      <div class="result-item-meta">Ball: ${escapeHtml(String(r.raw_score))}/17 · Sertifikat: ${escapeHtml(String(r.certificate_score))}/75 · ${new Date(r.created_at).toLocaleDateString("uz-UZ")}</div>
+      <div class="result-item-meta">Ball: ${escapeHtml(String(r.raw_score))}/${r.skill === "speaking" ? 21 : 17} · Sertifikat: ${escapeHtml(String(r.certificate_score))}/75 · ${new Date(r.created_at).toLocaleDateString("uz-UZ")}</div>
     </div>`;
   }).join("");
 }
