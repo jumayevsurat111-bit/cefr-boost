@@ -89,6 +89,26 @@
     };
   }
 
+  // /api/score ga ketayotgan har bir so'rovga foydalanuvchi tokenini avtomatik qo'shadi
+  // (server shu token orqali kodi borligini tekshiradi). Writing va Speaking ikkalasi uchun ishlaydi.
+  const origFetch = window.fetch.bind(window);
+  window.fetch = async function (input, init) {
+    try {
+      const url = typeof input === "string" ? input : (input && input.url) || "";
+      if (/^(https?:\/\/[^/]+)?\/api\/score(\?|$)/.test(url)) {
+        const { data } = await supabaseClient.auth.getSession();
+        const token = data.session && data.session.access_token;
+        if (token) {
+          init = init || {};
+          const h = new Headers(init.headers || (typeof input !== "string" && input.headers) || {});
+          if (!h.has("Authorization")) h.set("Authorization", "Bearer " + token);
+          init.headers = h;
+        }
+      }
+    } catch (e) {}
+    return origFetch(input, init);
+  };
+
   // Reading / Listening qo'shilganda ham ishlatish uchun: await window.ensureAccess()
   window.ensureAccess = ensureAccess;
 })();
