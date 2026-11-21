@@ -76,6 +76,7 @@ async function loadCodes() {
   const { data, error } = await supabaseClient
     .from("access_codes")
     .select("id, code, used_by, used_at, created_at")
+    .not("code", "like", "%#%")
     .order("created_at", { ascending: false })
     .limit(1000);
   if (error) { $("codeStats").textContent = "Xato: " + error.message; return; }
@@ -131,6 +132,83 @@ async function deleteCode(id, code) {
   loadCodes();
 }
 
+// ---------- Umumiy kod ----------
+function cell(tr, text) { const td = document.createElement("td"); td.textContent = text; tr.appendChild(td); return td; }
+function actBtn(label, cls, fn) {
+  const b = document.createElement("button");
+  b.className = "small " + cls;
+  b.style.marginRight = "4px";
+  b.textContent = label;
+  b.addEventListener("click", fn);
+  return b;
+}
+
+async function loadShared() {
+  const { data, error } = await supabaseClient.from("shared_codes").select("*").order("created_at", { ascending: false });
+  const tbody = $("sharedRows");
+  tbody.innerHTML = "";
+  if (error) { $("sharedMsg").textContent = "Xato: " + error.message; return; }
+  if (!data.length) {
+    const tr = document.createElement("tr");
+    const td = cell(tr, "Umumiy kod yo'q.");
+    td.colSpan = 4;
+    tbody.appendChild(tr);
+    return;
+  }
+  for (const sc of data) {
+    const { count } = await supabaseClient.from("access_codes")
+      .select("id", { count: "exact", head: true }).like("code", sc.code + "#%");
+    const tr = document.createElement("tr");
+    cell(tr, sc.code).className = "code";
+    cell(tr, (count || 0) + (sc.max_uses ? " / " + sc.max_uses : ""));
+    const tdState = document.createElement("td");
+    const tag = document.createElement("span");
+    tag.className = "tag " + (sc.is_active ? "free" : "used");
+    tag.textContent = sc.is_active ? "Faol" : "Yopiq";
+    tdState.appendChild(tag);
+    tr.appendChild(tdState);
+    const tdAct = document.createElement("td");
+    tdAct.appendChild(actBtn(sc.is_active ? "Yopish" : "Ochish", "ghost", () => toggleShared(sc)));
+    tdAct.appendChild(actBtn("Ruxsatni bekor qilish", "danger", () => revokeShared(sc)));
+    tdAct.appendChild(actBtn("O'chirish", "danger", () => deleteShared(sc)));
+    tr.appendChild(tdAct);
+    tbody.appendChild(tr);
+  }
+}
+
+async function addShared() {
+  const msg = $("sharedMsg");
+  let code = $("sharedCode").value.trim().toUpperCase() || makeCode();
+  if (!/^[A-Z0-9]{4,20}$/.test(code)) { msg.textContent = "Kod 4-20 ta harf yoki raqamdan iborat bo'lsin."; return; }
+  const max = parseInt($("sharedMax").value, 10);
+  const { error } = await supabaseClient.from("shared_codes").insert({ code, max_uses: max > 0 ? max : null });
+  if (error) { msg.textContent = error.message.includes("duplicate") ? "Bu kod allaqachon bor." : "Xato: " + error.message; return; }
+  msg.textContent = "✅ Umumiy kod yaratildi: " + code;
+  $("sharedCode").value = "";
+  $("sharedMax").value = "";
+  loadShared();
+}
+
+async function toggleShared(sc) {
+  const { error } = await supabaseClient.from("shared_codes").update({ is_active: !sc.is_active }).eq("id", sc.id);
+  $("sharedMsg").textContent = error ? "Xato: " + error.message : (sc.is_active ? "Kod yopildi: yangi odamlar kira olmaydi." : "Kod qayta ochildi.");
+  loadShared();
+}
+
+async function revokeShared(sc) {
+  if (!confirm(sc.code + " kodi bilan kirgan HAMMA odamning ruxsati bekor qilinadi. Davom etasizmi?")) return;
+  const { error } = await supabaseClient.from("access_codes").delete().like("code", sc.code + "#%");
+  $("sharedMsg").textContent = error ? "Xato: " + error.message : "Ruxsatlar bekor qilindi (bir necha daqiqada kuchga kiradi).";
+  loadShared();
+}
+
+async function deleteShared(sc) {
+  if (!confirm(sc.code + " kodini o'chirasizmi? Kirganlarning ruxsati saqlanadi.")) return;
+  const { error } = await supabaseClient.from("shared_codes").delete().eq("id", sc.id);
+  $("sharedMsg").textContent = error ? "Xato: " + error.message : "Kod o'chirildi.";
+  loadShared();
+}
+
 // ---------- Sahifa ----------
 (async () => {
   const { data } = await supabaseClient.auth.getSession();
@@ -164,6 +242,21 @@ async function deleteCode(id, code) {
     <table>
       <thead><tr><th>Kod</th><th>Holati</th><th>Sana</th><th></th></tr></thead>
       <tbody id="codeRows"></tbody>
+    </table>
+  </div>
+
+  <div class="sec">
+    <h3>👥 Umumiy kod (hamma uchun bitta)</h3>
+    <p class="note">Kanalga bitta kod joylaysiz. Kodni yopsangiz, yangi odamlar kira olmaydi. Oldin kirganlar kirishda davom etadi, xohlasangiz ularning ruxsatini ham bekor qilasiz.</p>
+    <div class="row">
+      <input id="sharedCode" placeholder="Kod (harf/raqam)" maxlength="20" style="width:170px;text-transform:uppercase">
+      <input id="sharedMax" type="number" min="1" placeholder="Limit (ixtiyoriy)" style="width:150px">
+      <button id="addSharedBtn">Umumiy kod yaratish</button>
+    </div>
+    <div class="msg" id="sharedMsg"></div>
+    <table>
+      <thead><tr><th>Kod</th><th>Kirganlar</th><th>Holati</th><th></th></tr></thead>
+      <tbody id="sharedRows"></tbody>
     </table>
   </div>
 
@@ -208,6 +301,8 @@ async function deleteCode(id, code) {
     copyText(t, "✅ Barcha bo'sh kodlar nusxalandi.");
   });
   loadCodes();
+  $("addSharedBtn").addEventListener("click", addShared);
+  loadShared();
 
   // Writing mock
   $("saveMockBtn").addEventListener("click", async () => {
