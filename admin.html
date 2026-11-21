@@ -211,6 +211,7 @@ async function deleteShared(sc) {
 
 // ---------- Statistika ----------
 async function loadStats() {
+  $("statsTotal").textContent = "Yangilanmoqda...";
   const { data, error } = await supabaseClient.from("Results")
     .select("mock_name, user_id, certificate_score").limit(5000);
   const tbody = $("statsRows");
@@ -218,7 +219,7 @@ async function loadStats() {
   if (error) { $("statsTotal").textContent = "Xato: " + error.message; return; }
   const rows = data || [];
   const allUsers = new Set(rows.map((r) => r.user_id));
-  $("statsTotal").textContent = "Jami urinishlar: " + rows.length + " · Test yechgan o'quvchilar: " + allUsers.size;
+  $("statsTotal").textContent = "Jami urinishlar: " + rows.length + " · Test yechgan o'quvchilar: " + allUsers.size + " · yangilandi: " + new Date().toLocaleTimeString("uz-UZ");
   const by = {};
   rows.forEach((r) => {
     const m = by[r.mock_name] || (by[r.mock_name] = { n: 0, users: new Set(), sum: 0 });
