@@ -209,6 +209,40 @@ async function deleteShared(sc) {
   loadShared();
 }
 
+// ---------- Statistika ----------
+async function loadStats() {
+  const { data, error } = await supabaseClient.from("Results")
+    .select("mock_name, user_id, certificate_score").limit(5000);
+  const tbody = $("statsRows");
+  tbody.innerHTML = "";
+  if (error) { $("statsTotal").textContent = "Xato: " + error.message; return; }
+  const rows = data || [];
+  const allUsers = new Set(rows.map((r) => r.user_id));
+  $("statsTotal").textContent = "Jami urinishlar: " + rows.length + " · Test yechgan o'quvchilar: " + allUsers.size;
+  const by = {};
+  rows.forEach((r) => {
+    const m = by[r.mock_name] || (by[r.mock_name] = { n: 0, users: new Set(), sum: 0 });
+    m.n++; m.users.add(r.user_id); m.sum += Number(r.certificate_score) || 0;
+  });
+  const names = Object.keys(by).sort();
+  if (!names.length) {
+    const tr = document.createElement("tr");
+    const td = cell(tr, "Hali natija yo'q.");
+    td.colSpan = 4;
+    tbody.appendChild(tr);
+    return;
+  }
+  names.forEach((name) => {
+    const m = by[name];
+    const tr = document.createElement("tr");
+    cell(tr, name);
+    cell(tr, String(m.n));
+    cell(tr, String(m.users.size));
+    cell(tr, Math.round(m.sum / m.n) + "/75");
+    tbody.appendChild(tr);
+  });
+}
+
 // ---------- Sahifa ----------
 (async () => {
   const { data } = await supabaseClient.auth.getSession();
@@ -261,6 +295,16 @@ async function deleteShared(sc) {
   </div>
 
   <div class="sec">
+    <h3>📊 Statistika</h3>
+    <div class="stats" id="statsTotal">Yuklanmoqda...</div>
+    <table>
+      <thead><tr><th>Mock</th><th>Urinishlar</th><th>O'quvchilar</th><th>O'rtacha ball</th></tr></thead>
+      <tbody id="statsRows"></tbody>
+    </table>
+    <button class="ghost small" id="statsRefresh" style="margin-top:10px">Yangilash</button>
+  </div>
+
+  <div class="sec">
     <h3>Yangi Writing mock qo'shish</h3>
     <input id="m_title" placeholder="Test nomi (masalan: Writing Mock 02)">
     <input id="m_t11_title" placeholder="Task 1.1 sarlavhasi">
@@ -303,6 +347,8 @@ async function deleteShared(sc) {
   loadCodes();
   $("addSharedBtn").addEventListener("click", addShared);
   loadShared();
+  $("statsRefresh").addEventListener("click", loadStats);
+  loadStats();
 
   // Writing mock
   $("saveMockBtn").addEventListener("click", async () => {
