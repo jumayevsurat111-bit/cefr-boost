@@ -21,6 +21,40 @@ const MIME = { webm: "audio/webm", mp4: "audio/mp4", ogg: "audio/ogg" };
 const num = (n) => (Number.isFinite(n) ? n : null);
 const round = (n, d = 2) => (Number.isFinite(n) ? Math.round(n * 10 ** d) / 10 ** d : null);
 const avg = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
+// ---- Kirish kodi tekshiruvi ----
+const ADMIN_EMAIL = "jumayevsurat111@gmail.com";
+const SB_URL = process.env.SUPABASE_URL || "https://sgvfmqxwhypjoxcaxanh.supabase.co";
+const SB_KEY = process.env.SUPABASE_ANON_KEY || "sb_publishable_RJM4SqD7iTiUX4wJLLMOTA_g5peTZAx";
+const accessCache = new Map(); // userId -> tekshirilgan vaqt
+
+async function checkAccess(authHeader) {
+  const token = String(authHeader || "").replace(/^Bearer\s+/i, "").trim();
+  if (!token) return { ok: false, status: 401, error: "Tizimga kiring." };
+  try {
+    const u = await fetch(`${SB_URL}/auth/v1/user`, {
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!u.ok) return { ok: false, status: 401, error: "Sessiya eskirgan. Qayta kiring." };
+    const user = await u.json();
+    if (String(user.email || "").toLowerCase() === ADMIN_EMAIL) return { ok: true };
+    const t = accessCache.get(user.id);
+    if (t && Date.now() - t < 10 * 60 * 1000) return { ok: true };
+    const r = await fetch(
+      `${SB_URL}/rest/v1/access_codes?select=id&used_by=eq.${encodeURIComponent(user.id)}&limit=1`,
+      { headers: { apikey: SB_KEY, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) }
+    );
+    if (!r.ok) return { ok: false, status: 502, error: "Kodni tekshirib bo'lmadi." };
+    const rows = await r.json();
+    if (Array.isArray(rows) && rows.length) {
+      accessCache.set(user.id, Date.now());
+      return { ok: true };
+    }
+    return { ok: false, status: 403, error: "Kirish kodi faollashtirilmagan." };
+  } catch (e) {
+    return { ok: false, status: 502, error: "Tekshiruvda xato: " + (e.message || e) };
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
