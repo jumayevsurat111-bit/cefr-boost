@@ -34,6 +34,8 @@ export default async function handler(req, res) {
   if (typeof path !== "string" || typeof token !== "string" || !/^[\w-]+\/[\w-]+\/\w+\.(webm|mp4|ogg)$/i.test(path)) {
     return res.status(400).json({ error: "Request must include a valid 'path' and 'token'." });
   }
+    const gate = await checkAccess("Bearer " + token);
+  if (!gate.ok) return res.status(gate.status).json({ error: gate.error });
   const ext = path.split(".").pop().toLowerCase();
 
   // 1) download the recording from Supabase Storage as the logged-in user
